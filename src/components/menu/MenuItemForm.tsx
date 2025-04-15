@@ -6,13 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogFooter } from "@/components/ui/dialog";
 
+interface MenuItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: "Entrées" | "Plats" | "Desserts" | "Boissons";
+}
+
 interface MenuItemFormProps {
-  formData: {
-    name: string;
-    description: string;
-    price: number;
-    category: string;
-  };
+  formData: Partial<MenuItem>;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleCategoryChange: (value: string) => void;
   onSubmit: () => void;
@@ -35,7 +38,7 @@ const MenuItemForm = ({
         <Input
           id="name"
           name="name"
-          value={formData.name}
+          value={formData.name || ""}
           onChange={handleInputChange}
           className="input-field"
         />
@@ -45,7 +48,7 @@ const MenuItemForm = ({
         <Input
           id="description"
           name="description"
-          value={formData.description}
+          value={formData.description || ""}
           onChange={handleInputChange}
           className="input-field"
         />
@@ -57,7 +60,7 @@ const MenuItemForm = ({
           name="price"
           type="number"
           step="0.01"
-          value={formData.price}
+          value={formData.price !== undefined ? formData.price : ""}
           onChange={handleInputChange}
           className="input-field"
         />
@@ -65,7 +68,7 @@ const MenuItemForm = ({
       <div className="grid gap-2">
         <Label htmlFor="category">Catégorie</Label>
         <Select 
-          value={formData.category} 
+          value={formData.category || ""} 
           onValueChange={handleCategoryChange}
         >
           <SelectTrigger className="input-field">

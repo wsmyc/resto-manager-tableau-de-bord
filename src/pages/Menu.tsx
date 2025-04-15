@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -152,7 +153,7 @@ const Menu = () => {
   };
 
   const handleAddItem = () => {
-    if (!formData.name || !formData.description || !formData.price || !formData.category) {
+    if (!formData.name || !formData.description || formData.price === undefined || !formData.category) {
       toast.error("Veuillez remplir tous les champs");
       return;
     }
@@ -172,7 +173,7 @@ const Menu = () => {
   };
 
   const handleEditItem = () => {
-    if (!formData.name || !formData.description || !formData.price || !formData.category) {
+    if (!formData.name || !formData.description || formData.price === undefined || !formData.category) {
       toast.error("Veuillez remplir tous les champs");
       return;
     }
@@ -180,7 +181,13 @@ const Menu = () => {
     setMenuItems(prevItems => 
       prevItems.map(item => 
         item.id === currentItemId 
-          ? { ...item, ...formData as MenuItem } 
+          ? { 
+              ...item, 
+              name: formData.name!, 
+              description: formData.description!, 
+              price: formData.price!, 
+              category: formData.category as MenuItem["category"] 
+            } 
           : item
       )
     );
