@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,7 +47,7 @@ const popularDishesData = [
   { name: 'Coq au Vin', orders: 52 },
   { name: 'Crème Brûlée', orders: 45 },
   { name: 'Salade Niçoise', orders: 40 },
-  { name: 'Soupe à l'Oignon', orders: 38 }
+  { name: 'Soupe à l\'Oignon', orders: 38 }
 ];
 
 const Reports = () => {
