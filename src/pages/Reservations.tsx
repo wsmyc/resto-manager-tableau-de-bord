@@ -6,13 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { format, isToday, isTomorrow, addDays } from "date-fns";
 import { fr } from "date-fns/locale";
-import { CalendarIcon, Check, X, Search, AlertCircle } from "lucide-react";
+import { CalendarIcon, Check, X, Search, AlertCircle, PlusCircle } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import ReservationForm from "@/components/reservations/ReservationForm";
 
 interface Reservation {
   id: string;
@@ -51,6 +53,16 @@ const Reservations = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [formData, setFormData] = useState<Partial<Reservation>>({
+    customerName: "",
+    phone: "",
+    people: 2,
+    date: new Date(),
+    time: "19:30",
+    notes: "",
+    status: "En attente"
+  });
 
   useEffect(() => {
     // In a real application, this would fetch from Firebase
@@ -61,14 +73,9 @@ const Reservations = () => {
         
         // Mock data with dates around today
         const today = new Date();
-        const tomorrow = new Date();
-        tomorrow.setDate(today.getDate() + 1);
-        
-        const dayAfterTomorrow = new Date();
-        dayAfterTomorrow.setDate(today.getDate() + 2);
-        
-        const yesterday = new Date();
-        yesterday.setDate(today.getDate() - 1);
+        const tomorrow = addDays(today, 1);
+        const dayAfterTomorrow = addDays(today, 2);
+        const yesterday = addDays(today, -1);
         
         const mockReservations: Reservation[] = [
           {
@@ -202,11 +209,88 @@ const Reservations = () => {
     return a.time.localeCompare(b.time);
   });
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleDateChange = (date: Date | undefined) => {
+    setFormData({
+      ...formData,
+      date
+    });
+  };
+
+  const handleTimeChange = (value: string) => {
+    setFormData({
+      ...formData,
+      time: value
+    });
+  };
+
+  const handlePeopleChange = (value: string) => {
+    setFormData({
+      ...formData,
+      people: parseInt(value)
+    });
+  };
+
+  const resetForm = () => {
+    setFormData({
+      customerName: "",
+      phone: "",
+      people: 2,
+      date: new Date(),
+      time: "19:30",
+      notes: "",
+      status: "En attente"
+    });
+  };
+
+  const handleAddReservation = () => {
+    if (!formData.customerName || !formData.phone || !formData.date || !formData.time || !formData.people) {
+      toast.error("Veuillez remplir tous les champs obligatoires");
+      return;
+    }
+
+    const newReservation: Reservation = {
+      id: `RSV-${String(reservations.length + 1).padStart(3, '0')}`,
+      customerName: formData.customerName,
+      phone: formData.phone,
+      people: formData.people,
+      date: formData.date,
+      time: formData.time,
+      status: "En attente",
+      notes: formData.notes
+    };
+
+    setReservations([...reservations, newReservation]);
+    toast.success("Réservation ajoutée");
+    setIsAddDialogOpen(false);
+    resetForm();
+  };
+
+  const formatDateLabel = (date: Date) => {
+    if (isToday(date)) return "Aujourd'hui";
+    if (isTomorrow(date)) return "Demain";
+    return format(date, "P", { locale: fr });
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <Card className="card-dashboard">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-xl font-semibold text-restaurant-primary">Réservations</CardTitle>
+          <Button 
+            className="bg-restaurant-primary hover:bg-restaurant-primary/90"
+            onClick={() => setIsAddDialogOpen(true)}
+          >
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Nouvelle Réservation
+          </Button>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -306,7 +390,7 @@ const Reservations = () => {
                       <TableCell>{reservation.customerName}</TableCell>
                       <TableCell>{reservation.phone}</TableCell>
                       <TableCell>{reservation.people}</TableCell>
-                      <TableCell>{format(reservation.date, "P", { locale: fr })}</TableCell>
+                      <TableCell>{formatDateLabel(reservation.date)}</TableCell>
                       <TableCell>{reservation.time}</TableCell>
                       <TableCell>
                         <ReservationStatusBadge status={reservation.status} />
@@ -346,6 +430,28 @@ const Reservations = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Add Reservation Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Nouvelle Réservation</DialogTitle>
+          </DialogHeader>
+          <ReservationForm
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleDateChange={handleDateChange}
+            handleTimeChange={handleTimeChange}
+            handlePeopleChange={handlePeopleChange}
+            onSubmit={handleAddReservation}
+            onCancel={() => {
+              setIsAddDialogOpen(false);
+              resetForm();
+            }}
+            submitLabel="Ajouter"
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
