@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { PlusCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
-import { PlusCircle, Pencil, Trash2, AlertCircle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import MenuItemForm from "@/components/menu/MenuItemForm";
+import MenuItemTable from "@/components/menu/MenuItemTable";
+import MenuFilters from "@/components/menu/MenuFilters";
 
 interface MenuItem {
   id: string;
@@ -243,89 +241,24 @@ const Menu = () => {
                   Ajoutez un nouvel article à votre menu. Cliquez sur sauvegarder lorsque vous avez terminé.
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Nom de l'Article</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="input-field"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Input
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    className="input-field"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="price">Prix (€)</Label>
-                  <Input
-                    id="price"
-                    name="price"
-                    type="number"
-                    step="0.01"
-                    value={formData.price}
-                    onChange={handleInputChange}
-                    className="input-field"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="category">Catégorie</Label>
-                  <Select 
-                    value={formData.category as string} 
-                    onValueChange={handleCategoryChange}
-                  >
-                    <SelectTrigger className="input-field">
-                      <SelectValue placeholder="Sélectionner une catégorie" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Entrées">Entrées</SelectItem>
-                      <SelectItem value="Plats">Plats</SelectItem>
-                      <SelectItem value="Desserts">Desserts</SelectItem>
-                      <SelectItem value="Boissons">Boissons</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>Annuler</Button>
-                <Button className="bg-restaurant-primary hover:bg-restaurant-primary/90" onClick={handleAddItem}>Ajouter</Button>
-              </DialogFooter>
+              <MenuItemForm
+                formData={formData}
+                handleInputChange={handleInputChange}
+                handleCategoryChange={handleCategoryChange}
+                onSubmit={handleAddItem}
+                onCancel={() => setIsAddDialogOpen(false)}
+                submitLabel="Ajouter"
+              />
             </DialogContent>
           </Dialog>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="relative flex-1">
-              <Input
-                placeholder="Rechercher un article..."
-                className="input-field"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div className="w-full sm:w-64">
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="input-field">
-                  <SelectValue placeholder="Toutes les catégories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Toutes les catégories</SelectItem>
-                  <SelectItem value="Entrées">Entrées</SelectItem>
-                  <SelectItem value="Plats">Plats</SelectItem>
-                  <SelectItem value="Desserts">Desserts</SelectItem>
-                  <SelectItem value="Boissons">Boissons</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <MenuFilters
+            searchQuery={searchQuery}
+            categoryFilter={categoryFilter}
+            onSearchChange={setSearchQuery}
+            onCategoryChange={setCategoryFilter}
+          />
 
           {isLoading ? (
             <div className="text-center py-8">
@@ -339,53 +272,11 @@ const Menu = () => {
               <p className="text-gray-500 mt-1">Essayez de modifier vos filtres ou votre recherche</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nom de l'Article</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Prix</TableHead>
-                    <TableHead>Catégorie</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredMenuItems.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell className="font-medium">{item.name}</TableCell>
-                      <TableCell className="max-w-xs truncate">{item.description}</TableCell>
-                      <TableCell>{item.price.toFixed(2)}€</TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="bg-restaurant-primary/10 text-restaurant-primary border-restaurant-primary/20">
-                          {item.category}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            onClick={() => openEditDialog(item)}
-                            className="h-8 w-8"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            onClick={() => openDeleteDialog(item.id)}
-                            className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <MenuItemTable
+              items={filteredMenuItems}
+              onEdit={openEditDialog}
+              onDelete={openDeleteDialog}
+            />
           )}
         </CardContent>
       </Card>
@@ -398,61 +289,14 @@ const Menu = () => {
               Modifiez les détails de l'article de menu. Cliquez sur sauvegarder lorsque vous avez terminé.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="edit-name">Nom de l'Article</Label>
-              <Input
-                id="edit-name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="input-field"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-description">Description</Label>
-              <Input
-                id="edit-description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                className="input-field"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-price">Prix (€)</Label>
-              <Input
-                id="edit-price"
-                name="price"
-                type="number"
-                step="0.01"
-                value={formData.price}
-                onChange={handleInputChange}
-                className="input-field"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-category">Catégorie</Label>
-              <Select 
-                value={formData.category as string} 
-                onValueChange={handleCategoryChange}
-              >
-                <SelectTrigger className="input-field">
-                  <SelectValue placeholder="Sélectionner une catégorie" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Entrées">Entrées</SelectItem>
-                  <SelectItem value="Plats">Plats</SelectItem>
-                  <SelectItem value="Desserts">Desserts</SelectItem>
-                  <SelectItem value="Boissons">Boissons</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Annuler</Button>
-            <Button className="bg-restaurant-primary hover:bg-restaurant-primary/90" onClick={handleEditItem}>Sauvegarder</Button>
-          </DialogFooter>
+          <MenuItemForm
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleCategoryChange={handleCategoryChange}
+            onSubmit={handleEditItem}
+            onCancel={() => setIsEditDialogOpen(false)}
+            submitLabel="Sauvegarder"
+          />
         </DialogContent>
       </Dialog>
 
@@ -464,15 +308,10 @@ const Menu = () => {
               Êtes-vous sûr de vouloir supprimer cet article du menu ? Cette action ne peut pas être annulée.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <div className="flex justify-end space-x-2 mt-4">
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Annuler</Button>
-            <Button 
-              variant="destructive" 
-              onClick={handleDeleteItem}
-            >
-              Supprimer
-            </Button>
-          </DialogFooter>
+            <Button variant="destructive" onClick={handleDeleteItem}>Supprimer</Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
