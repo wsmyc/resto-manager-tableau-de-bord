@@ -178,7 +178,7 @@ const Orders = () => {
                   <SelectValue placeholder="Tous les statuts" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Tous les statuts</SelectItem>
+                  <SelectItem value="all">Tous les statuts</SelectItem>
                   <SelectItem value="En attente">En attente</SelectItem>
                   <SelectItem value="En préparation">En préparation</SelectItem>
                   <SelectItem value="Prêt">Prêt</SelectItem>
