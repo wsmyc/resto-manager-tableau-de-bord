@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -50,7 +49,6 @@ const Orders = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // In a real application, this would be a Firestore query
     const fetchOrders = async () => {
       setIsLoading(true);
       try {
@@ -145,11 +143,11 @@ const Orders = () => {
   };
 
   const filteredOrders = orders.filter(order => {
-    const matchesSearch = order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          order.items.some(item => item.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesSearch = 
+      order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.id.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesStatus = statusFilter === "" || order.status === statusFilter;
+    const matchesStatus = statusFilter === "all" || order.status === statusFilter;
     
     return matchesSearch && matchesStatus;
   });

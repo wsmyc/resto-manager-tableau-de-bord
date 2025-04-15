@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -36,12 +35,10 @@ const Menu = () => {
   const [categoryFilter, setCategoryFilter] = useState("");
 
   useEffect(() => {
-    // In a real application, this would fetch from Firebase Firestore
     const fetchMenuItems = async () => {
       setIsLoading(true);
       try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        // Mock data
         const mockMenuItems: MenuItem[] = [
           {
             id: "item-001",
@@ -162,7 +159,6 @@ const Menu = () => {
       return;
     }
 
-    // In a real application, this would add to Firestore
     const newItem: MenuItem = {
       id: `item-${Date.now()}`,
       name: formData.name,
@@ -183,7 +179,6 @@ const Menu = () => {
       return;
     }
 
-    // In a real application, this would update Firestore
     setMenuItems(prevItems => 
       prevItems.map(item => 
         item.id === currentItemId 
@@ -198,7 +193,6 @@ const Menu = () => {
   };
 
   const handleDeleteItem = () => {
-    // In a real application, this would delete from Firestore
     setMenuItems(prevItems => prevItems.filter(item => item.id !== currentItemId));
     toast.success("Article supprimé");
     setIsDeleteDialogOpen(false);
@@ -225,7 +219,7 @@ const Menu = () => {
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = categoryFilter === "" || item.category === categoryFilter;
+    const matchesCategory = categoryFilter === "all" || item.category === categoryFilter;
     
     return matchesSearch && matchesCategory;
   });
@@ -396,7 +390,6 @@ const Menu = () => {
         </CardContent>
       </Card>
 
-      {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -463,7 +456,6 @@ const Menu = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
