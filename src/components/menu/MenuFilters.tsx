@@ -31,7 +31,7 @@ const MenuFilters = ({
             <SelectValue placeholder="Toutes les catégories" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes les catégories</SelectItem>
+            <SelectItem value="all-categories">Toutes les catégories</SelectItem>
             <SelectItem value="Entrées">Entrées</SelectItem>
             <SelectItem value="Plats">Plats</SelectItem>
             <SelectItem value="Desserts">Desserts</SelectItem>

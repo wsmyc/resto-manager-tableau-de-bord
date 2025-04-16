@@ -51,7 +51,7 @@ const Reservations = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("all-statuses");
   const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [formData, setFormData] = useState<Partial<Reservation>>({
@@ -190,7 +190,7 @@ const Reservations = () => {
       reservation.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       reservation.phone.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesStatus = statusFilter === "" || reservation.status === statusFilter;
+    const matchesStatus = statusFilter === "all-statuses" || reservation.status === statusFilter;
     
     const matchesDate = !dateFilter || 
       (reservation.date.getDate() === dateFilter.getDate() &&
@@ -225,6 +225,7 @@ const Reservations = () => {
   };
 
   const handleTimeChange = (value: string) => {
+    if (value === "default") return;
     setFormData({
       ...formData,
       time: value
@@ -232,6 +233,7 @@ const Reservations = () => {
   };
 
   const handlePeopleChange = (value: string) => {
+    if (value === "default") return;
     setFormData({
       ...formData,
       people: parseInt(value)
@@ -309,7 +311,7 @@ const Reservations = () => {
                   <SelectValue placeholder="Tous les statuts" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Tous les statuts</SelectItem>
+                  <SelectItem value="all-statuses">Tous les statuts</SelectItem>
                   <SelectItem value="En attente">En attente</SelectItem>
                   <SelectItem value="Confirmée">Confirmée</SelectItem>
                   <SelectItem value="Annulée">Annulée</SelectItem>

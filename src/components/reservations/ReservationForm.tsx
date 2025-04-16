@@ -75,13 +75,14 @@ const ReservationForm = ({
       <div className="grid gap-2">
         <Label htmlFor="people">Nombre de Personnes</Label>
         <Select 
-          value={formData.people?.toString() || ""} 
+          value={formData.people?.toString() || "default"} 
           onValueChange={handlePeopleChange}
         >
           <SelectTrigger className="input-field">
             <SelectValue placeholder="Sélectionner" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="default" disabled>Sélectionner</SelectItem>
             {[1, 2, 3, 4, 5, 6, 7, 8, 10, 12].map(num => (
               <SelectItem key={num} value={num.toString()}>{num}</SelectItem>
             ))}
@@ -123,13 +124,14 @@ const ReservationForm = ({
       <div className="grid gap-2">
         <Label htmlFor="time">Heure</Label>
         <Select 
-          value={formData.time || ""} 
+          value={formData.time || "default"} 
           onValueChange={handleTimeChange}
         >
           <SelectTrigger className="input-field">
             <SelectValue placeholder="Sélectionner" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="default" disabled>Sélectionner une heure</SelectItem>
             {timeSlots.map(time => (
               <SelectItem key={time} value={time}>{time}</SelectItem>
             ))}
