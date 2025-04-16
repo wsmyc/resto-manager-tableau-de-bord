@@ -33,9 +33,13 @@ const MenuFilters = ({
           <SelectContent>
             <SelectItem value="all-categories">Toutes les catégories</SelectItem>
             <SelectItem value="Entrées">Entrées</SelectItem>
-            <SelectItem value="Plats">Plats</SelectItem>
+            <SelectItem value="Burgers & Sandwichs">Burgers & Sandwichs</SelectItem>
+            <SelectItem value="Plats Traditionnels">Plats Traditionnels</SelectItem>
+            <SelectItem value="Options Végétariennes">Options Végétariennes</SelectItem>
+            <SelectItem value="Accompagnements">Accompagnements</SelectItem>
+            <SelectItem value="Boissons Chaudes">Boissons Chaudes</SelectItem>
+            <SelectItem value="Boissons Froides">Boissons Froides</SelectItem>
             <SelectItem value="Desserts">Desserts</SelectItem>
-            <SelectItem value="Boissons">Boissons</SelectItem>
           </SelectContent>
         </Select>
       </div>

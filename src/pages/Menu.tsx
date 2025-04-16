@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PlusCircle, AlertCircle } from "lucide-react";
+import { PlusCircle, AlertCircle, Utensils, Burger, ChefHat, Leaf, CupSoda, Cake } from "lucide-react";
 import { toast } from "sonner";
 import MenuItemForm from "@/components/menu/MenuItemForm";
 import MenuItemTable from "@/components/menu/MenuItemTable";
@@ -14,7 +13,15 @@ interface MenuItem {
   name: string;
   description: string;
   price: number;
-  category: "Entrées" | "Plats" | "Desserts" | "Boissons";
+  category: 
+    | "Entrées"
+    | "Burgers & Sandwichs"
+    | "Plats Traditionnels"
+    | "Options Végétariennes"
+    | "Accompagnements"
+    | "Boissons Chaudes"
+    | "Boissons Froides"
+    | "Desserts";
 }
 
 const Menu = () => {
@@ -41,52 +48,52 @@ const Menu = () => {
         const mockMenuItems: MenuItem[] = [
           {
             id: "item-001",
-            name: "Soupe à l'Oignon",
-            description: "Soupe à l'oignon gratinée avec croûtons et fromage gruyère",
-            price: 8.50,
-            category: "Entrées"
-          },
-          {
-            id: "item-002",
-            name: "Escargots de Bourgogne",
-            description: "Escargots servis avec du beurre à l'ail et aux herbes",
-            price: 12.00,
-            category: "Entrées"
-          },
-          {
-            id: "item-003",
             name: "Salade Niçoise",
             description: "Salade avec thon, œufs, tomates, olives et anchois",
             price: 10.50,
             category: "Entrées"
           },
           {
+            id: "item-002",
+            name: "Burger Classic",
+            description: "Burger de bœuf avec fromage, laitue et tomate",
+            price: 12.90,
+            category: "Burgers & Sandwichs"
+          },
+          {
+            id: "item-003",
+            name: "Coq au Vin",
+            description: "Poulet mijoté au vin rouge avec lardons et champignons",
+            price: 16.50,
+            category: "Plats Traditionnels"
+          },
+          {
             id: "item-004",
-            name: "Bœuf Bourguignon",
-            description: "Ragoût de bœuf mijoté au vin rouge avec carottes et champignons",
-            price: 18.90,
-            category: "Plats"
+            name: "Ratatouille Végétarienne",
+            description: "Plat de légumes provençaux mijotés",
+            price: 14.00,
+            category: "Options Végétariennes"
           },
           {
             id: "item-005",
-            name: "Coq au Vin",
-            description: "Poulet braisé dans du vin rouge avec lardons et champignons",
-            price: 16.50,
-            category: "Plats"
+            name: "Frites Maison",
+            description: "Frites croustillantes faites maison",
+            price: 4.50,
+            category: "Accompagnements"
           },
           {
             id: "item-006",
-            name: "Ratatouille",
-            description: "Plat de légumes provençaux mijotés",
-            price: 14.00,
-            category: "Plats"
+            name: "Café Expresso",
+            description: "Café expresso italien traditionnel",
+            price: 2.50,
+            category: "Boissons Chaudes"
           },
           {
             id: "item-007",
-            name: "Crème Brûlée",
-            description: "Crème à la vanille avec une couche de sucre caramélisé",
-            price: 7.50,
-            category: "Desserts"
+            name: "Limonade Fraîche",
+            description: "Limonade maison rafraîchissante",
+            price: 3.50,
+            category: "Boissons Froides"
           },
           {
             id: "item-008",
@@ -94,20 +101,6 @@ const Menu = () => {
             description: "Tarte aux pommes caramélisées renversée",
             price: 8.00,
             category: "Desserts"
-          },
-          {
-            id: "item-009",
-            name: "Vin Rouge - Bordeaux",
-            description: "Bouteille de vin rouge de la région de Bordeaux",
-            price: 28.00,
-            category: "Boissons"
-          },
-          {
-            id: "item-010",
-            name: "Vin Blanc - Chablis",
-            description: "Bouteille de vin blanc de la région de Chablis",
-            price: 25.00,
-            category: "Boissons"
           }
         ];
         setMenuItems(mockMenuItems);
