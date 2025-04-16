@@ -1,8 +1,17 @@
+import { 
+  PlusCircle, 
+  AlertCircle, 
+  Utensils, 
+  Hamburger as BurgerIcon,
+  ChefHat, 
+  Leaf, 
+  CupSoda, 
+  Cake 
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PlusCircle, AlertCircle, Utensils, Burger as BurgerIcon, ChefHat, Leaf, CupSoda, Cake } from "lucide-react";
 import { toast } from "sonner";
 import MenuItemForm from "@/components/menu/MenuItemForm";
 import MenuItemTable from "@/components/menu/MenuItemTable";
