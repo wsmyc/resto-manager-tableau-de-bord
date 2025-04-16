@@ -1,8 +1,9 @@
+
 import { 
   PlusCircle, 
   AlertCircle, 
   Utensils, 
-  Hamburger as BurgerIcon,
+  Menu as BurgerIcon,
   ChefHat, 
   Leaf, 
   CupSoda, 
