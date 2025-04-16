@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PlusCircle, AlertCircle, Utensils, Burger, ChefHat, Leaf, CupSoda, Cake } from "lucide-react";
+import { PlusCircle, AlertCircle, Utensils, Burger as BurgerIcon, ChefHat, Leaf, CupSoda, Cake } from "lucide-react";
 import { toast } from "sonner";
 import MenuItemForm from "@/components/menu/MenuItemForm";
 import MenuItemTable from "@/components/menu/MenuItemTable";
@@ -31,14 +31,14 @@ const Menu = () => {
     name: "",
     description: "",
     price: 0,
-    category: "Plats"
+    category: "Plats Traditionnels"
   });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentItemId, setCurrentItemId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all-categories");
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -141,7 +141,7 @@ const Menu = () => {
       name: "",
       description: "",
       price: 0,
-      category: "Plats"
+      category: "Plats Traditionnels"
     });
   };
 
@@ -217,7 +217,7 @@ const Menu = () => {
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = categoryFilter === "all" || item.category === categoryFilter;
+    const matchesCategory = categoryFilter === "all-categories" || item.category === categoryFilter;
     
     return matchesSearch && matchesCategory;
   });

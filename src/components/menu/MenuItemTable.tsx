@@ -9,7 +9,15 @@ interface MenuItem {
   name: string;
   description: string;
   price: number;
-  category: "Entrées" | "Plats" | "Desserts" | "Boissons";
+  category: 
+    | "Entrées"
+    | "Burgers & Sandwichs"
+    | "Plats Traditionnels"
+    | "Options Végétariennes"
+    | "Accompagnements"
+    | "Boissons Chaudes"
+    | "Boissons Froides"
+    | "Desserts";
 }
 
 interface MenuItemTableProps {
