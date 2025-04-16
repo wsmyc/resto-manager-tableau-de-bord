@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -90,6 +91,127 @@ const Reports = () => {
                     Catégories
                   </TabsTrigger>
                 </TabsList>
+              
+                <TabsContent value="revenue">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg font-medium flex items-center gap-2">
+                        <CircleDollarSign className="h-5 w-5 text-restaurant-accent" />
+                        {reportType === "weekly" 
+                          ? "Revenus Hebdomadaires" 
+                          : reportType === "monthly" 
+                          ? "Revenus Mensuels" 
+                          : "Revenus Annuels"}
+                      </CardTitle>
+                      <div className="text-sm text-muted-foreground">
+                        Total: {calculateTotalRevenue(reportType === "weekly" ? weeklyRevenueData : monthlyRevenueData).toLocaleString()}€
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-80">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart
+                            data={reportType === "weekly" ? weeklyRevenueData : monthlyRevenueData}
+                            margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip 
+                              formatter={(value) => [`${value}€`, 'Revenus']}
+                              contentStyle={{
+                                backgroundColor: 'white',
+                                borderRadius: '0.5rem',
+                                border: 'none',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                              }}
+                            />
+                            <Bar dataKey="revenue" fill="#245536" radius={[4, 4, 0, 0]} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="dishes">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg font-medium flex items-center gap-2">
+                        <PieChartIcon className="h-5 w-5 text-restaurant-accent" />
+                        Plats les Plus Populaires
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-80">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart
+                            layout="vertical"
+                            data={popularDishesData}
+                            margin={{ top: 10, right: 30, left: 80, bottom: 5 }}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+                            <XAxis type="number" />
+                            <YAxis dataKey="name" type="category" />
+                            <Tooltip 
+                              formatter={(value) => [`${value}`, 'Commandes']}
+                              contentStyle={{
+                                backgroundColor: 'white',
+                                borderRadius: '0.5rem',
+                                border: 'none',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                              }}
+                            />
+                            <Bar dataKey="orders" fill="#ba3400" radius={[0, 4, 4, 0]} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="categories">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg font-medium flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-restaurant-accent" />
+                        Ventes par Catégorie
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-80 flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={salesByCategoryData}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="value"
+                              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            >
+                              {salesByCategoryData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                              ))}
+                            </Pie>
+                            <Tooltip 
+                              formatter={(value) => [`${value}%`, 'Pourcentage']}
+                              contentStyle={{
+                                backgroundColor: 'white',
+                                borderRadius: '0.5rem',
+                                border: 'none',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                              }}
+                            />
+                            <Legend />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
               </Tabs>
             </div>
             <div className="flex flex-row gap-4">
@@ -113,127 +235,6 @@ const Reports = () => {
               </Button>
             </div>
           </div>
-
-          <TabsContent value="revenue">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-medium flex items-center gap-2">
-                  <CircleDollarSign className="h-5 w-5 text-restaurant-accent" />
-                  {reportType === "weekly" 
-                    ? "Revenus Hebdomadaires" 
-                    : reportType === "monthly" 
-                    ? "Revenus Mensuels" 
-                    : "Revenus Annuels"}
-                </CardTitle>
-                <div className="text-sm text-muted-foreground">
-                  Total: {calculateTotalRevenue(reportType === "weekly" ? weeklyRevenueData : monthlyRevenueData).toLocaleString()}€
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={reportType === "weekly" ? weeklyRevenueData : monthlyRevenueData}
-                      margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip 
-                        formatter={(value) => [`${value}€`, 'Revenus']}
-                        contentStyle={{
-                          backgroundColor: 'white',
-                          borderRadius: '0.5rem',
-                          border: 'none',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                        }}
-                      />
-                      <Bar dataKey="revenue" fill="#245536" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="dishes">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-medium flex items-center gap-2">
-                  <PieChartIcon className="h-5 w-5 text-restaurant-accent" />
-                  Plats les Plus Populaires
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      layout="vertical"
-                      data={popularDishesData}
-                      margin={{ top: 10, right: 30, left: 80, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-                      <XAxis type="number" />
-                      <YAxis dataKey="name" type="category" />
-                      <Tooltip 
-                        formatter={(value) => [`${value}`, 'Commandes']}
-                        contentStyle={{
-                          backgroundColor: 'white',
-                          borderRadius: '0.5rem',
-                          border: 'none',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                        }}
-                      />
-                      <Bar dataKey="orders" fill="#ba3400" radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="categories">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-medium flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-restaurant-accent" />
-                  Ventes par Catégorie
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-80 flex items-center justify-center">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={salesByCategoryData}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      >
-                        {salesByCategoryData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip 
-                        formatter={(value) => [`${value}%`, 'Pourcentage']}
-                        contentStyle={{
-                          backgroundColor: 'white',
-                          borderRadius: '0.5rem',
-                          border: 'none',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                        }}
-                      />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
         </CardContent>
       </Card>
 
