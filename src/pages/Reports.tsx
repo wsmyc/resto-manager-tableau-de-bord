@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,13 +34,20 @@ const monthlyRevenueData = [
 ];
 
 const salesByCategoryData = [
-  { name: 'Entrées', value: 22 },
-  { name: 'Plats', value: 40 },
-  { name: 'Desserts', value: 18 },
-  { name: 'Boissons', value: 20 }
+  { name: 'Entrées', value: 10 },
+  { name: 'Burgers & Sandwichs', value: 15 },
+  { name: 'Plats Traditionnels', value: 25 },
+  { name: 'Options Végétariennes', value: 12 },
+  { name: 'Accompagnements', value: 8 },
+  { name: 'Boissons Chaudes', value: 7 },
+  { name: 'Boissons Froides', value: 13 },
+  { name: 'Desserts', value: 10 }
 ];
 
-const COLORS = ['#245536', '#ba3400', '#db9051', '#e9b975'];
+const COLORS = [
+  '#245536', '#ba3400', '#db9051', '#e9b975', 
+  '#5c8d76', '#f06e28', '#94c6ac', '#ffd166'
+];
 
 const popularDishesData = [
   { name: 'Bœuf Bourguignon', orders: 68 },
@@ -56,7 +62,6 @@ const Reports = () => {
   const [reportCategory, setReportCategory] = useState("revenue");
   
   const handleGeneratePDF = () => {
-    // In a real application, this would use jsPDF or a similar library
     toast.success("Génération du PDF en cours...");
     setTimeout(() => {
       toast.success("PDF généré avec succès");
