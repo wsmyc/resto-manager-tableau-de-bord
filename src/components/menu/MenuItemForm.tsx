@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogFooter } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 interface MenuItem {
   id: string;
@@ -27,6 +28,7 @@ interface MenuItem {
     | "Salades"
     | "Plats Rapides"
     | "Végétarien";
+  ingredients?: string;
 }
 
 interface MenuItemFormProps {
@@ -66,6 +68,17 @@ const MenuItemForm = ({
           value={formData.description || ""}
           onChange={handleInputChange}
           className="input-field"
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="ingredients">Ingrédients</Label>
+        <Textarea
+          id="ingredients"
+          name="ingredients"
+          value={formData.ingredients || ""}
+          onChange={handleInputChange}
+          className="input-field"
+          rows={3}
         />
       </div>
       <div className="grid gap-2">
