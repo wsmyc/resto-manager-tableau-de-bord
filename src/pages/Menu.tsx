@@ -63,6 +63,7 @@ const Menu = () => {
       try {
         await new Promise(resolve => setTimeout(resolve, 1000));
         const mockMenuItems: MenuItem[] = [
+          // Entrées existantes et nouvelles
           {
             id: "item-001",
             name: "Salade Niçoise",
@@ -71,12 +72,93 @@ const Menu = () => {
             category: "Entrées"
           },
           {
+            id: "item-059",
+            name: "Soupe à l'Oignon",
+            description: "Soupe traditionnelle aux oignons caramélisés, gratinée au fromage comté",
+            price: 7.50,
+            category: "Entrées"
+          },
+          {
+            id: "item-060",
+            name: "Tartare de Saumon",
+            description: "Saumon frais coupé au couteau, citron, aneth, et capres",
+            price: 12.00,
+            category: "Entrées"
+          },
+          {
+            id: "item-061",
+            name: "Quiche Lorraine",
+            description: "Tarte salée avec lardons, œufs, et crème fraîche",
+            price: 8.50,
+            category: "Entrées"
+          },
+          {
+            id: "item-062",
+            name: "Terrine de Campagne",
+            description: "Terrine de porc et foie de volaille, cornichons, et pain de seigle",
+            price: 8.00,
+            category: "Entrées"
+          },
+          {
+            id: "item-063",
+            name: "Œufs Mimosa",
+            description: "Œufs durs farcis à la mayonnaise, paprika doux et herbes fraîches",
+            price: 7.00,
+            category: "Entrées"
+          },
+          
+          // Burgers & Sandwichs existants et nouveaux
+          {
             id: "item-002",
             name: "Burger Classic",
             description: "Burger de bœuf avec fromage, laitue et tomate",
             price: 12.90,
             category: "Burgers & Sandwichs"
           },
+          {
+            id: "item-064",
+            name: "Burger Bistrot",
+            description: "Pain brioché, steak haché charolais, oignons confits, roquefort",
+            price: 15.00,
+            category: "Burgers & Sandwichs"
+          },
+          {
+            id: "item-065",
+            name: "Croque-Monsieur",
+            description: "Classique jambon et fromage gratiné",
+            price: 10.00,
+            category: "Burgers & Sandwichs"
+          },
+          {
+            id: "item-066",
+            name: "Panini Poulet-Ratatouille",
+            description: "Poulet grillé, ratatouille maison, et fromage de chèvre",
+            price: 12.50,
+            category: "Burgers & Sandwichs"
+          },
+          {
+            id: "item-067",
+            name: "Club Sandwich Saumon",
+            description: "Pain toasté, saumon fumé, avocat, crème citronnée",
+            price: 13.00,
+            category: "Burgers & Sandwichs"
+          },
+          {
+            id: "item-068",
+            name: "Wrap Végétarien",
+            description: "Tortilla garnie de légumes grillés, houmous, salade croquante",
+            price: 11.00,
+            category: "Burgers & Sandwichs"
+          },
+          {
+            id: "item-069",
+            name: "Burger Poulet Pané",
+            description: "Poulet croustillant, sauce miel-moutarde, salade, cheddar",
+            price: 14.00,
+            category: "Burgers & Sandwichs"
+          },
+          
+          // Plats Traditionnels existants et nouveaux
           {
             id: "item-003",
             name: "Coq au Vin",
@@ -85,12 +167,93 @@ const Menu = () => {
             category: "Plats Traditionnels"
           },
           {
+            id: "item-070",
+            name: "Bœuf Bourguignon",
+            description: "Bœuf mijoté aux carottes et oignons, sauce riche",
+            price: 17.50,
+            category: "Plats Traditionnels"
+          },
+          {
+            id: "item-071",
+            name: "Ratatouille Provençale",
+            description: "Légumes du soleil rôtis au thym et à l'huile d'olive",
+            price: 13.00,
+            category: "Plats Traditionnels"
+          },
+          {
+            id: "item-072",
+            name: "Quiche aux Poireaux",
+            description: "Tarte aux poireaux et fromage de chèvre",
+            price: 11.00,
+            category: "Plats Traditionnels"
+          },
+          {
+            id: "item-073",
+            name: "Daurade Grillée",
+            description: "Filet de daurade, légumes grillés, et sauce vierge",
+            price: 18.00,
+            category: "Plats Traditionnels"
+          },
+          {
+            id: "item-074",
+            name: "Poulet Basquaise",
+            description: "Poulet mijoté avec poivrons, tomates et herbes du Sud-Ouest",
+            price: 15.00,
+            category: "Plats Traditionnels"
+          },
+          
+          // Options Végétariennes existantes et nouvelles
+          {
             id: "item-004",
             name: "Ratatouille Végétarienne",
             description: "Plat de légumes provençaux mijotés",
             price: 14.00,
             category: "Options Végétariennes"
           },
+          {
+            id: "item-075",
+            name: "Gratin de Légumes",
+            description: "Courgettes, aubergines, et tomates gratinées au fromage",
+            price: 12.00,
+            category: "Options Végétariennes"
+          },
+          {
+            id: "item-076",
+            name: "Galette de Lentilles",
+            description: "Galette de lentilles corail, sauce yaourt-citron",
+            price: 11.50,
+            category: "Options Végétariennes"
+          },
+          {
+            id: "item-077",
+            name: "Lasagnes aux Épinards et Ricotta",
+            description: "Feuilles de lasagnes, sauce tomate, épinards, ricotta fondante",
+            price: 13.00,
+            category: "Options Végétariennes"
+          },
+          {
+            id: "item-078",
+            name: "Curry de Légumes",
+            description: "Légumes de saison mijotés au lait de coco et épices douces",
+            price: 12.50,
+            category: "Options Végétariennes"
+          },
+          {
+            id: "item-079",
+            name: "Pâtes aux Champignons",
+            description: "Tagliatelles fraîches, champignons, crème et herbes",
+            price: 11.00,
+            category: "Options Végétariennes"
+          },
+          {
+            id: "item-080",
+            name: "Tian de Légumes",
+            description: "Aubergines, courgettes, tomates, huile d'olive et herbes de Provence",
+            price: 10.50,
+            category: "Options Végétariennes"
+          },
+          
+          // Accompagnements existants et nouveaux
           {
             id: "item-005",
             name: "Frites Maison",
@@ -99,12 +262,51 @@ const Menu = () => {
             category: "Accompagnements"
           },
           {
+            id: "item-081",
+            name: "Gratin Dauphinois",
+            description: "Pommes de terre, crème fraîche, et noix de muscade",
+            price: 6.50,
+            category: "Accompagnements"
+          },
+          {
+            id: "item-082",
+            name: "Légumes Rôtis",
+            description: "Courgettes, carottes, et poivrons rôtis à l'huile d'olive",
+            price: 5.50,
+            category: "Accompagnements"
+          },
+          {
+            id: "item-083",
+            name: "Purée de Céleri-Rave",
+            description: "Purée onctueuse au céleri-rave et crème fraîche",
+            price: 4.50,
+            category: "Accompagnements"
+          },
+          {
+            id: "item-084",
+            name: "Quinoa aux Herbes",
+            description: "Quinoa, persil, coriandre, et tomates séchées",
+            price: 5.00,
+            category: "Accompagnements"
+          },
+          {
+            id: "item-085",
+            name: "Pommes Sautées à l'Ail",
+            description: "Pommes de terre poêlées avec ail et persil",
+            price: 4.50,
+            category: "Accompagnements"
+          },
+          
+          // Boissons Chaudes
+          {
             id: "item-006",
             name: "Café Expresso",
             description: "Café expresso italien traditionnel",
             price: 2.50,
             category: "Boissons Chaudes"
           },
+          
+          // Boissons Froides
           {
             id: "item-007",
             name: "Limonade Fraîche",
@@ -112,6 +314,8 @@ const Menu = () => {
             price: 3.50,
             category: "Boissons Froides"
           },
+          
+          // Desserts
           {
             id: "item-008",
             name: "Tarte Tatin",
@@ -119,7 +323,43 @@ const Menu = () => {
             price: 8.00,
             category: "Desserts"
           },
-          // Nouvelles entrées - Plats de Viande
+          {
+            id: "item-054",
+            name: "Moelleux au chocolat",
+            description: "Gâteau au chocolat fondant, cœur coulant",
+            price: 6.50,
+            category: "Desserts"
+          },
+          {
+            id: "item-055",
+            name: "Fondant au chocolat",
+            description: "Fondant noir 70% cacao",
+            price: 6.50,
+            category: "Desserts"
+          },
+          {
+            id: "item-056",
+            name: "Panna cotta fruits rouges",
+            description: "Crème gélifiée, coulis de fruits rouges",
+            price: 6.00,
+            category: "Desserts"
+          },
+          {
+            id: "item-057",
+            name: "Tiramisu",
+            description: "Dessert italien au café et mascarpone",
+            price: 6.00,
+            category: "Desserts"
+          },
+          {
+            id: "item-058",
+            name: "Clafoutis aux cerises",
+            description: "Gâteau moelleux aux cerises",
+            price: 5.50,
+            category: "Desserts"
+          },
+          
+          // Plats de Viande
           {
             id: "item-009",
             name: "Entrecôte grillée",
@@ -190,6 +430,7 @@ const Menu = () => {
             price: 10.00,
             category: "Plats de Viande"
           },
+          
           // Poissons & Fruits de Mer
           {
             id: "item-019",
@@ -261,6 +502,7 @@ const Menu = () => {
             price: 22.00,
             category: "Poissons & Fruits de Mer"
           },
+          
           // Pizzas & Tartes
           {
             id: "item-029",
@@ -311,6 +553,7 @@ const Menu = () => {
             price: 14.00,
             category: "Pizzas & Tartes"
           },
+          
           // Pâtes
           {
             id: "item-036",
@@ -354,6 +597,7 @@ const Menu = () => {
             price: 12.50,
             category: "Pâtes"
           },
+          
           // Salades
           {
             id: "item-042",
@@ -383,6 +627,7 @@ const Menu = () => {
             price: 11.00,
             category: "Salades"
           },
+          
           // Plats Rapides
           {
             id: "item-046",
@@ -412,6 +657,7 @@ const Menu = () => {
             price: 9.50,
             category: "Plats Rapides"
           },
+          
           // Végétarien
           {
             id: "item-050",
@@ -440,42 +686,6 @@ const Menu = () => {
             description: "Tofu mariné, légumes sautés à l'asiatique",
             price: 11.50,
             category: "Végétarien"
-          },
-          // Desserts additionnels
-          {
-            id: "item-054",
-            name: "Moelleux au chocolat",
-            description: "Gâteau au chocolat fondant, cœur coulant",
-            price: 6.50,
-            category: "Desserts"
-          },
-          {
-            id: "item-055",
-            name: "Fondant au chocolat",
-            description: "Fondant noir 70% cacao",
-            price: 6.50,
-            category: "Desserts"
-          },
-          {
-            id: "item-056",
-            name: "Panna cotta fruits rouges",
-            description: "Crème gélifiée, coulis de fruits rouges",
-            price: 6.00,
-            category: "Desserts"
-          },
-          {
-            id: "item-057",
-            name: "Tiramisu",
-            description: "Dessert italien au café et mascarpone",
-            price: 6.00,
-            category: "Desserts"
-          },
-          {
-            id: "item-058",
-            name: "Clafoutis aux cerises",
-            description: "Gâteau moelleux aux cerises",
-            price: 5.50,
-            category: "Desserts"
           }
         ];
         setMenuItems(mockMenuItems);
