@@ -40,6 +40,13 @@ const MenuFilters = ({
             <SelectItem value="Boissons Chaudes">Boissons Chaudes</SelectItem>
             <SelectItem value="Boissons Froides">Boissons Froides</SelectItem>
             <SelectItem value="Desserts">Desserts</SelectItem>
+            <SelectItem value="Plats de Viande">Plats de Viande</SelectItem>
+            <SelectItem value="Poissons & Fruits de Mer">Poissons & Fruits de Mer</SelectItem>
+            <SelectItem value="Pizzas & Tartes">Pizzas & Tartes</SelectItem>
+            <SelectItem value="Pâtes">Pâtes</SelectItem>
+            <SelectItem value="Salades">Salades</SelectItem>
+            <SelectItem value="Plats Rapides">Plats Rapides</SelectItem>
+            <SelectItem value="Végétarien">Végétarien</SelectItem>
           </SelectContent>
         </Select>
       </div>
