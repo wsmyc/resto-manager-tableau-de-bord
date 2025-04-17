@@ -17,7 +17,14 @@ interface MenuItem {
     | "Accompagnements"
     | "Boissons Chaudes"
     | "Boissons Froides"
-    | "Desserts";
+    | "Desserts"
+    | "Plats de Viande"
+    | "Poissons & Fruits de Mer"
+    | "Pizzas & Tartes"
+    | "Pâtes"
+    | "Salades"
+    | "Plats Rapides"
+    | "Végétarien";
 }
 
 interface MenuItemTableProps {
