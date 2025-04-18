@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-interface MenuItem {
+export interface MenuItem {
   id: string;
   name: string;
   description: string;

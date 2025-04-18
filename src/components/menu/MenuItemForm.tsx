@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -5,37 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-
-interface MenuItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: 
-    | "Entrées"
-    | "Plats"
-    | "Accompagnements"
-    | "Boissons"
-    | "Desserts";
-  subcategory:
-    | "Soupes et Potages"
-    | "Salades et Crudités"
-    | "Spécialités Froides"
-    | "Spécialités Chaudes"
-    | "Sandwichs et Burgers"
-    | "Cuisine Traditionnelle"
-    | "Poissons et Fruits de Mer"
-    | "Viandes"
-    | "Végétarien"
-    | "Féculents"
-    | "Légumes"
-    | "Boissons Chaudes"
-    | "Boissons Froides"
-    | "Crèmes et Mousses"
-    | "Pâtisseries"
-    | "Fruits et Sorbets";
-  ingredients?: string;
-}
+import { MenuItem } from './MenuItemTable';
 
 interface MenuItemFormProps {
   formData: Partial<MenuItem>;
