@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -43,25 +44,18 @@ const mockIngredientUsage: IngredientUsage[] = [
   { menuItemId: "601", menuItemName: "Café Allongé", ingredientId: "ing-024", ingredientName: "Café", quantityPerServing: 0.02, unit: "kg", category: "Boissons" },
   { menuItemId: "602", menuItemName: "Thé à la Menthe Fraîche", ingredientId: "ing-025", ingredientName: "Thé vert", quantityPerServing: 0.005, unit: "kg", category: "Boissons" },
   { menuItemId: "602", menuItemName: "Thé à la Menthe Fraîche", ingredientId: "ing-026", ingredientName: "Menthe fraîche", quantityPerServing: 0.01, unit: "kg", category: "Herbes" },
-  { menuItemId: "701", menuItemName: "Jus d'Orange Pressé", ingredientId: "ing-027", ingredientName: "Oranges", quantityPerServing: 0.4, unit: "kg", category: "Fruits" }
-];
-
-const additionalIngredientUsage: IngredientUsage[] = [
+  { menuItemId: "701", menuItemName: "Jus d'Orange Pressé", ingredientId: "ing-027", ingredientName: "Oranges", quantityPerServing: 0.4, unit: "kg", category: "Fruits" },
+  // Additional ingredient usage data
   { menuItemId: "103", menuItemName: "Salade César", ingredientId: "ing-028", ingredientName: "Laitue romaine", quantityPerServing: 0.2, unit: "kg", category: "Légumes" },
   { menuItemId: "103", menuItemName: "Salade César", ingredientId: "ing-029", ingredientName: "Poulet grillé", quantityPerServing: 0.12, unit: "kg", category: "Viandes" },
   { menuItemId: "103", menuItemName: "Salade César", ingredientId: "ing-030", ingredientName: "Parmesan", quantityPerServing: 0.03, unit: "kg", category: "Fromages" },
-  
   { menuItemId: "302", menuItemName: "Boeuf Bourguignon", ingredientId: "ing-031", ingredientName: "Bœuf", quantityPerServing: 0.25, unit: "kg", category: "Viandes" },
   { menuItemId: "302", menuItemName: "Boeuf Bourguignon", ingredientId: "ing-032", ingredientName: "Carottes", quantityPerServing: 0.1, unit: "kg", category: "Légumes" },
-  
   { menuItemId: "202", menuItemName: "Club Sandwich", ingredientId: "ing-033", ingredientName: "Pain de mie", quantityPerServing: 3, unit: "unité", category: "Boulangerie" },
   { menuItemId: "202", menuItemName: "Club Sandwich", ingredientId: "ing-034", ingredientName: "Dinde", quantityPerServing: 0.12, unit: "kg", category: "Viandes" },
-  
   { menuItemId: "803", menuItemName: "Mousse au Chocolat", ingredientId: "ing-035", ingredientName: "Chocolat noir", quantityPerServing: 0.08, unit: "kg", category: "Chocolat" },
   { menuItemId: "803", menuItemName: "Mousse au Chocolat", ingredientId: "ing-007", ingredientName: "Œufs", quantityPerServing: 2, unit: "unité", category: "Œufs" }
 ];
-
-const mockIngredientUsage = [...mockIngredientUsage, ...additionalIngredientUsage];
 
 const mockMenuItems = [
   { id: "101", name: "Soupe à l'Oignon", category: "Entrées", subcategory: "Soupes et Potages", price: 7.50, description: "Soupe traditionnelle aux oignons caramélisés, gratinée au fromage comté", ingredients: "Oignons, bouillon de bœuf, comté, pain baguette" },
@@ -77,9 +71,9 @@ const mockMenuItems = [
   { id: "601", name: "Café Allongé", category: "Boissons", subcategory: "Boissons", price: 2.00, description: "Café allongé", ingredients: "Café" },
   { id: "602", name: "Thé à la Menthe Fraîche", category: "Boissons", subcategory: "Boissons", price: 1.50, description: "Thé à la menthe fraîche", ingredients: "Thé vert, menthe fraîche" },
   { id: "701", name: "Jus d'Orange Pressé", category: "Boissons", subcategory: "Boissons", price: 3.00, description: "Jus d'orange pressé", ingredients: "Oranges" },
-  { id: "801", name: "Crème Brûlée", category: "Boissons", subcategory: "Boissons", price: 4.00, description: "Crème brûlée", ingredients: "Crème liquide, œufs, vanille" },
-  { id: "802", name: "Tarte Tatin", category: "Boissons", subcategory: "Boissons", price: 5.00, description: "Tarte tatin", ingredients: "Pommes, pâte feuilletée, beurre" },
-  { id: "803", name: "Mousse au Chocolat", category: "Boissons", subcategory: "Boissons", price: 6.00, description: "Mousse au chocolat", ingredients: "Chocolat noir, œufs" }
+  { id: "801", name: "Crème Brûlée", category: "Desserts", subcategory: "Desserts", price: 4.00, description: "Crème brûlée", ingredients: "Crème liquide, œufs, vanille" },
+  { id: "802", name: "Tarte Tatin", category: "Desserts", subcategory: "Desserts", price: 5.00, description: "Tarte tatin", ingredients: "Pommes, pâte feuilletée, beurre" },
+  { id: "803", name: "Mousse au Chocolat", category: "Desserts", subcategory: "Desserts", price: 6.00, description: "Mousse au chocolat", ingredients: "Chocolat noir, œufs" }
 ];
 
 const mockSales = [
@@ -202,7 +196,7 @@ const IngredientUsageComponent = () => {
                   <TableRow key={index}>
                     <TableCell className="font-medium">{item.name}</TableCell>
                     <TableCell>{item.category}</TableCell>
-                    <TableCell>{item.totalUsage} {item.unit}</TableCell>
+                    <TableCell>{item.totalUsage.toFixed(2)} {item.unit}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
