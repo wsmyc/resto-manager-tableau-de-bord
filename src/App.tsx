@@ -11,6 +11,7 @@ import Orders from "./pages/Orders";
 import Menu from "./pages/Menu";
 import Reservations from "./pages/Reservations";
 import Reports from "./pages/Reports";
+import StockManagement from "./pages/StockManagement";
 import AppLayout from "./components/AppLayout";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/menu" element={<Menu />} />
+            <Route path="/stock" element={<StockManagement />} />
             <Route path="/reservations" element={<Reservations />} />
             <Route path="/reports" element={<Reports />} />
           </Route>

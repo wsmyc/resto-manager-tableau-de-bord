@@ -39,7 +39,7 @@ export const auth = {
   currentUser: null
 };
 
-// Firestore Database Functions
+// Firestore Database Functions for menu management
 export const firestore = {
   // Get collection reference
   collection: (path: string) => ({
@@ -139,5 +139,97 @@ export const firestore = {
   })
 };
 
+// Stock management specific functions
+export const stockService = {
+  getStockItems: async () => {
+    // Simulate API call to get stock items
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve([
+          {
+            id: "ing-001",
+            name: "Oignons",
+            category: "Légumes",
+            quantity: 25,
+            unit: "kg",
+            expiryDate: "2023-05-15",
+            alertThreshold: 5,
+            costPerUnit: 1.75,
+            supplier: "Légumes du Marché"
+          },
+          // More items would come from Firebase in the real implementation
+        ]);
+      }, 500);
+    });
+  },
+  
+  addStockItem: async (item: any) => {
+    // Simulate API call to add a stock item
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({ id: `ing-${Date.now()}` });
+      }, 500);
+    });
+  },
+  
+  updateStockItem: async (id: string, data: any) => {
+    // Simulate API call to update a stock item
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({ success: true });
+      }, 500);
+    });
+  },
+  
+  deleteStockItem: async (id: string) => {
+    // Simulate API call to delete a stock item
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({ success: true });
+      }, 500);
+    });
+  }
+};
+
+// Function to synchronize data with other interfaces
+export const syncWithExternalInterfaces = {
+  // Send updates to Chef's order screen
+  syncWithChefInterface: async (data: any) => {
+    console.log("Syncing with Chef's interface:", data);
+    // In real implementation, this would use Firebase Realtime Database
+    // or Cloud Firestore to sync data with the Chef's interface
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({ success: true });
+      }, 500);
+    });
+  },
+  
+  // Send updates to Server's POS
+  syncWithServerPOS: async (data: any) => {
+    console.log("Syncing with Server's POS:", data);
+    // In real implementation, this would use Firebase Realtime Database
+    // or Cloud Firestore to sync data with the Server's POS
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({ success: true });
+      }, 500);
+    });
+  },
+  
+  // Send updates to Client interface
+  syncWithClientInterface: async (data: any) => {
+    console.log("Syncing with Client interface:", data);
+    // In real implementation, this would use Firebase Realtime Database
+    // or Cloud Firestore to sync data with the Client interface
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({ success: true });
+      }, 500);
+    });
+  }
+};
+
 // For demonstration purposes only
 // In a real app, you would implement proper Firebase integration
+

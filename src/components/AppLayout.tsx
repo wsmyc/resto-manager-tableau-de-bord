@@ -9,7 +9,8 @@ import {
   FileText, 
   LogOut, 
   Menu as MenuIcon, 
-  X 
+  X,
+  Package
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -63,6 +64,11 @@ const AppLayout = () => {
       name: "Menu",
       path: "/menu",
       icon: <Utensils size={20} />,
+    },
+    {
+      name: "Stock",
+      path: "/stock",
+      icon: <Package size={20} />,
     },
     {
       name: "Réservations",
