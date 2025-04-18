@@ -85,7 +85,7 @@ const Menu = () => {
             description: "Terrine de porc et foie de volaille, cornichons, et pain de seigle",
             price: 8.00,
             category: "Entrées",
-            subcategory: "Spécialités Chaudes",
+            subcategory: "Spécialités Froides",
             ingredients: "Porc, foie de volaille, épices"
           },
           {
@@ -112,7 +112,7 @@ const Menu = () => {
             description: "Tranches fines de bœuf marinées à l'huile d'olive et parmesan",
             price: 14.00,
             category: "Entrées",
-            subcategory: "Spécialités Chaudes",
+            subcategory: "Spécialités Froides",
             ingredients: "Bœuf, parmesan, roquette, huile d'olive"
           },
           {
@@ -139,7 +139,7 @@ const Menu = () => {
             description: "Salade verte avec fromage de chèvre grillé sur toast",
             price: 10.50,
             category: "Entrées",
-            subcategory: "Spécialités Chaudes",
+            subcategory: "Salades et Crudités",
             ingredients: "Chèvre, salade, noix, vinaigrette"
           },
           {
@@ -148,7 +148,7 @@ const Menu = () => {
             description: "Oeufs durs garnis de mayonnaise et jaune d'oeuf",
             price: 7.50,
             category: "Entrées",
-            subcategory: "Spécialités Chaudes",
+            subcategory: "Spécialités Froides",
             ingredients: "Oeufs, mayonnaise, ciboulette"
           },
           {
@@ -166,7 +166,7 @@ const Menu = () => {
             description: "Demi-avocat garni de crevettes et sauce cocktail",
             price: 12.50,
             category: "Entrées",
-            subcategory: "Spécialités Chaudes",
+            subcategory: "Spécialités Froides",
             ingredients: "Avocat, crevettes, sauce cocktail, citron"
           },
           {
@@ -175,18 +175,18 @@ const Menu = () => {
             description: "Salade romaine, croûtons, parmesan et sauce césar",
             price: 11.00,
             category: "Entrées",
-            subcategory: "Spécialités Chaudes",
+            subcategory: "Salades et Crudités",
             ingredients: "Poulet, parmesan, croûtons, sauce césar"
           },
           
-          // Burgers & Sandwichs
+          // Plats - Sandwichs et Burgers
           {
             id: "201",
             name: "Burger Bistrot",
             description: "Pain brioché, steak haché charolais, oignons confits, roquefort",
             price: 15.00,
-            category: "Burgers & Sandwichs",
-            subcategory: "Burgers",
+            category: "Plats",
+            subcategory: "Sandwichs et Burgers",
             ingredients: "Bœuf, roquefort, oignons, salade"
           },
           {
@@ -194,8 +194,8 @@ const Menu = () => {
             name: "Croque-Monsieur",
             description: "Classique jambon et fromage gratiné",
             price: 10.00,
-            category: "Burgers & Sandwichs",
-            subcategory: "Sandwichs",
+            category: "Plats",
+            subcategory: "Sandwichs et Burgers",
             ingredients: "Jambon, emmental, pain de mie, béchamel"
           },
           {
@@ -203,8 +203,8 @@ const Menu = () => {
             name: "Panini Poulet-Ratatouille",
             description: "Poulet grillé, ratatouille maison, et fromage de chèvre",
             price: 12.50,
-            category: "Burgers & Sandwichs",
-            subcategory: "Sandwichs",
+            category: "Plats",
+            subcategory: "Sandwichs et Burgers",
             ingredients: "Poulet, courgettes, aubergines, tomates"
           },
           {
@@ -212,8 +212,8 @@ const Menu = () => {
             name: "Burger Végétarien",
             description: "Steak de légumes, avocat, et sauce yaourt",
             price: 13.50,
-            category: "Burgers & Sandwichs",
-            subcategory: "Burgers",
+            category: "Plats",
+            subcategory: "Sandwichs et Burgers",
             ingredients: "Légumes, avocat, yaourt, pain brioché"
           },
           {
@@ -221,8 +221,8 @@ const Menu = () => {
             name: "Baguette Jambon-Beurre",
             description: "Baguette traditionnelle avec jambon et beurre",
             price: 8.00,
-            category: "Burgers & Sandwichs",
-            subcategory: "Sandwichs",
+            category: "Plats",
+            subcategory: "Sandwichs et Burgers",
             ingredients: "Jambon, beurre, baguette"
           },
           {
@@ -230,8 +230,8 @@ const Menu = () => {
             name: "Burger BBQ",
             description: "Steak haché, sauce barbecue, oignons frits",
             price: 16.00,
-            category: "Burgers & Sandwichs",
-            subcategory: "Burgers",
+            category: "Plats",
+            subcategory: "Sandwichs et Burgers",
             ingredients: "Bœuf, sauce BBQ, oignons, cheddar"
           },
           {
@@ -239,8 +239,8 @@ const Menu = () => {
             name: "Panini Saumon-Avocat",
             description: "Saumon fumé, avocat, et fromage frais",
             price: 14.00,
-            category: "Burgers & Sandwichs",
-            subcategory: "Sandwichs",
+            category: "Plats",
+            subcategory: "Sandwichs et Burgers",
             ingredients: "Saumon, avocat, fromage frais, pain panini"
           },
           {
@@ -248,8 +248,8 @@ const Menu = () => {
             name: "Club Sandwich",
             description: "Poulet, bacon, laitue, tomate, et mayonnaise",
             price: 12.00,
-            category: "Burgers & Sandwichs",
-            subcategory: "Sandwichs",
+            category: "Plats",
+            subcategory: "Sandwichs et Burgers",
             ingredients: "Poulet, bacon, tomate, pain de mie"
           },
           {
@@ -257,8 +257,8 @@ const Menu = () => {
             name: "Wrap Poulet-Crudités",
             description: "Poulet grillé, crudités, et sauce fromagère",
             price: 11.50,
-            category: "Burgers & Sandwichs",
-            subcategory: "Sandwichs",
+            category: "Plats",
+            subcategory: "Sandwichs et Burgers",
             ingredients: "Poulet, crudités, tortilla, sauce"
           },
           {
@@ -266,8 +266,8 @@ const Menu = () => {
             name: "Burger Chevre-Miel",
             description: "Steak haché, fromage de chèvre, et miel",
             price: 15.50,
-            category: "Burgers & Sandwichs",
-            subcategory: "Burgers",
+            category: "Plats",
+            subcategory: "Sandwichs et Burgers",
             ingredients: "Bœuf, chèvre, miel, salade"
           },
           
@@ -277,8 +277,8 @@ const Menu = () => {
             name: "Coq au Vin",
             description: "Cuisse de poulet mijotée au vin rouge (sans alcool), champignons",
             price: 16.00,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Cuisine Traditionnelle",
             ingredients: "Poulet, carottes, oignons, bouillon"
           },
           {
@@ -286,8 +286,8 @@ const Menu = () => {
             name: "Boeuf Bourguignon",
             description: "Bœuf mijoté aux carottes et oignons, sauce riche",
             price: 17.50,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Cuisine Traditionnelle",
             ingredients: "Bœuf, lardons, champignons, bouillon"
           },
           {
@@ -295,8 +295,8 @@ const Menu = () => {
             name: "Ratatouille Provençale",
             description: "Légumes du soleil rôtis au thym et à l'huile d'olive",
             price: 13.00,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Cuisine Traditionnelle",
             ingredients: "Aubergines, courgettes, poivrons, tomates"
           },
           {
@@ -304,8 +304,8 @@ const Menu = () => {
             name: "Quiche aux Poireaux",
             description: "Tarte aux poireaux et fromage de chèvre",
             price: 11.00,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Cuisine Traditionnelle",
             ingredients: "Poireaux, chèvre, œufs, crème"
           },
           {
@@ -313,8 +313,8 @@ const Menu = () => {
             name: "Daurade Grillée",
             description: "Filet de daurade, légumes grillés, et sauce vierge",
             price: 18.00,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Poissons et Fruits de Mer",
             ingredients: "Daurade, citron, courgettes, tomates cerises"
           },
           {
@@ -322,8 +322,8 @@ const Menu = () => {
             name: "Blanquette de Veau",
             description: "Veau mijoté à la crème et aux champignons",
             price: 19.00,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Viandes",
             ingredients: "Veau, champignons, crème, carottes"
           },
           {
@@ -331,8 +331,8 @@ const Menu = () => {
             name: "Confit de Canard",
             description: "Cuisse de canard confite, pommes de terre sautées",
             price: 18.50,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Viandes",
             ingredients: "Canard, pommes de terre, ail"
           },
           {
@@ -340,8 +340,8 @@ const Menu = () => {
             name: "Pot-au-Feu",
             description: "Bœuf et légumes mijotés, bouillon parfumé",
             price: 17.00,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Cuisine Traditionnelle",
             ingredients: "Bœuf, carottes, poireaux, navets"
           },
           {
@@ -349,8 +349,8 @@ const Menu = () => {
             name: "Lapin à la Moutarde",
             description: "Lapin mijoté à la moutarde à l'ancienne",
             price: 16.50,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Viandes",
             ingredients: "Lapin, moutarde, crème, échalotes"
           },
           {
@@ -358,8 +358,8 @@ const Menu = () => {
             name: "Andouillette Grillée",
             description: "Andouillette grillée, sauce moutarde",
             price: 15.00,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Viandes",
             ingredients: "Andouillette, moutarde, pommes de terre"
           },
           {
@@ -367,8 +367,8 @@ const Menu = () => {
             name: "Filet Mignon",
             description: "Filet mignon de porc, sauce aux champignons",
             price: 20.00,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Viandes",
             ingredients: "Porc, champignons, crème, échalotes"
           },
           {
@@ -376,8 +376,8 @@ const Menu = () => {
             name: "Saumon en Papillote",
             description: "Saumon cuit en papillote avec légumes",
             price: 19.50,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Poissons et Fruits de Mer",
             ingredients: "Saumon, courgettes, citron, aneth"
           },
           {
@@ -385,8 +385,8 @@ const Menu = () => {
             name: "Poulet Rôti",
             description: "Poulet rôti avec jus de cuisson",
             price: 15.50,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Viandes",
             ingredients: "Poulet, thym, ail, jus de cuisson"
           },
           {
@@ -394,8 +394,8 @@ const Menu = () => {
             name: "Gigot d'Agneau",
             description: "Gigot d'agneau rôti, flageolets",
             price: 22.00,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Viandes",
             ingredients: "Agneau, flageolets, romarin"
           },
           {
@@ -403,8 +403,8 @@ const Menu = () => {
             name: "Cassoulet",
             description: "Haricots blancs, saucisse, et confit de canard",
             price: 16.50,
-            category: "Plats Traditionnels",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Cuisine Traditionnelle",
             ingredients: "Haricots, saucisse, canard, tomates"
           },
           
@@ -414,8 +414,8 @@ const Menu = () => {
             name: "Gratin de Légumes",
             description: "Courgettes, aubergines, et tomates gratinées au fromage",
             price: 12.00,
-            category: "Options Végétariennes",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Végétarien",
             ingredients: "Légumes de saison, béchamel, emmental"
           },
           {
@@ -423,8 +423,8 @@ const Menu = () => {
             name: "Galette de Lentilles",
             description: "Galette de lentilles corail, sauce yaourt-citron",
             price: 11.50,
-            category: "Options Végétariennes",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Végétarien",
             ingredients: "Lentilles, carottes, oignons, épices"
           },
           {
@@ -432,8 +432,8 @@ const Menu = () => {
             name: "Risotto aux Champignons",
             description: "Risotto crémeux aux champignons sauvages",
             price: 14.00,
-            category: "Options Végétariennes",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Végétarien",
             ingredients: "Riz, champignons, parmesan, crème"
           },
           {
@@ -441,8 +441,8 @@ const Menu = () => {
             name: "Tarte aux Legumes",
             description: "Tarte aux légumes de saison et fromage de chèvre",
             price: 12.50,
-            category: "Options Végétariennes",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Végétarien",
             ingredients: "Légumes, chèvre, pâte brisée"
           },
           {
@@ -450,8 +450,8 @@ const Menu = () => {
             name: "Falafel",
             description: "Boulettes de pois chiches, sauce tahini",
             price: 10.50,
-            category: "Options Végétariennes",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Végétarien",
             ingredients: "Pois chiches, tahini, persil"
           },
           {
@@ -459,8 +459,8 @@ const Menu = () => {
             name: "Lasagnes Végétariennes",
             description: "Lasagnes aux légumes et béchamel",
             price: 13.50,
-            category: "Options Végétariennes",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Végétarien",
             ingredients: "Courgettes, aubergines, tomates, béchamel"
           },
           {
@@ -468,8 +468,8 @@ const Menu = () => {
             name: "Curry de Légumes",
             description: "Curry doux aux légumes et lait de coco",
             price: 12.00,
-            category: "Options Végétariennes",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Végétarien",
             ingredients: "Légumes, lait de coco, curry"
           },
           {
@@ -477,8 +477,8 @@ const Menu = () => {
             name: "Pâtes aux Artichauts",
             description: "Pâtes fraîches aux artichauts et parmesan",
             price: 11.50,
-            category: "Options Végétariennes",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Végétarien",
             ingredients: "Pâtes, artichauts, parmesan, crème"
           },
           {
@@ -486,8 +486,8 @@ const Menu = () => {
             name: "Soupe de Lentilles",
             description: "Soupe épicée aux lentilles et légumes",
             price: 9.00,
-            category: "Options Végétariennes",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Végétarien",
             ingredients: "Lentilles, carottes, oignons, épices"
           },
           {
@@ -495,8 +495,8 @@ const Menu = () => {
             name: "Quinoa aux Legumes",
             description: "Quinoa, légumes grillés, et vinaigrette citronnée",
             price: 12.50,
-            category: "Options Végétariennes",
-            subcategory: "Plats",
+            category: "Plats",
+            subcategory: "Végétarien",
             ingredients: "Quinoa, courgettes, poivrons, citron"
           },
           
@@ -507,7 +507,7 @@ const Menu = () => {
             description: "Coupées à la main, sel de Guérande",
             price: 5.00,
             category: "Accompagnements",
-            subcategory: "Plats",
+            subcategory: "Féculents",
             ingredients: "Pommes de terre, huile d'arachide"
           },
           {
@@ -516,7 +516,7 @@ const Menu = () => {
             description: "Pommes de terre, crème fraîche, et noix de muscade",
             price: 6.50,
             category: "Accompagnements",
-            subcategory: "Plats",
+            subcategory: "Féculents",
             ingredients: "Pommes de terre, crème, muscade"
           },
           {
@@ -525,7 +525,7 @@ const Menu = () => {
             description: "Courgettes, carottes, et poivrons rôtis à l'huile d'olive",
             price: 5.50,
             category: "Accompagnements",
-            subcategory: "Plats",
+            subcategory: "Légumes",
             ingredients: "Courgettes, carottes, poivrons, huile d'olive"
           },
           {
@@ -534,7 +534,7 @@ const Menu = () => {
             description: "Purée onctueuse au céleri-rave et crème fraîche",
             price: 4.50,
             category: "Accompagnements",
-            subcategory: "Plats",
+            subcategory: "Légumes",
             ingredients: "Céleri-rave, crème, beurre"
           },
           {
@@ -543,7 +543,7 @@ const Menu = () => {
             description: "Quinoa, persil, coriandre, et tomates séchées",
             price: 5.00,
             category: "Accompagnements",
-            subcategory: "Plats",
+            subcategory: "Féculents",
             ingredients: "Quinoa, persil, coriandre, tomates"
           },
           {
@@ -552,7 +552,7 @@ const Menu = () => {
             description: "Riz basmati parfumé au beurre",
             price: 4.00,
             category: "Accompagnements",
-            subcategory: "Plats",
+            subcategory: "Féculents",
             ingredients: "Riz, beurre"
           },
           {
@@ -561,7 +561,7 @@ const Menu = () => {
             description: "Pommes de terre sautées à l'ail et au persil",
             price: 5.50,
             category: "Accompagnements",
-            subcategory: "Plats",
+            subcategory: "Féculents",
             ingredients: "Pommes de terre, ail, persil"
           },
           {
@@ -570,7 +570,7 @@ const Menu = () => {
             description: "Haricots verts à l'ail",
             price: 4.50,
             category: "Accompagnements",
-            subcategory: "Plats",
+            subcategory: "Légumes",
             ingredients: "Haricots verts, ail, beurre"
           },
           {
@@ -579,7 +579,7 @@ const Menu = () => {
             description: "Polenta crémeuse au parmesan",
             price: 5.00,
             category: "Accompagnements",
-            subcategory: "Plats",
+            subcategory: "Féculents",
             ingredients: "Polenta, parmesan, crème"
           },
           {
@@ -588,7 +588,7 @@ const Menu = () => {
             description: "Petits pois et carottes à la française",
             price: 4.50,
             category: "Accompagnements",
-            subcategory: "Plats",
+            subcategory: "Légumes",
             ingredients: "Petits pois, carottes, oignons"
           },
           
@@ -598,8 +598,8 @@ const Menu = () => {
             name: "Café Allongé",
             description: "Café filtre servi dans une grande tasse",
             price: 3.00,
-            category: "Boissons Chaudes",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Chaudes",
             ingredients: "Café arabica"
           },
           {
@@ -607,8 +607,8 @@ const Menu = () => {
             name: "Thé à la Menthe Fraîche",
             description: "Thé vert à la menthe fraîche et miel",
             price: 4.00,
-            category: "Boissons Chaudes",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Chaudes",
             ingredients: "Thé vert, menthe, miel"
           },
           {
@@ -616,8 +616,8 @@ const Menu = () => {
             name: "Chocolat Viennois",
             description: "Chocolat chaud épais avec chantilly et copeaux de chocolat",
             price: 5.50,
-            category: "Boissons Chaudes",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Chaudes",
             ingredients: "Chocolat noir, crème, sucre"
           },
           {
@@ -625,8 +625,8 @@ const Menu = () => {
             name: "Infusion Verveine-Citron",
             description: "Verveine et zeste de citron bio",
             price: 4.00,
-            category: "Boissons Chaudes",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Chaudes",
             ingredients: "Verveine, citron"
           },
           {
@@ -634,8 +634,8 @@ const Menu = () => {
             name: "Café Noisette",
             description: "Expresso avec une touche de lait mousseux",
             price: 3.50,
-            category: "Boissons Chaudes",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Chaudes",
             ingredients: "Café, lait"
           },
           {
@@ -643,8 +643,8 @@ const Menu = () => {
             name: "Cappuccino",
             description: "Expresso, lait mousseux, et cacao",
             price: 4.50,
-            category: "Boissons Chaudes",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Chaudes",
             ingredients: "Café, lait, cacao"
           },
           {
@@ -652,8 +652,8 @@ const Menu = () => {
             name: "Thé Noir",
             description: "Thé noir de Ceylan",
             price: 3.50,
-            category: "Boissons Chaudes",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Chaudes",
             ingredients: "Thé noir"
           },
           {
@@ -661,8 +661,8 @@ const Menu = () => {
             name: "Latte Macchiato",
             description: "Lait mousseux avec un trait d'expresso",
             price: 5.00,
-            category: "Boissons Chaudes",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Chaudes",
             ingredients: "Lait, café"
           },
           {
@@ -670,8 +670,8 @@ const Menu = () => {
             name: "Chocolat à l'Orange",
             description: "Chocolat chaud parfumé à l'orange",
             price: 5.50,
-            category: "Boissons Chaudes",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Chaudes",
             ingredients: "Chocolat, orange, crème"
           },
           {
@@ -679,8 +679,8 @@ const Menu = () => {
             name: "Thé Chai",
             description: "Thé noir épicé au lait",
             price: 4.50,
-            category: "Boissons Chaudes",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Chaudes",
             ingredients: "Thé, épices, lait"
           },
           
@@ -690,8 +690,8 @@ const Menu = () => {
             name: "Jus d'Orange Pressé",
             description: "Pressé quotidiennement",
             price: 5.00,
-            category: "Boissons Froides",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Froides",
             ingredients: "Oranges fraîches"
           },
           {
@@ -699,8 +699,8 @@ const Menu = () => {
             name: "Limonade Maison",
             description: "Citron, sucre de canne, et eau gazeuse",
             price: 4.50,
-            category: "Boissons Froides",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Froides",
             ingredients: "Citron, sucre, eau"
           },
           {
@@ -708,8 +708,8 @@ const Menu = () => {
             name: "Eau Infusée (Citron/Gingembre)",
             description: "Eau fraîche infusée au citron et gingembre",
             price: 3.50,
-            category: "Boissons Froides",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Froides",
             ingredients: "Citron, gingembre, eau"
           },
           {
@@ -717,8 +717,8 @@ const Menu = () => {
             name: "Smoothie Tropical",
             description: "Mangue, ananas, et banane mixés avec yaourt nature",
             price: 6.00,
-            category: "Boissons Froides",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Froides",
             ingredients: "Mangue, ananas, banane, yaourt"
           },
           {
@@ -726,8 +726,8 @@ const Menu = () => {
             name: "Jus de Pomme",
             description: "Jus de pomme pressé à froid",
             price: 4.50,
-            category: "Boissons Froides",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Froides",
             ingredients: "Pommes"
           },
           {
@@ -735,8 +735,8 @@ const Menu = () => {
             name: "Coca-Cola",
             description: "Soda classique",
             price: 3.50,
-            category: "Boissons Froides",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Froides",
             ingredients: "Eau gazéifiée, sucre, arômes"
           },
           {
@@ -744,8 +744,8 @@ const Menu = () => {
             name: "Perrier",
             description: "Eau minérale gazeuse",
             price: 3.00,
-            category: "Boissons Froides",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Froides",
             ingredients: "Eau minérale"
           },
           {
@@ -753,8 +753,8 @@ const Menu = () => {
             name: "Ice Tea",
             description: "Thé glacé à la pêche",
             price: 4.00,
-            category: "Boissons Froides",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Froides",
             ingredients: "Thé, pêche, sucre"
           },
           {
@@ -762,8 +762,8 @@ const Menu = () => {
             name: "Jus de Carotte",
             description: "Jus de carotte frais",
             price: 5.00,
-            category: "Boissons Froides",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Froides",
             ingredients: "Carottes"
           },
           {
@@ -771,8 +771,8 @@ const Menu = () => {
             name: "Diabolo Menthe",
             description: "Limonade à la menthe",
             price: 4.00,
-            category: "Boissons Froides",
-            subcategory: "Boissons",
+            category: "Boissons",
+            subcategory: "Boissons Froides",
             ingredients: "Limonade, sirop de menthe"
           },
           
@@ -783,7 +783,7 @@ const Menu = () => {
             description: "Crème vanille caramélisée à la torche",
             price: 6.50,
             category: "Desserts",
-            subcategory: "Desserts",
+            subcategory: "Crèmes et Mousses",
             ingredients: "Crème fraîche, vanille, sucre, œufs"
           },
           {
@@ -792,7 +792,7 @@ const Menu = () => {
             description: "Tarte renversée aux pommes caramélisées",
             price: 7.00,
             category: "Desserts",
-            subcategory: "Desserts",
+            subcategory: "Pâtisseries",
             ingredients: "Pommes, sucre, pâte feuilletée"
           },
           {
@@ -801,7 +801,7 @@ const Menu = () => {
             description: "Mousse 70% cacao, chantilly légère",
             price: 6.00,
             category: "Desserts",
-            subcategory: "Desserts",
+            subcategory: "Crèmes et Mousses",
             ingredients: "Chocolat noir, œufs, crème"
           },
           {
@@ -810,7 +810,7 @@ const Menu = () => {
             description: "Meringue légère sur crème anglaise vanillée",
             price: 6.50,
             category: "Desserts",
-            subcategory: "Desserts",
+            subcategory: "Crèmes et Mousses",
             ingredients: "Œufs, lait, vanille"
           },
           {
@@ -819,7 +819,7 @@ const Menu = () => {
             description: "Fruits de saison coupés au couteau (melon, fraises, kiwi)",
             price: 5.50,
             category: "Desserts",
-            subcategory: "Desserts",
+            subcategory: "Fruits et Sorbets",
             ingredients: "Melon, fraises, kiwi"
           },
           {
@@ -828,7 +828,7 @@ const Menu = () => {
             description: "Sorbet artisanal au choix",
             price: 5.00,
             category: "Desserts",
-            subcategory: "Desserts",
+            subcategory: "Fruits et Sorbets",
             ingredients: "Citron ou framboise, eau, sucre"
           },
           {
@@ -837,7 +837,7 @@ const Menu = () => {
             description: "Choux garnis de glace vanille et sauce chocolat",
             price: 7.50,
             category: "Desserts",
-            subcategory: "Desserts",
+            subcategory: "Pâtisseries",
             ingredients: "Choux, glace, chocolat"
           },
           {
@@ -846,7 +846,7 @@ const Menu = () => {
             description: "Gâteau moelleux avec cœur coulant",
             price: 7.00,
             category: "Desserts",
-            subcategory: "Desserts",
+            subcategory: "Pâtisseries",
             ingredients: "Chocolat, beurre, œufs"
           },
           {
@@ -855,7 +855,7 @@ const Menu = () => {
             description: "Dessert italien au café et mascarpone",
             price: 6.50,
             category: "Desserts",
-            subcategory: "Desserts",
+            subcategory: "Crèmes et Mousses",
             ingredients: "Mascarpone, café, biscuits"
           },
           {
@@ -864,7 +864,7 @@ const Menu = () => {
             description: "Clafoutis traditionnel aux cerises",
             price: 6.00,
             category: "Desserts",
-            subcategory: "Desserts",
+            subcategory: "Pâtisseries",
             ingredients: "Cerises, lait, œufs, farine"
           }
         ];
