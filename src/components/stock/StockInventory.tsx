@@ -128,9 +128,17 @@ const StockInventory = () => {
 
   // Handle adding new stock item
   const handleAddItem = (values: z.infer<typeof formSchema>) => {
+    // Here's the fix: create a new item with all required properties explicitly defined
     const newItem: StockItem = {
       id: `ing-${Math.floor(Math.random() * 1000)}`,
-      ...values
+      name: values.name,
+      category: values.category,
+      quantity: values.quantity,
+      unit: values.unit,
+      expiryDate: values.expiryDate,
+      alertThreshold: values.alertThreshold,
+      costPerUnit: values.costPerUnit,
+      supplier: values.supplier
     };
     
     setStockItems([...stockItems, newItem]);
