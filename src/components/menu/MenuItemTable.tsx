@@ -17,20 +17,27 @@ interface MenuItem {
   price: number;
   category: 
     | "Entrées"
-    | "Burgers & Sandwichs"
-    | "Plats Traditionnels"
-    | "Options Végétariennes"
+    | "Plats"
     | "Accompagnements"
+    | "Boissons"
+    | "Desserts";
+  subcategory:
+    | "Soupes et Potages"
+    | "Salades et Crudités"
+    | "Spécialités Froides"
+    | "Spécialités Chaudes"
+    | "Sandwichs et Burgers"
+    | "Cuisine Traditionnelle"
+    | "Poissons et Fruits de Mer"
+    | "Viandes"
+    | "Végétarien"
+    | "Féculents"
+    | "Légumes"
     | "Boissons Chaudes"
     | "Boissons Froides"
-    | "Desserts"
-    | "Plats de Viande"
-    | "Poissons & Fruits de Mer"
-    | "Pizzas & Tartes"
-    | "Pâtes"
-    | "Salades"
-    | "Plats Rapides"
-    | "Végétarien";
+    | "Crèmes et Mousses"
+    | "Pâtisseries"
+    | "Fruits et Sorbets";
   ingredients?: string;
 }
 
@@ -50,6 +57,7 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
             <TableHead>Description</TableHead>
             <TableHead>Prix</TableHead>
             <TableHead>Catégorie</TableHead>
+            <TableHead>Sous-Catégorie</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -81,6 +89,11 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
               <TableCell>
                 <Badge variant="outline" className="bg-restaurant-primary/10 text-restaurant-primary border-restaurant-primary/20">
                   {item.category}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                <Badge variant="outline" className="bg-muted text-muted-foreground">
+                  {item.subcategory}
                 </Badge>
               </TableCell>
               <TableCell>

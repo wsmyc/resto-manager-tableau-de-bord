@@ -5,15 +5,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface MenuFiltersProps {
   searchQuery: string;
   categoryFilter: string;
+  subcategoryFilter: string;
   onSearchChange: (value: string) => void;
   onCategoryChange: (value: string) => void;
+  onSubcategoryChange: (value: string) => void;
 }
 
 const MenuFilters = ({
   searchQuery,
   categoryFilter,
+  subcategoryFilter,
   onSearchChange,
-  onCategoryChange
+  onCategoryChange,
+  onSubcategoryChange
 }: MenuFiltersProps) => {
   return (
     <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -25,7 +29,7 @@ const MenuFilters = ({
           onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
-      <div className="w-full sm:w-64">
+      <div className="w-full sm:w-48">
         <Select value={categoryFilter} onValueChange={onCategoryChange}>
           <SelectTrigger className="input-field">
             <SelectValue placeholder="Toutes les catégories" />
@@ -33,20 +37,36 @@ const MenuFilters = ({
           <SelectContent>
             <SelectItem value="all-categories">Toutes les catégories</SelectItem>
             <SelectItem value="Entrées">Entrées</SelectItem>
-            <SelectItem value="Burgers & Sandwichs">Burgers & Sandwichs</SelectItem>
-            <SelectItem value="Plats Traditionnels">Plats Traditionnels</SelectItem>
-            <SelectItem value="Options Végétariennes">Options Végétariennes</SelectItem>
+            <SelectItem value="Plats">Plats</SelectItem>
             <SelectItem value="Accompagnements">Accompagnements</SelectItem>
+            <SelectItem value="Boissons">Boissons</SelectItem>
+            <SelectItem value="Desserts">Desserts</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="w-full sm:w-48">
+        <Select value={subcategoryFilter} onValueChange={onSubcategoryChange}>
+          <SelectTrigger className="input-field">
+            <SelectValue placeholder="Toutes les sous-catégories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all-subcategories">Toutes les sous-catégories</SelectItem>
+            <SelectItem value="Soupes et Potages">Soupes et Potages</SelectItem>
+            <SelectItem value="Salades et Crudités">Salades et Crudités</SelectItem>
+            <SelectItem value="Spécialités Froides">Spécialités Froides</SelectItem>
+            <SelectItem value="Spécialités Chaudes">Spécialités Chaudes</SelectItem>
+            <SelectItem value="Sandwichs et Burgers">Sandwichs et Burgers</SelectItem>
+            <SelectItem value="Cuisine Traditionnelle">Cuisine Traditionnelle</SelectItem>
+            <SelectItem value="Poissons et Fruits de Mer">Poissons et Fruits de Mer</SelectItem>
+            <SelectItem value="Viandes">Viandes</SelectItem>
+            <SelectItem value="Végétarien">Végétarien</SelectItem>
+            <SelectItem value="Féculents">Féculents</SelectItem>
+            <SelectItem value="Légumes">Légumes</SelectItem>
             <SelectItem value="Boissons Chaudes">Boissons Chaudes</SelectItem>
             <SelectItem value="Boissons Froides">Boissons Froides</SelectItem>
-            <SelectItem value="Desserts">Desserts</SelectItem>
-            <SelectItem value="Plats de Viande">Plats de Viande</SelectItem>
-            <SelectItem value="Poissons & Fruits de Mer">Poissons & Fruits de Mer</SelectItem>
-            <SelectItem value="Pizzas & Tartes">Pizzas & Tartes</SelectItem>
-            <SelectItem value="Pâtes">Pâtes</SelectItem>
-            <SelectItem value="Salades">Salades</SelectItem>
-            <SelectItem value="Plats Rapides">Plats Rapides</SelectItem>
-            <SelectItem value="Végétarien">Végétarien</SelectItem>
+            <SelectItem value="Crèmes et Mousses">Crèmes et Mousses</SelectItem>
+            <SelectItem value="Pâtisseries">Pâtisseries</SelectItem>
+            <SelectItem value="Fruits et Sorbets">Fruits et Sorbets</SelectItem>
           </SelectContent>
         </Select>
       </div>

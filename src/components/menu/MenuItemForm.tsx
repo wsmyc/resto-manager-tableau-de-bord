@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,20 +13,27 @@ interface MenuItem {
   price: number;
   category: 
     | "Entrées"
-    | "Burgers & Sandwichs"
-    | "Plats Traditionnels"
-    | "Options Végétariennes"
+    | "Plats"
     | "Accompagnements"
+    | "Boissons"
+    | "Desserts";
+  subcategory:
+    | "Soupes et Potages"
+    | "Salades et Crudités"
+    | "Spécialités Froides"
+    | "Spécialités Chaudes"
+    | "Sandwichs et Burgers"
+    | "Cuisine Traditionnelle"
+    | "Poissons et Fruits de Mer"
+    | "Viandes"
+    | "Végétarien"
+    | "Féculents"
+    | "Légumes"
     | "Boissons Chaudes"
     | "Boissons Froides"
-    | "Desserts"
-    | "Plats de Viande"
-    | "Poissons & Fruits de Mer"
-    | "Pizzas & Tartes"
-    | "Pâtes"
-    | "Salades"
-    | "Plats Rapides"
-    | "Végétarien";
+    | "Crèmes et Mousses"
+    | "Pâtisseries"
+    | "Fruits et Sorbets";
   ingredients?: string;
 }
 
@@ -35,6 +41,7 @@ interface MenuItemFormProps {
   formData: Partial<MenuItem>;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleCategoryChange: (value: string) => void;
+  handleSubcategoryChange: (value: string) => void;
   onSubmit: () => void;
   onCancel: () => void;
   submitLabel: string;
@@ -44,12 +51,14 @@ const MenuItemForm = ({
   formData,
   handleInputChange,
   handleCategoryChange,
+  handleSubcategoryChange,
   onSubmit,
   onCancel,
   submitLabel
 }: MenuItemFormProps) => {
   return (
     <div className="grid gap-4 py-4">
+      
       <div className="grid gap-2">
         <Label htmlFor="name">Nom de l'Article</Label>
         <Input
@@ -93,6 +102,7 @@ const MenuItemForm = ({
           className="input-field"
         />
       </div>
+      
       <div className="grid gap-2">
         <Label htmlFor="category">Catégorie</Label>
         <Select 
@@ -104,23 +114,44 @@ const MenuItemForm = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Entrées">Entrées</SelectItem>
-            <SelectItem value="Burgers & Sandwichs">Burgers & Sandwichs</SelectItem>
-            <SelectItem value="Plats Traditionnels">Plats Traditionnels</SelectItem>
-            <SelectItem value="Options Végétariennes">Options Végétariennes</SelectItem>
+            <SelectItem value="Plats">Plats</SelectItem>
             <SelectItem value="Accompagnements">Accompagnements</SelectItem>
-            <SelectItem value="Boissons Chaudes">Boissons Chaudes</SelectItem>
-            <SelectItem value="Boissons Froides">Boissons Froides</SelectItem>
+            <SelectItem value="Boissons">Boissons</SelectItem>
             <SelectItem value="Desserts">Desserts</SelectItem>
-            <SelectItem value="Plats de Viande">Plats de Viande</SelectItem>
-            <SelectItem value="Poissons & Fruits de Mer">Poissons & Fruits de Mer</SelectItem>
-            <SelectItem value="Pizzas & Tartes">Pizzas & Tartes</SelectItem>
-            <SelectItem value="Pâtes">Pâtes</SelectItem>
-            <SelectItem value="Salades">Salades</SelectItem>
-            <SelectItem value="Plats Rapides">Plats Rapides</SelectItem>
-            <SelectItem value="Végétarien">Végétarien</SelectItem>
           </SelectContent>
         </Select>
       </div>
+
+      <div className="grid gap-2">
+        <Label htmlFor="subcategory">Sous-Catégorie</Label>
+        <Select 
+          value={formData.subcategory || ""} 
+          onValueChange={handleSubcategoryChange}
+        >
+          <SelectTrigger className="input-field">
+            <SelectValue placeholder="Sélectionner une sous-catégorie" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Soupes et Potages">Soupes et Potages</SelectItem>
+            <SelectItem value="Salades et Crudités">Salades et Crudités</SelectItem>
+            <SelectItem value="Spécialités Froides">Spécialités Froides</SelectItem>
+            <SelectItem value="Spécialités Chaudes">Spécialités Chaudes</SelectItem>
+            <SelectItem value="Sandwichs et Burgers">Sandwichs et Burgers</SelectItem>
+            <SelectItem value="Cuisine Traditionnelle">Cuisine Traditionnelle</SelectItem>
+            <SelectItem value="Poissons et Fruits de Mer">Poissons et Fruits de Mer</SelectItem>
+            <SelectItem value="Viandes">Viandes</SelectItem>
+            <SelectItem value="Végétarien">Végétarien</SelectItem>
+            <SelectItem value="Féculents">Féculents</SelectItem>
+            <SelectItem value="Légumes">Légumes</SelectItem>
+            <SelectItem value="Boissons Chaudes">Boissons Chaudes</SelectItem>
+            <SelectItem value="Boissons Froides">Boissons Froides</SelectItem>
+            <SelectItem value="Crèmes et Mousses">Crèmes et Mousses</SelectItem>
+            <SelectItem value="Pâtisseries">Pâtisseries</SelectItem>
+            <SelectItem value="Fruits et Sorbets">Fruits et Sorbets</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <DialogFooter>
         <Button variant="outline" onClick={onCancel}>Annuler</Button>
         <Button className="bg-restaurant-primary hover:bg-restaurant-primary/90" onClick={onSubmit}>
