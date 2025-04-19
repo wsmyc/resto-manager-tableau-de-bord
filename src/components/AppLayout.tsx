@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { 
@@ -10,7 +9,8 @@ import {
   LogOut, 
   Menu as MenuIcon, 
   X,
-  Package
+  Package,
+  Users
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -22,25 +22,20 @@ const AppLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check if we're on mobile and set sidebar accordingly
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 1024);
       setIsSidebarOpen(window.innerWidth >= 1024);
     };
 
-    // Initial check
     checkScreenSize();
 
-    // Add event listener
     window.addEventListener("resize", checkScreenSize);
 
-    // Clean up
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   const handleLogout = () => {
-    // In a real application, this would be firebase.auth().signOut()
     toast.success("Déconnexion réussie");
     navigate("/login");
   };
@@ -76,6 +71,11 @@ const AppLayout = () => {
       icon: <Calendar size={20} />,
     },
     {
+      name: "Employés",
+      path: "/employees",
+      icon: <Users size={20} />,
+    },
+    {
       name: "Rapports",
       path: "/reports",
       icon: <FileText size={20} />,
@@ -84,7 +84,6 @@ const AppLayout = () => {
 
   return (
     <div className="flex h-screen bg-restaurant-background">
-      {/* Sidebar for mobile that shows conditionally */}
       <div 
         className={cn(
           "fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden transition-opacity",
@@ -94,7 +93,6 @@ const AppLayout = () => {
         onClick={() => setIsSidebarOpen(false)}
       />
 
-      {/* Sidebar */}
       <aside
         className={cn(
           "fixed lg:static h-full z-30 bg-sidebar w-64 shadow-xl transition-transform duration-300 ease-in-out transform lg:transform-none",
@@ -148,9 +146,7 @@ const AppLayout = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
         <header className="bg-white shadow-sm z-10">
           <div className="px-4 sm:px-6 py-4 flex justify-between items-center">
             <Button
@@ -172,7 +168,6 @@ const AppLayout = () => {
           </div>
         </header>
 
-        {/* Main content */}
         <main className="flex-1 overflow-auto p-4 sm:p-6">
           <Outlet />
         </main>
