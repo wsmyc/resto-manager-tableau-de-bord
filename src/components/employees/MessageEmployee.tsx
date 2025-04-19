@@ -1,0 +1,70 @@
+
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+
+interface Employee {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: 'Chef' | 'Serveur';
+  salary: number;
+}
+
+interface MessageEmployeeProps {
+  employee: Employee;
+  onClose: () => void;
+}
+
+export const MessageEmployee = ({ employee, onClose }: MessageEmployeeProps) => {
+  const [message, setMessage] = useState("");
+
+  const handleSendMessage = () => {
+    if (!message.trim()) {
+      toast.error("Veuillez entrer un message");
+      return;
+    }
+    
+    console.log(`Message envoyé à ${employee.firstName} ${employee.lastName}:`, message);
+    toast.success("Message envoyé avec succès");
+    setMessage("");
+    onClose();
+  };
+
+  return (
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>
+            Envoyer un message à {employee.firstName} {employee.lastName}
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <Textarea
+            placeholder="Écrivez votre message ici..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="min-h-[100px]"
+          />
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={onClose}>
+              Annuler
+            </Button>
+            <Button onClick={handleSendMessage}>
+              Envoyer
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};

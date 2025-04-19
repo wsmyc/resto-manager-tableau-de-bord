@@ -22,7 +22,8 @@ import {
 import { toast } from "sonner"
 
 const formSchema = z.object({
-  fullName: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
+  firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères"),
+  lastName: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
   email: z.string().email("Email invalide"),
   phone: z.string().min(10, "Numéro de téléphone invalide"),
   role: z.enum(["Chef", "Serveur"]),
@@ -36,7 +37,8 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
+      firstName: "",
+      lastName: "",
       email: "",
       phone: "",
       role: "Serveur",
@@ -54,12 +56,25 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="fullName"
+          name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom Complet</FormLabel>
+              <FormLabel>Prénom</FormLabel>
               <FormControl>
-                <Input placeholder="Jean Dupont" {...field} />
+                <Input placeholder="Jean" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nom</FormLabel>
+              <FormControl>
+                <Input placeholder="Dupont" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
