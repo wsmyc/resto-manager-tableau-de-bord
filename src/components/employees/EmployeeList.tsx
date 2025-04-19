@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { User, Mail, Phone, BriefCase } from 'lucide-react';
+import { User, Mail, Phone, Briefcase } from 'lucide-react';
 
 interface Employee {
   id: number;
@@ -66,7 +66,7 @@ export const EmployeeList = () => {
                 {employee.phone}
               </TableCell>
               <TableCell className="flex items-center gap-2">
-                <BriefCase className="h-4 w-4 text-muted-foreground" />
+                <Briefcase className="h-4 w-4 text-muted-foreground" />
                 {employee.role}
               </TableCell>
               <TableCell>{employee.salary} €/mois</TableCell>
