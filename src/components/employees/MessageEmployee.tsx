@@ -5,10 +5,12 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { Send } from "lucide-react";
 
 interface Employee {
   id: number;
@@ -47,6 +49,9 @@ export const MessageEmployee = ({ employee, onClose }: MessageEmployeeProps) => 
           <DialogTitle>
             Envoyer un message à {employee.firstName} {employee.lastName}
           </DialogTitle>
+          <DialogDescription>
+            Le message sera envoyé directement à l'employé par email et notification.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <Textarea
@@ -60,6 +65,7 @@ export const MessageEmployee = ({ employee, onClose }: MessageEmployeeProps) => 
               Annuler
             </Button>
             <Button onClick={handleSendMessage}>
+              <Send className="mr-2 h-4 w-4" />
               Envoyer
             </Button>
           </div>
