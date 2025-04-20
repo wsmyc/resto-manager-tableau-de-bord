@@ -11,23 +11,15 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Send } from "lucide-react";
-
-interface Employee {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  role: 'Chef' | 'Serveur';
-  salary: number;
-}
+import { Employee } from "./EmployeeList";
 
 interface MessageEmployeeProps {
   employee: Employee;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-export const MessageEmployee = ({ employee, onClose }: MessageEmployeeProps) => {
+export const MessageEmployee = ({ employee, onClose, onSuccess }: MessageEmployeeProps) => {
   const [message, setMessage] = useState("");
 
   const handleSendMessage = () => {
@@ -39,6 +31,7 @@ export const MessageEmployee = ({ employee, onClose }: MessageEmployeeProps) => 
     console.log(`Message envoyé à ${employee.firstName} ${employee.lastName}:`, message);
     toast.success("Message envoyé avec succès");
     setMessage("");
+    if (onSuccess) onSuccess();
     onClose();
   };
 

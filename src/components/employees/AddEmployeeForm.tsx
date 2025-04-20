@@ -20,17 +20,24 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { toast } from "sonner"
+import { Employee } from "./EmployeeList"
 
 const formSchema = z.object({
   firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères"),
   lastName: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
   email: z.string().email("Email invalide"),
-  phone: z.string().min(10, "Numéro de téléphone invalide"),
+  phone: z.string().min(10, "Numéro de téléphone invalide").transform(value => {
+    // Supprimer tous les espaces existants
+    let cleaned = value.replace(/\s/g, '');
+    // Reformater avec des espaces tous les 2 chiffres
+    return cleaned.replace(/(\d{2})(?=\d)/g, "$1 ");
+  }),
   role: z.enum(["Chef", "Serveur"]),
+  salary: z.coerce.number().min(0, "Le salaire doit être un nombre positif"),
 })
 
 interface AddEmployeeFormProps {
-  onSuccess: () => void;
+  onSuccess: (employee: Employee) => void;
 }
 
 export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
@@ -42,44 +49,68 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
       email: "",
       phone: "",
       role: "Serveur",
+      salary: 1800,
     },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    toast.success("Employé ajouté avec succès")
-    onSuccess()
+    // Créer un nouvel employé avec un ID généré
+    const newEmployee: Employee = {
+      id: Date.now(),
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      phone: values.phone,
+      role: values.role,
+      salary: values.salary,
+    };
+    
+    console.log("Nouvel employé ajouté:", newEmployee);
+    toast.success("Employé ajouté avec succès");
+    onSuccess(newEmployee);
+    form.reset();
   }
+
+  // Fonction pour formater le numéro de téléphone pendant la saisie
+  const formatPhoneNumber = (value: string) => {
+    // Supprimer tous les caractères non numériques
+    const cleaned = value.replace(/\D/g, '');
+    // Ajouter des espaces tous les 2 chiffres
+    const formatted = cleaned.replace(/(\d{2})(?=\d)/g, "$1 ");
+    return formatted;
+  };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Prénom</FormLabel>
-              <FormControl>
-                <Input placeholder="Jean" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nom</FormLabel>
-              <FormControl>
-                <Input placeholder="Dupont" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Prénom</FormLabel>
+                <FormControl>
+                  <Input placeholder="Jean" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nom</FormLabel>
+                <FormControl>
+                  <Input placeholder="Dupont" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="email"
@@ -100,33 +131,55 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
             <FormItem>
               <FormLabel>Téléphone</FormLabel>
               <FormControl>
-                <Input placeholder="06 12 34 56 78" {...field} />
+                <Input 
+                  placeholder="06 12 34 56 78" 
+                  {...field} 
+                  onChange={(e) => {
+                    const formatted = formatPhoneNumber(e.target.value);
+                    field.onChange(formatted);
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Rôle</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Rôle</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner un rôle" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Chef">Chef</SelectItem>
+                    <SelectItem value="Serveur">Serveur</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="salary"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Salaire (€/mois)</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner un rôle" />
-                  </SelectTrigger>
+                  <Input type="number" min={0} step={100} {...field} />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="Chef">Chef</SelectItem>
-                  <SelectItem value="Serveur">Serveur</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <div className="flex justify-end">
           <Button type="submit">Ajouter l'employé</Button>
         </div>
