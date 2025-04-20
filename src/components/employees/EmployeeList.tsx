@@ -48,7 +48,7 @@ export const EmployeeList = () => {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-md border">
+      <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -58,28 +58,36 @@ export const EmployeeList = () => {
               <TableHead>Téléphone</TableHead>
               <TableHead>Rôle</TableHead>
               <TableHead>Salaire (€)</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead className="w-[80px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {mockEmployees.map((employee) => (
               <TableRow key={employee.id}>
-                <TableCell className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  {employee.firstName}
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <span>{employee.firstName}</span>
+                  </div>
                 </TableCell>
                 <TableCell>{employee.lastName}</TableCell>
-                <TableCell className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
-                  {employee.email}
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <span className="truncate max-w-[180px]">{employee.email}</span>
+                  </div>
                 </TableCell>
-                <TableCell className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
-                  {employee.phone}
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <span>{employee.phone}</span>
+                  </div>
                 </TableCell>
-                <TableCell className="flex items-center gap-2">
-                  <Briefcase className="h-4 w-4 text-muted-foreground" />
-                  {employee.role}
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <span>{employee.role}</span>
+                  </div>
                 </TableCell>
                 <TableCell>{employee.salary} €/mois</TableCell>
                 <TableCell>
@@ -87,6 +95,7 @@ export const EmployeeList = () => {
                     variant="ghost"
                     size="icon"
                     onClick={() => setSelectedEmployee(employee)}
+                    title="Envoyer un message"
                   >
                     <MessageSquare className="h-4 w-4" />
                   </Button>

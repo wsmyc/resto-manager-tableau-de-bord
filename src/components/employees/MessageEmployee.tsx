@@ -44,27 +44,30 @@ export const MessageEmployee = ({ employee, onClose }: MessageEmployeeProps) => 
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader className="mb-2">
+          <DialogTitle className="text-xl">
             Envoyer un message à {employee.firstName} {employee.lastName}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="mt-1">
             Le message sera envoyé directement à l'employé par email et notification.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-4">
+        <div className="space-y-4 py-2">
           <Textarea
             placeholder="Écrivez votre message ici..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="min-h-[100px]"
+            className="min-h-[120px] w-full resize-none focus:border-restaurant-accent"
           />
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-3 pt-2">
             <Button variant="outline" onClick={onClose}>
               Annuler
             </Button>
-            <Button onClick={handleSendMessage}>
+            <Button 
+              onClick={handleSendMessage}
+              className="bg-restaurant-accent hover:bg-restaurant-accent/90"
+            >
               <Send className="mr-2 h-4 w-4" />
               Envoyer
             </Button>

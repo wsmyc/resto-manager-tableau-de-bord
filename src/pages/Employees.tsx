@@ -10,9 +10,9 @@ const Employees = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-restaurant-primary">Gestion des Employés</h1>
+    <div className="container mx-auto p-4 md:p-6 space-y-6 max-w-6xl">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold text-restaurant-primary">Gestion des Employés</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-restaurant-accent hover:bg-restaurant-accent/90">
@@ -20,9 +20,9 @@ const Employees = () => {
               Nouvel Employé
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[525px]">
+          <DialogContent className="sm:max-w-[550px]">
             <DialogHeader>
-              <DialogTitle>Ajouter un Nouvel Employé</DialogTitle>
+              <DialogTitle className="text-xl">Ajouter un Nouvel Employé</DialogTitle>
             </DialogHeader>
             <AddEmployeeForm onSuccess={() => setIsDialogOpen(false)} />
           </DialogContent>
