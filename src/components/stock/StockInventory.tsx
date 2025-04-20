@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Stock item interface
 export interface StockItem {
   id: string;
   name: string;
@@ -26,7 +24,6 @@ export interface StockItem {
   supplier: string;
 }
 
-// Sample stock data
 const sampleStock: StockItem[] = [
   {
     id: "ing-001",
@@ -85,7 +82,6 @@ const sampleStock: StockItem[] = [
   }
 ];
 
-// Form schema for adding new stock
 const formSchema = z.object({
   name: z.string().min(2, { message: "Le nom est requis" }),
   category: z.string().min(1, { message: "La catégorie est requise" }),
@@ -102,6 +98,7 @@ const StockInventory = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [restockQuantity, setRestockQuantity] = useState<{ [key: string]: number }>({});
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -118,7 +115,6 @@ const StockInventory = () => {
     },
   });
 
-  // Filter stock items based on search and category
   const filteredItems = stockItems.filter((item) => {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           item.supplier.toLowerCase().includes(searchQuery.toLowerCase());
@@ -126,9 +122,7 @@ const StockInventory = () => {
     return matchesSearch && matchesCategory;
   });
 
-  // Handle adding new stock item
   const handleAddItem = (values: z.infer<typeof formSchema>) => {
-    // Here's the fix: create a new item with all required properties explicitly defined
     const newItem: StockItem = {
       id: `ing-${Math.floor(Math.random() * 1000)}`,
       name: values.name,
@@ -150,10 +144,30 @@ const StockInventory = () => {
     });
   };
 
-  // Get unique categories for filter
+  const handleRestock = (itemId: string) => {
+    const quantity = restockQuantity[itemId];
+    if (!quantity || quantity <= 0) {
+      toast.error("Veuillez spécifier une quantité valide");
+      return;
+    }
+    
+    const updatedItems = stockItems.map(item => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          quantity: item.quantity + quantity
+        };
+      }
+      return item;
+    });
+    
+    setStockItems(updatedItems);
+    setRestockQuantity(prev => ({ ...prev, [itemId]: 0 }));
+    toast.success(`Réapprovisionnement effectué avec succès`);
+  };
+
   const categories = ["all", ...new Set(stockItems.map(item => item.category))];
 
-  // Check if item is near expiry (less than 7 days)
   const isNearExpiry = (expiryDate: string) => {
     const today = new Date();
     const expiry = new Date(expiryDate);
@@ -162,12 +176,10 @@ const StockInventory = () => {
     return diffDays <= 7 && diffDays > 0;
   };
 
-  // Check if item is expired
   const isExpired = (expiryDate: string) => {
     return new Date(expiryDate) < new Date();
   };
 
-  // Check if item is below threshold
   const isBelowThreshold = (quantity: number, threshold: number) => {
     return quantity <= threshold;
   };
@@ -402,13 +414,23 @@ const StockInventory = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => {
-                        toast({
-                          title: "Commander",
-                          description: `Commande de ${item.name} envoyée au fournisseur`,
-                        });
-                      }}>
+                    <div className="flex space-x-2 items-center">
+                      <Input
+                        type="number"
+                        min="1"
+                        value={restockQuantity[item.id] || ""}
+                        onChange={(e) => setRestockQuantity(prev => ({
+                          ...prev,
+                          [item.id]: parseFloat(e.target.value) || 0
+                        }))}
+                        placeholder="Qté"
+                        className="w-20"
+                      />
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleRestock(item.id)}
+                      >
                         <RefreshCw className="h-4 w-4 mr-1" />
                         Commander
                       </Button>

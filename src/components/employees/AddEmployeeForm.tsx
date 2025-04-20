@@ -1,4 +1,3 @@
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -26,12 +25,19 @@ const formSchema = z.object({
   firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères"),
   lastName: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
   email: z.string().email("Email invalide"),
-  phone: z.string().min(10, "Numéro de téléphone invalide").transform(value => {
-    // Supprimer tous les espaces existants
-    let cleaned = value.replace(/\s/g, '');
-    // Reformater avec des espaces tous les 2 chiffres
-    return cleaned.replace(/(\d{2})(?=\d)/g, "$1 ");
-  }),
+  phone: z.string()
+    .min(10, "Numéro de téléphone invalide")
+    .max(14, "Numéro de téléphone trop long")
+    .transform(value => {
+      // Supprimer tous les caractères non numériques
+      const cleaned = value.replace(/\D/g, '');
+      // Vérifier si le numéro a plus de 12 chiffres
+      if (cleaned.length > 12) {
+        return cleaned.slice(0, 12);
+      }
+      // Reformater avec des espaces tous les 2 chiffres
+      return cleaned.replace(/(\d{2})(?=\d)/g, "$1 ");
+    }),
   role: z.enum(["Chef", "Serveur"]),
   salary: z.coerce.number().min(0, "Le salaire doit être un nombre positif"),
 })
@@ -53,22 +59,36 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Créer un nouvel employé avec un ID généré
-    const newEmployee: Employee = {
-      id: Date.now(),
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-      phone: values.phone,
-      role: values.role,
-      salary: values.salary,
-    };
-    
-    console.log("Nouvel employé ajouté:", newEmployee);
-    toast.success("Employé ajouté avec succès");
-    onSuccess(newEmployee);
-    form.reset();
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      // Vérifier l'email avec l'API Abstract
+      const response = await fetch(`https://emailverification.whoisxmlapi.com/api/v2?apiKey=at_2rB2RVVFv1WQkWcpqQF0x6NSC4LOi&emailAddress=${values.email}`);
+      const data = await response.json();
+      
+      if (!response.ok || data.formatCheck !== 'true' || data.smtpCheck !== 'true') {
+        toast.error("L'adresse email n'est pas valide ou n'existe pas");
+        return;
+      }
+
+      // Créer un nouvel employé avec un ID généré
+      const newEmployee: Employee = {
+        id: Date.now(),
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        phone: values.phone,
+        role: values.role,
+        salary: values.salary,
+      };
+      
+      console.log("Nouvel employé ajouté:", newEmployee);
+      toast.success("Employé ajouté avec succès");
+      onSuccess(newEmployee);
+      form.reset();
+    } catch (error) {
+      console.error("Erreur lors de la vérification de l'email:", error);
+      toast.error("Erreur lors de la vérification de l'email");
+    }
   }
 
   // Fonction pour formater le numéro de téléphone pendant la saisie
