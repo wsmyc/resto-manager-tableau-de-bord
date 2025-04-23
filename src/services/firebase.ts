@@ -1,6 +1,43 @@
 
 // Firebase Configuration and Services
 
+// Define proper types for our data structures
+interface User {
+  uid: string;
+  email: string;
+  displayName?: string;
+  photoURL?: string;
+}
+
+interface FirebaseAuthResponse {
+  user: User;
+}
+
+interface DocumentData {
+  id?: string;
+  [key: string]: any; // This allows for dynamic fields in documents
+}
+
+interface DocumentSnapshot {
+  exists: boolean;
+  id: string;
+  data: () => DocumentData;
+}
+
+interface QuerySnapshot {
+  docs: DocumentSnapshot[];
+}
+
+interface Employee {
+  id?: string | number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: string;
+  salary: number;
+}
+
 // 1. Firebase Configuration
 // Replace these values with your own Firebase project configuration
 export const firebaseConfig = {
@@ -15,7 +52,7 @@ export const firebaseConfig = {
 // 2. Firebase Authentication Functions
 export const auth = {
   // Sign in with email and password
-  signInWithEmailAndPassword: async (email: string, password: string) => {
+  signInWithEmailAndPassword: async (email: string, password: string): Promise<FirebaseAuthResponse> => {
     // TODO: Replace with actual Firebase Auth implementation
     // return signInWithEmailAndPassword(auth, email, password);
     
@@ -32,7 +69,7 @@ export const auth = {
   },
   
   // Create user with email and password
-  createUserWithEmailAndPassword: async (email: string, password: string) => {
+  createUserWithEmailAndPassword: async (email: string, password: string): Promise<FirebaseAuthResponse> => {
     // TODO: Replace with actual Firebase Auth implementation
     // return createUserWithEmailAndPassword(auth, email, password);
     
@@ -49,7 +86,7 @@ export const auth = {
   },
   
   // Sign out
-  signOut: async () => {
+  signOut: async (): Promise<void> => {
     // TODO: Replace with actual Firebase Auth implementation
     // return signOut(auth);
     
@@ -62,7 +99,7 @@ export const auth = {
   currentUser: null,
 
   // Update user profile
-  updateProfile: async (user: any, profile: {displayName?: string, photoURL?: string}) => {
+  updateProfile: async (user: User, profile: {displayName?: string, photoURL?: string}): Promise<boolean> => {
     // TODO: Replace with actual Firebase Auth implementation
     // return updateProfile(user, profile);
     
@@ -82,7 +119,7 @@ export const firestore = {
     // Get document by ID
     doc: (id: string) => ({
       // Get document data
-      get: async () => {
+      get: async (): Promise<DocumentSnapshot> => {
         // TODO: Replace with actual Firestore implementation
         // return getDoc(doc(db, path, id));
         
@@ -99,7 +136,7 @@ export const firestore = {
       },
       
       // Set document data
-      set: async (data: any) => {
+      set: async (data: DocumentData): Promise<void> => {
         // TODO: Replace with actual Firestore implementation
         // return setDoc(doc(db, path, id), data);
         
@@ -111,7 +148,7 @@ export const firestore = {
       },
       
       // Update document data
-      update: async (data: any) => {
+      update: async (data: DocumentData): Promise<void> => {
         // TODO: Replace with actual Firestore implementation
         // return updateDoc(doc(db, path, id), data);
         
@@ -123,7 +160,7 @@ export const firestore = {
       },
       
       // Delete document
-      delete: async () => {
+      delete: async (): Promise<void> => {
         // TODO: Replace with actual Firestore implementation
         // return deleteDoc(doc(db, path, id));
         
@@ -136,7 +173,7 @@ export const firestore = {
     }),
     
     // Add document to collection
-    add: async (data: any) => {
+    add: async (data: DocumentData): Promise<{id: string}> => {
       // TODO: Replace with actual Firestore implementation
       // return addDoc(collection(db, path), data);
       
@@ -151,7 +188,7 @@ export const firestore = {
     },
     
     // Get collection data
-    get: async () => {
+    get: async (): Promise<QuerySnapshot> => {
       // TODO: Replace with actual Firestore implementation
       // return getDocs(collection(db, path));
       
@@ -177,8 +214,8 @@ export const firestore = {
     },
     
     // Query collection
-    where: (field: string, operator: string, value: any) => ({
-      get: async () => {
+    where: (field: string, operator: string, value: string | number | boolean) => ({
+      get: async (): Promise<QuerySnapshot> => {
         // TODO: Replace with actual Firestore implementation
         // const q = query(collection(db, path), where(field, operator, value));
         // return getDocs(q);
@@ -206,7 +243,7 @@ export const firestore = {
 // 4. Employee Services
 export const employeeService = {
   // Get all employees
-  getEmployees: async () => {
+  getEmployees: async (): Promise<Employee[]> => {
     // TODO: Replace with actual Firestore implementation
     // const employeesCollection = collection(db, 'employees');
     // const employeeSnapshot = await getDocs(employeesCollection);
@@ -243,7 +280,7 @@ export const employeeService = {
   },
   
   // Add new employee
-  addEmployee: async (employee: any) => {
+  addEmployee: async (employee: Employee): Promise<{id: string}> => {
     // TODO: Replace with actual Firestore implementation
     // const employeesCollection = collection(db, 'employees');
     // return addDoc(employeesCollection, employee);
@@ -258,7 +295,7 @@ export const employeeService = {
   },
   
   // Update employee
-  updateEmployee: async (id: string, data: any) => {
+  updateEmployee: async (id: string, data: Partial<Employee>): Promise<{success: boolean}> => {
     // TODO: Replace with actual Firestore implementation
     // const employeeDoc = doc(db, 'employees', id);
     // return updateDoc(employeeDoc, data);
@@ -273,7 +310,7 @@ export const employeeService = {
   },
   
   // Delete employee
-  deleteEmployee: async (id: string) => {
+  deleteEmployee: async (id: string): Promise<{success: boolean}> => {
     // TODO: Replace with actual Firestore implementation
     // const employeeDoc = doc(db, 'employees', id);
     // return deleteDoc(employeeDoc);
