@@ -11,7 +11,7 @@ interface Order {
   customerName: string;
   items: string[];
   total: number;
-  status: "En attente" | "En préparation" | "Prêt" | "Livré" | "Annulé";
+  status: "En attente" | "Lancée" | "Annulée";
   time: string;
 }
 
@@ -32,7 +32,7 @@ const Orders = () => {
             customerName: "Jean Dupont",
             items: ["Bœuf Bourguignon", "Crème Brûlée", "Vin Rouge"],
             total: 42.50,
-            status: "En préparation",
+            status: "En attente",
             time: "14:30"
           },
           {

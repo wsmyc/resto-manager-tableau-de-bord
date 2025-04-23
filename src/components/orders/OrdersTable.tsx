@@ -8,7 +8,7 @@ interface Order {
   customerName: string;
   items: string[];
   total: number;
-  status: "En attente" | "En préparation" | "Prêt" | "Livré" | "Annulé";
+  status: "En attente" | "Lancée" | "Annulée";
   time: string;
 }
 
@@ -56,11 +56,8 @@ const OrdersTable = ({ orders, onStatusChange }: OrdersTableProps) => {
                     <SelectValue placeholder="Changer le statut" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="En attente">En attente</SelectItem>
-                    <SelectItem value="En préparation">En préparation</SelectItem>
-                    <SelectItem value="Prêt">Prêt</SelectItem>
-                    <SelectItem value="Livré">Livré</SelectItem>
-                    <SelectItem value="Annulé">Annulé</SelectItem>
+                    <SelectItem value="Lancée">Lancée</SelectItem>
+                    <SelectItem value="Annulée">Annulée</SelectItem>
                   </SelectContent>
                 </Select>
               </TableCell>
