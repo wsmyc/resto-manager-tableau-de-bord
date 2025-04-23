@@ -15,7 +15,7 @@ interface FirebaseAuthResponse {
 
 interface DocumentData {
   id?: string;
-  [key: string]: any; // This allows for dynamic fields in documents
+  [key: string]: unknown; // Changed from any to unknown
 }
 
 interface DocumentSnapshot {
