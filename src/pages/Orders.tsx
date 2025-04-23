@@ -155,6 +155,7 @@ const Orders = () => {
             <OrdersTable
               orders={filteredOrders}
               onStatusChange={updateOrderStatus}
+              isChef={false} // Mettez à true pour le chef, false pour le manager
             />
           )}
         </CardContent>
@@ -164,4 +165,3 @@ const Orders = () => {
 };
 
 export default Orders;
-
