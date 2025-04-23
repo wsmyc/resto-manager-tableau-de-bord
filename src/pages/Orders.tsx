@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
@@ -48,7 +49,7 @@ const Orders = () => {
             customerName: "Philippe Martin",
             items: ["Quiche Lorraine", "Ratatouille", "Tarte Tatin", "Vin Blanc"],
             total: 53.20,
-            status: "Prêt",
+            status: "Lancée",
             time: "14:15"
           },
           {
@@ -56,7 +57,7 @@ const Orders = () => {
             customerName: "Sophie Bernard",
             items: ["Cassoulet", "Mousse au Chocolat"],
             total: 28.90,
-            status: "Livré",
+            status: "Lancée",
             time: "13:50"
           },
           {
@@ -64,7 +65,7 @@ const Orders = () => {
             customerName: "Lucas Petit",
             items: ["Escargots", "Magret de Canard", "Tarte aux Pommes"],
             total: 45.60,
-            status: "Annulé",
+            status: "Annulée",
             time: "14:00"
           },
           {
@@ -72,7 +73,7 @@ const Orders = () => {
             customerName: "Emma Dubois",
             items: ["Soupe à l'Oignon", "Steak Frites", "Crêpes Suzette"],
             total: 39.70,
-            status: "En préparation",
+            status: "En attente",
             time: "15:00"
           },
           {
@@ -88,7 +89,7 @@ const Orders = () => {
             customerName: "Camille Roux",
             items: ["Salade de Chèvre Chaud", "Bouillabaisse", "Tarte au Citron"],
             total: 47.90,
-            status: "En préparation",
+            status: "En attente",
             time: "15:30"
           }
         ];
@@ -163,3 +164,4 @@ const Orders = () => {
 };
 
 export default Orders;
+

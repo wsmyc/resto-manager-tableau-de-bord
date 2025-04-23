@@ -36,10 +36,8 @@ const OrderFilters = ({
           <SelectContent>
             <SelectItem value="all">Tous les statuts</SelectItem>
             <SelectItem value="En attente">En attente</SelectItem>
-            <SelectItem value="En préparation">En préparation</SelectItem>
-            <SelectItem value="Prêt">Prêt</SelectItem>
-            <SelectItem value="Livré">Livré</SelectItem>
-            <SelectItem value="Annulé">Annulé</SelectItem>
+            <SelectItem value="Lancée">Lancée</SelectItem>
+            <SelectItem value="Annulée">Annulée</SelectItem>
           </SelectContent>
         </Select>
       </div>
