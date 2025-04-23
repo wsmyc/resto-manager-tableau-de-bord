@@ -147,7 +147,11 @@ const StockInventory = () => {
   const handleRestock = (itemId: string) => {
     const quantity = restockQuantity[itemId];
     if (!quantity || quantity <= 0) {
-      toast.error("Veuillez spécifier une quantité valide");
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Veuillez spécifier une quantité valide"
+      });
       return;
     }
     
@@ -163,7 +167,10 @@ const StockInventory = () => {
     
     setStockItems(updatedItems);
     setRestockQuantity(prev => ({ ...prev, [itemId]: 0 }));
-    toast.success(`Réapprovisionnement effectué avec succès`);
+    toast({
+      title: "Réapprovisionnement réussi",
+      description: "Réapprovisionnement effectué avec succès"
+    });
   };
 
   const categories = ["all", ...new Set(stockItems.map(item => item.category))];
