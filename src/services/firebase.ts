@@ -1,21 +1,24 @@
 
-// This is a placeholder for Firebase integration
-// TODO: Replace with your Firebase config and implementation
+// Firebase Configuration and Services
 
-// Example Firebase configuration
-// export const firebaseConfig = {
-//   apiKey: "YOUR_API_KEY",
-//   authDomain: "YOUR_AUTH_DOMAIN",
-//   projectId: "YOUR_PROJECT_ID",
-//   storageBucket: "YOUR_STORAGE_BUCKET",
-//   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-//   appId: "YOUR_APP_ID"
-// };
+// 1. Firebase Configuration
+// Replace these values with your own Firebase project configuration
+export const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
 
-// Firebase Authentication Functions
+// 2. Firebase Authentication Functions
 export const auth = {
   // Sign in with email and password
   signInWithEmailAndPassword: async (email: string, password: string) => {
+    // TODO: Replace with actual Firebase Auth implementation
+    // return signInWithEmailAndPassword(auth, email, password);
+    
     // Simulate API call
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -28,18 +31,51 @@ export const auth = {
     });
   },
   
+  // Create user with email and password
+  createUserWithEmailAndPassword: async (email: string, password: string) => {
+    // TODO: Replace with actual Firebase Auth implementation
+    // return createUserWithEmailAndPassword(auth, email, password);
+    
+    // Simulate API call
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (email && password) {
+          resolve({ user: { uid: `user-${Date.now()}`, email } });
+        } else {
+          reject(new Error('Invalid email or password'));
+        }
+      }, 1000);
+    });
+  },
+  
   // Sign out
   signOut: async () => {
+    // TODO: Replace with actual Firebase Auth implementation
+    // return signOut(auth);
+    
     return new Promise(resolve => {
       setTimeout(resolve, 500);
     });
   },
   
   // Get current user
-  currentUser: null
+  currentUser: null,
+
+  // Update user profile
+  updateProfile: async (user: any, profile: {displayName?: string, photoURL?: string}) => {
+    // TODO: Replace with actual Firebase Auth implementation
+    // return updateProfile(user, profile);
+    
+    return new Promise(resolve => {
+      setTimeout(() => {
+        console.log("Profile updated:", profile);
+        resolve(true);
+      }, 500);
+    });
+  }
 };
 
-// Firestore Database Functions for menu management
+// 3. Firestore Database Functions
 export const firestore = {
   // Get collection reference
   collection: (path: string) => ({
@@ -47,6 +83,9 @@ export const firestore = {
     doc: (id: string) => ({
       // Get document data
       get: async () => {
+        // TODO: Replace with actual Firestore implementation
+        // return getDoc(doc(db, path, id));
+        
         // Simulate API call
         return new Promise(resolve => {
           setTimeout(() => {
@@ -61,24 +100,36 @@ export const firestore = {
       
       // Set document data
       set: async (data: any) => {
+        // TODO: Replace with actual Firestore implementation
+        // return setDoc(doc(db, path, id), data);
+        
         // Simulate API call
         return new Promise(resolve => {
+          console.log(`Setting ${path}/${id}:`, data);
           setTimeout(resolve, 500);
         });
       },
       
       // Update document data
       update: async (data: any) => {
+        // TODO: Replace with actual Firestore implementation
+        // return updateDoc(doc(db, path, id), data);
+        
         // Simulate API call
         return new Promise(resolve => {
+          console.log(`Updating ${path}/${id}:`, data);
           setTimeout(resolve, 500);
         });
       },
       
       // Delete document
       delete: async () => {
+        // TODO: Replace with actual Firestore implementation
+        // return deleteDoc(doc(db, path, id));
+        
         // Simulate API call
         return new Promise(resolve => {
+          console.log(`Deleting ${path}/${id}`);
           setTimeout(resolve, 500);
         });
       }
@@ -86,16 +137,24 @@ export const firestore = {
     
     // Add document to collection
     add: async (data: any) => {
+      // TODO: Replace with actual Firestore implementation
+      // return addDoc(collection(db, path), data);
+      
       // Simulate API call
       return new Promise(resolve => {
+        const docId = `doc-${Date.now()}`;
+        console.log(`Adding to ${path}:`, data);
         setTimeout(() => {
-          resolve({ id: `doc-${Date.now()}` });
+          resolve({ id: docId });
         }, 500);
       });
     },
     
     // Get collection data
     get: async () => {
+      // TODO: Replace with actual Firestore implementation
+      // return getDocs(collection(db, path));
+      
       // Simulate API call
       return new Promise(resolve => {
         setTimeout(() => {
@@ -118,10 +177,15 @@ export const firestore = {
     },
     
     // Query collection
-    where: () => ({
+    where: (field: string, operator: string, value: any) => ({
       get: async () => {
+        // TODO: Replace with actual Firestore implementation
+        // const q = query(collection(db, path), where(field, operator, value));
+        // return getDocs(q);
+        
         // Simulate API call
         return new Promise(resolve => {
+          console.log(`Querying ${path} where ${field} ${operator} ${value}`);
           setTimeout(() => {
             resolve({
               docs: [
@@ -139,51 +203,84 @@ export const firestore = {
   })
 };
 
-// Stock management specific functions
-export const stockService = {
-  getStockItems: async () => {
-    // Simulate API call to get stock items
+// 4. Employee Services
+export const employeeService = {
+  // Get all employees
+  getEmployees: async () => {
+    // TODO: Replace with actual Firestore implementation
+    // const employeesCollection = collection(db, 'employees');
+    // const employeeSnapshot = await getDocs(employeesCollection);
+    // return employeeSnapshot.docs.map(doc => ({
+    //   id: doc.id,
+    //   ...doc.data()
+    // }));
+    
+    // Simulate API call
     return new Promise(resolve => {
       setTimeout(() => {
         resolve([
           {
-            id: "ing-001",
-            name: "Oignons",
-            category: "Légumes",
-            quantity: 25,
-            unit: "kg",
-            expiryDate: "2023-05-15",
-            alertThreshold: 5,
-            costPerUnit: 1.75,
-            supplier: "Légumes du Marché"
+            id: 1,
+            firstName: "Jean",
+            lastName: "Dupont",
+            email: "jean.dupont@restaurant.fr",
+            phone: "06 12 34 56 78",
+            role: "Chef",
+            salary: 2800
           },
-          // More items would come from Firebase in the real implementation
+          {
+            id: 2,
+            firstName: "Marie",
+            lastName: "Laurent",
+            email: "marie.laurent@restaurant.fr",
+            phone: "06 98 76 54 32",
+            role: "Serveur",
+            salary: 1800
+          },
         ]);
       }, 500);
     });
   },
   
-  addStockItem: async (item: any) => {
-    // Simulate API call to add a stock item
+  // Add new employee
+  addEmployee: async (employee: any) => {
+    // TODO: Replace with actual Firestore implementation
+    // const employeesCollection = collection(db, 'employees');
+    // return addDoc(employeesCollection, employee);
+    
+    // Simulate API call
     return new Promise(resolve => {
+      console.log("Adding employee:", employee);
       setTimeout(() => {
-        resolve({ id: `ing-${Date.now()}` });
+        resolve({ id: `emp-${Date.now()}` });
       }, 500);
     });
   },
   
-  updateStockItem: async (id: string, data: any) => {
-    // Simulate API call to update a stock item
+  // Update employee
+  updateEmployee: async (id: string, data: any) => {
+    // TODO: Replace with actual Firestore implementation
+    // const employeeDoc = doc(db, 'employees', id);
+    // return updateDoc(employeeDoc, data);
+    
+    // Simulate API call
     return new Promise(resolve => {
+      console.log(`Updating employee ${id}:`, data);
       setTimeout(() => {
         resolve({ success: true });
       }, 500);
     });
   },
   
-  deleteStockItem: async (id: string) => {
-    // Simulate API call to delete a stock item
+  // Delete employee
+  deleteEmployee: async (id: string) => {
+    // TODO: Replace with actual Firestore implementation
+    // const employeeDoc = doc(db, 'employees', id);
+    // return deleteDoc(employeeDoc);
+    
+    // Simulate API call
     return new Promise(resolve => {
+      console.log(`Deleting employee ${id}`);
       setTimeout(() => {
         resolve({ success: true });
       }, 500);
@@ -191,45 +288,56 @@ export const stockService = {
   }
 };
 
-// Function to synchronize data with other interfaces
-export const syncWithExternalInterfaces = {
-  // Send updates to Chef's order screen
-  syncWithChefInterface: async (data: any) => {
-    console.log("Syncing with Chef's interface:", data);
-    // In real implementation, this would use Firebase Realtime Database
-    // or Cloud Firestore to sync data with the Chef's interface
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({ success: true });
-      }, 500);
-    });
-  },
-  
-  // Send updates to Server's POS
-  syncWithServerPOS: async (data: any) => {
-    console.log("Syncing with Server's POS:", data);
-    // In real implementation, this would use Firebase Realtime Database
-    // or Cloud Firestore to sync data with the Server's POS
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({ success: true });
-      }, 500);
-    });
-  },
-  
-  // Send updates to Client interface
-  syncWithClientInterface: async (data: any) => {
-    console.log("Syncing with Client interface:", data);
-    // In real implementation, this would use Firebase Realtime Database
-    // or Cloud Firestore to sync data with the Client interface
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({ success: true });
-      }, 500);
-    });
-  }
-};
-
-// For demonstration purposes only
-// In a real app, you would implement proper Firebase integration
-
+/*
+ * GUIDE D'INTÉGRATION DE FIREBASE
+ * 
+ * Pour connecter cette application à Firebase et remplacer les données statiques:
+ * 
+ * 1. CONFIGURATION
+ *    - Créez un projet Firebase sur https://console.firebase.google.com/
+ *    - Ajoutez une application Web et copiez la configuration
+ *    - Installez Firebase: npm install firebase
+ *    - Remplacez firebaseConfig avec votre configuration
+ * 
+ * 2. INITIALISATION
+ *    - Décommentez ce code et placez-le en haut du fichier:
+ * 
+ *    import { initializeApp } from 'firebase/app';
+ *    import { 
+ *      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
+ *      signOut, updateProfile
+ *    } from 'firebase/auth';
+ *    import { 
+ *      getFirestore, collection, doc, getDoc, setDoc, updateDoc, 
+ *      deleteDoc, addDoc, getDocs, query, where
+ *    } from 'firebase/firestore';
+ * 
+ *    const app = initializeApp(firebaseConfig);
+ *    const auth = getAuth(app);
+ *    const db = getFirestore(app);
+ * 
+ * 3. REMPLACER LES FONCTIONS SIMULÉES
+ *    - Pour chaque fonction simulée (Promise avec setTimeout), remplacez par
+ *      l'appel réel à Firebase (commenté avec "TODO: Replace with actual...")
+ * 
+ * 4. IMPORTATION DE DONNÉES
+ *    - Si vous avez des données JSON existantes, vous pouvez les importer avec:
+ *      
+ *    async function importData(collectionName, data) {
+ *      const batch = writeBatch(db);
+ *      data.forEach(item => {
+ *        const docRef = doc(collection(db, collectionName));
+ *        batch.set(docRef, item);
+ *      });
+ *      await batch.commit();
+ *    }
+ *    
+ *    // Exemple d'utilisation:
+ *    // import employeesData from './data/employees.json';
+ *    // importData('employees', employeesData);
+ *
+ * 5. SÉCURITÉ
+ *    - Configurez les règles de sécurité Firebase pour contrôler l'accès
+ *    - Pour Firestore: https://console.firebase.google.com/project/YOUR_PROJECT/firestore/rules
+ *    - Pour Auth: https://console.firebase.google.com/project/YOUR_PROJECT/authentication/emails
+ */

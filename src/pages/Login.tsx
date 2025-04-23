@@ -78,7 +78,7 @@ const Login = () => {
               />
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex flex-col">
             <Button 
               type="submit" 
               className="w-full bg-restaurant-primary hover:bg-restaurant-primary/90"
@@ -86,6 +86,17 @@ const Login = () => {
             >
               {isLoading ? "Connexion en cours..." : "Se Connecter"}
             </Button>
+            <div className="mt-4 text-center">
+              <p className="text-sm">
+                Pas encore de compte?{" "}
+                <a 
+                  href="/signup" 
+                  className="text-restaurant-primary hover:underline"
+                >
+                  Créer un compte
+                </a>
+              </p>
+            </div>
           </CardFooter>
         </form>
       </Card>

@@ -8,9 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { User, Mail, Phone, Briefcase, MessageSquare } from 'lucide-react';
+import { User, Mail, Phone, Briefcase, MessageSquare, Edit, DollarSign } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { MessageEmployee } from "./MessageEmployee";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { EditSalary } from "./EditSalary";
 
 export interface Employee {
   id: number;
@@ -22,13 +24,12 @@ export interface Employee {
   salary: number;
 }
 
-// Déplacer mockEmployees vers Employees.tsx pour être partagé
-
 export const EmployeeList = ({ employees, onMessageSent }: { 
   employees: Employee[],
   onMessageSent?: () => void
 }) => {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [editingSalary, setEditingSalary] = useState<Employee | null>(null);
 
   return (
     <div className="space-y-4">
@@ -42,7 +43,7 @@ export const EmployeeList = ({ employees, onMessageSent }: {
               <TableHead className="w-[160px]">Téléphone</TableHead>
               <TableHead className="w-[120px]">Rôle</TableHead>
               <TableHead className="w-[140px]">Salaire (€)</TableHead>
-              <TableHead className="w-[80px] text-right">Actions</TableHead>
+              <TableHead className="w-[120px] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -80,16 +81,31 @@ export const EmployeeList = ({ employees, onMessageSent }: {
                       <span>{employee.role}</span>
                     </div>
                   </TableCell>
-                  <TableCell>{employee.salary} €/mois</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <DollarSign className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <span>{employee.salary} €/mois</span>
+                    </div>
+                  </TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setSelectedEmployee(employee)}
-                      title="Envoyer un message"
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                    </Button>
+                    <div className="flex justify-end space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setEditingSalary(employee)}
+                        title="Modifier le salaire"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setSelectedEmployee(employee)}
+                        title="Envoyer un message"
+                      >
+                        <MessageSquare className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -97,12 +113,31 @@ export const EmployeeList = ({ employees, onMessageSent }: {
           </TableBody>
         </Table>
       </div>
+      
       {selectedEmployee && (
         <MessageEmployee
           employee={selectedEmployee}
           onClose={() => setSelectedEmployee(null)}
           onSuccess={onMessageSent}
         />
+      )}
+      
+      {editingSalary && (
+        <Dialog open={!!editingSalary} onOpenChange={(open) => !open && setEditingSalary(null)}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Modifier le salaire</DialogTitle>
+            </DialogHeader>
+            <EditSalary 
+              employee={editingSalary} 
+              onClose={() => setEditingSalary(null)}
+              onSuccess={() => {
+                setEditingSalary(null);
+                if (onMessageSent) onMessageSent();
+              }} 
+            />
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

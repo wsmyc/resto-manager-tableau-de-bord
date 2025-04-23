@@ -38,7 +38,16 @@ const Employees = () => {
 
   const handleMessageSent = () => {
     // Cette fonction peut être utilisée pour rafraîchir les données si nécessaire
-    console.log("Message envoyé, rafraîchissement des données si nécessaire");
+    console.log("Message envoyé ou données mises à jour");
+  };
+
+  // Mise à jour du salaire d'un employé
+  const handleSalaryUpdate = (updatedEmployee: Employee) => {
+    setEmployees(prevEmployees => 
+      prevEmployees.map(emp => 
+        emp.id === updatedEmployee.id ? updatedEmployee : emp
+      )
+    );
   };
 
   return (
@@ -60,7 +69,10 @@ const Employees = () => {
           </DialogContent>
         </Dialog>
       </div>
-      <EmployeeList employees={employees} onMessageSent={handleMessageSent} />
+      <EmployeeList 
+        employees={employees} 
+        onMessageSent={handleMessageSent} 
+      />
     </div>
   );
 };
