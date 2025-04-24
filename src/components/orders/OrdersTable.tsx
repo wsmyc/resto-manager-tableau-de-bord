@@ -13,6 +13,8 @@ interface Order {
   total: number;
   status: "En attente" | "Lancée" | "Annulée";
   time: string;
+  tableNumber: string;
+  server: string;
 }
 
 interface OrdersTableProps {
@@ -29,6 +31,8 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
           <TableRow>
             <TableHead>ID</TableHead>
             <TableHead>Nom du Client</TableHead>
+            <TableHead>Table</TableHead>
+            <TableHead>Serveur</TableHead>
             <TableHead>Articles</TableHead>
             <TableHead>Total</TableHead>
             <TableHead>Statut</TableHead>
@@ -41,6 +45,8 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
             <TableRow key={order.id}>
               <TableCell className="font-medium">{order.id}</TableCell>
               <TableCell>{order.customerName}</TableCell>
+              <TableCell>{order.tableNumber}</TableCell>
+              <TableCell>{order.server}</TableCell>
               <TableCell>
                 <div className="max-w-xs truncate">
                   {order.items.join(", ")}

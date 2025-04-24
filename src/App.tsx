@@ -14,6 +14,7 @@ import Reservations from "./pages/Reservations";
 import Reports from "./pages/Reports";
 import StockManagement from "./pages/StockManagement";
 import Employees from "./pages/Employees";
+import Messagerie from "./pages/Messagerie";
 import AppLayout from "./components/AppLayout";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/reservations" element={<Reservations />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/employees" element={<Employees />} />
+            <Route path="/messagerie" element={<Messagerie />} />
           </Route>
           
           <Route path="*" element={<NotFound />} />

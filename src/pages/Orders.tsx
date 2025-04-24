@@ -14,6 +14,8 @@ interface Order {
   total: number;
   status: "En attente" | "Lancée" | "Annulée";
   time: string;
+  tableNumber: string;
+  server: string;
 }
 
 const Orders = () => {
@@ -34,7 +36,9 @@ const Orders = () => {
             items: ["Bœuf Bourguignon", "Crème Brûlée", "Vin Rouge"],
             total: 42.50,
             status: "En attente",
-            time: "14:30"
+            time: "14:30",
+            tableNumber: "T01",
+            server: "Marie Laurent"
           },
           {
             id: "ORD-002",
@@ -42,7 +46,9 @@ const Orders = () => {
             items: ["Salade Niçoise", "Coq au Vin", "Eau Minérale"],
             total: 35.80,
             status: "En attente",
-            time: "14:45"
+            time: "14:45",
+            tableNumber: "T03",
+            server: "Philippe Martin"
           },
           {
             id: "ORD-003",
@@ -50,7 +56,9 @@ const Orders = () => {
             items: ["Quiche Lorraine", "Ratatouille", "Tarte Tatin", "Vin Blanc"],
             total: 53.20,
             status: "Lancée",
-            time: "14:15"
+            time: "14:15",
+            tableNumber: "T05",
+            server: "Sophie Bernard"
           },
           {
             id: "ORD-004",
@@ -58,7 +66,9 @@ const Orders = () => {
             items: ["Cassoulet", "Mousse au Chocolat"],
             total: 28.90,
             status: "Lancée",
-            time: "13:50"
+            time: "13:50",
+            tableNumber: "T02",
+            server: "Marie Laurent"
           },
           {
             id: "ORD-005",
@@ -66,7 +76,9 @@ const Orders = () => {
             items: ["Escargots", "Magret de Canard", "Tarte aux Pommes"],
             total: 45.60,
             status: "Annulée",
-            time: "14:00"
+            time: "14:00",
+            tableNumber: "T07",
+            server: "Thomas Leroy"
           },
           {
             id: "ORD-006",
@@ -74,7 +86,9 @@ const Orders = () => {
             items: ["Soupe à l'Oignon", "Steak Frites", "Crêpes Suzette"],
             total: 39.70,
             status: "En attente",
-            time: "15:00"
+            time: "15:00",
+            tableNumber: "T04",
+            server: "Camille Roux"
           },
           {
             id: "ORD-007",
@@ -82,7 +96,9 @@ const Orders = () => {
             items: ["Foie Gras", "Blanquette de Veau", "Éclair au Chocolat"],
             total: 58.30,
             status: "En attente",
-            time: "15:15"
+            time: "15:15",
+            tableNumber: "T06",
+            server: "Philippe Martin"
           },
           {
             id: "ORD-008",
@@ -90,7 +106,9 @@ const Orders = () => {
             items: ["Salade de Chèvre Chaud", "Bouillabaisse", "Tarte au Citron"],
             total: 47.90,
             status: "En attente",
-            time: "15:30"
+            time: "15:30",
+            tableNumber: "T08",
+            server: "Marie Laurent"
           }
         ];
         setOrders(mockedOrders);
@@ -119,7 +137,9 @@ const Orders = () => {
   const filteredOrders = orders.filter(order => {
     const matchesSearch = 
       order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.id.toLowerCase().includes(searchQuery.toLowerCase());
+      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.server.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.tableNumber.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
     

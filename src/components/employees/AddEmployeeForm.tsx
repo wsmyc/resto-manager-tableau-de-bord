@@ -1,3 +1,4 @@
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -46,6 +47,16 @@ interface AddEmployeeFormProps {
   onSuccess: (employee: Employee) => void;
 }
 
+// Fonction pour générer un mot de passe temporaire
+const generateTempPassword = () => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let password = "";
+  for (let i = 0; i < 8; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return password;
+};
+
 export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,16 +72,9 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      // Vérifier l'email avec l'API Abstract
-      const response = await fetch(`https://emailverification.whoisxmlapi.com/api/v2?apiKey=at_2rB2RVVFv1WQkWcpqQF0x6NSC4LOi&emailAddress=${values.email}`);
-      const data = await response.json();
+      const tempPassword = generateTempPassword();
       
-      if (!response.ok || data.formatCheck !== 'true' || data.smtpCheck !== 'true') {
-        toast.error("L'adresse email n'est pas valide ou n'existe pas");
-        return;
-      }
-
-      // Créer un nouvel employé avec un ID généré
+      // Créer un nouvel employé avec un ID généré et un mot de passe temporaire
       const newEmployee: Employee = {
         id: Date.now(),
         firstName: values.firstName,
@@ -79,15 +83,16 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
         phone: values.phone,
         role: values.role,
         salary: values.salary,
+        tempPassword: tempPassword,
       };
       
       console.log("Nouvel employé ajouté:", newEmployee);
-      toast.success("Employé ajouté avec succès");
+      toast.success(`Employé ajouté avec succès. Mot de passe temporaire: ${tempPassword}`);
       onSuccess(newEmployee);
       form.reset();
     } catch (error) {
-      console.error("Erreur lors de la vérification de l'email:", error);
-      toast.error("Erreur lors de la vérification de l'email");
+      console.error("Erreur lors de l'ajout de l'employé:", error);
+      toast.error("Erreur lors de l'ajout de l'employé");
     }
   }
 

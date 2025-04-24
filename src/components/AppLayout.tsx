@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { 
@@ -10,7 +11,8 @@ import {
   Menu as MenuIcon, 
   X,
   Package,
-  Users
+  Users,
+  MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -74,6 +76,11 @@ const AppLayout = () => {
       name: "Employés",
       path: "/employees",
       icon: <Users size={20} />,
+    },
+    {
+      name: "Messagerie",
+      path: "/messagerie",
+      icon: <MessageSquare size={20} />,
     },
     {
       name: "Rapports",
