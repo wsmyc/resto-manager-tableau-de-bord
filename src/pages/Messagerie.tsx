@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessagesList, Message } from "@/components/messaging/MessagesList";
 import { MessageDetail } from "@/components/messaging/MessageDetail";
 import { ComposeMessage } from "@/components/messaging/ComposeMessage";
-import { Plus, MessageCircle } from "lucide-react";
+import { Plus, MessageCircle, Mail } from "lucide-react";
 import { toast } from "sonner";
 
 interface Employee {
@@ -13,6 +13,13 @@ interface Employee {
   firstName: string;
   lastName: string;
   role: string;
+}
+
+interface Conversation {
+  contact: string;
+  messages: Message[];
+  lastMessage: Message;
+  unreadCount: number;
 }
 
 const mockEmployees: Employee[] = [
@@ -68,39 +75,69 @@ const mockMessages: Message[] = [
 
 const Messagerie = () => {
   const [messages, setMessages] = useState<Message[]>(mockMessages);
-  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+  const [conversations, setConversations] = useState<{ [key: string]: Conversation }>({});
+  const [selectedContact, setSelectedContact] = useState<string | null>(null);
   const [isComposing, setIsComposing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Utilisateur actuel (dans une vraie application, ce serait récupéré depuis un contexte d'authentification)
   const currentUser = "Manager";
 
   useEffect(() => {
-    // Simuler le chargement des messages
     const loadMessages = async () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Organize messages into conversations
+      const newConversations: { [key: string]: Conversation } = {};
+      
+      messages.forEach(message => {
+        const contact = message.sender === currentUser ? message.recipient : message.sender;
+        
+        if (!newConversations[contact]) {
+          newConversations[contact] = {
+            contact,
+            messages: [],
+            lastMessage: message,
+            unreadCount: 0
+          };
+        }
+        
+        newConversations[contact].messages.push(message);
+        if (!message.read && message.recipient === currentUser) {
+          newConversations[contact].unreadCount++;
+        }
+      });
+      
+      // Sort messages within each conversation
+      Object.values(newConversations).forEach(conversation => {
+        conversation.messages.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+        conversation.lastMessage = conversation.messages[0];
+      });
+      
+      setConversations(newConversations);
       setIsLoading(false);
     };
     
     loadMessages();
-  }, []);
+  }, [messages, currentUser]);
 
-  const handleMessageSelect = (message: Message) => {
-    // Marquer le message comme lu s'il ne l'est pas déjà
-    if (!message.read && message.recipient === currentUser) {
+  const handleMessageSelect = (contact: string) => {
+    setSelectedContact(contact);
+    setIsComposing(false);
+    
+    // Mark messages as read
+    if (conversations[contact]) {
       const updatedMessages = messages.map(m => 
-        m.id === message.id ? { ...m, read: true } : m
+        (!m.read && m.sender === contact && m.recipient === currentUser)
+          ? { ...m, read: true }
+          : m
       );
       setMessages(updatedMessages);
     }
-    
-    setSelectedMessage(message);
-    setIsComposing(false);
   };
 
   const handleCompose = () => {
     setIsComposing(true);
-    setSelectedMessage(null);
+    setSelectedContact(null);
   };
 
   const handleSendMessage = (recipientId: number, content: string) => {
@@ -120,6 +157,7 @@ const Messagerie = () => {
     
     setMessages([newMessage, ...messages]);
     setIsComposing(false);
+    setSelectedContact(recipientName);
     toast.success(`Message envoyé à ${recipientName}`);
   };
 
@@ -137,16 +175,20 @@ const Messagerie = () => {
     toast.success(`Réponse envoyée à ${recipient}`);
   };
 
+  const sortedConversations = Object.values(conversations).sort(
+    (a, b) => b.lastMessage.timestamp.getTime() - a.lastMessage.timestamp.getTime()
+  );
+
   return (
     <div className="space-y-6">
       <Card className="shadow-md">
         <CardHeader className="border-b pb-3">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <MessageCircle className="h-6 w-6 mr-2 text-restaurant-primary" />
+              <Mail className="h-6 w-6 mr-2 text-restaurant-primary" />
               <CardTitle className="text-xl font-semibold text-restaurant-primary">Messagerie</CardTitle>
             </div>
-            <Button onClick={handleCompose}>
+            <Button onClick={handleCompose} variant="default">
               <Plus className="h-4 w-4 mr-2" />
               Nouveau Message
             </Button>
@@ -154,20 +196,21 @@ const Messagerie = () => {
         </CardHeader>
         <CardContent className="p-0">
           <div className="grid grid-cols-1 md:grid-cols-3 h-[calc(100vh-220px)]">
-            <div className="border-r">
+            <div className="border-r bg-gray-50">
               {isLoading ? (
                 <div className="flex justify-center items-center h-full">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-restaurant-accent"></div>
                 </div>
               ) : (
                 <MessagesList 
-                  messages={messages} 
-                  onMessageSelect={handleMessageSelect}
+                  conversations={sortedConversations}
+                  onConversationSelect={handleMessageSelect}
+                  selectedContact={selectedContact}
                   currentUser={currentUser}
                 />
               )}
             </div>
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 bg-white">
               {isLoading ? (
                 <div className="flex justify-center items-center h-full">
                   <p className="text-gray-500">Chargement des messages...</p>
@@ -178,18 +221,19 @@ const Messagerie = () => {
                   onSend={handleSendMessage}
                   onCancel={() => setIsComposing(false)}
                 />
-              ) : selectedMessage ? (
+              ) : selectedContact && conversations[selectedContact] ? (
                 <MessageDetail 
-                  message={selectedMessage}
+                  messages={conversations[selectedContact].messages}
+                  contact={selectedContact}
                   onReply={handleReply}
                   currentUser={currentUser}
                 />
               ) : (
                 <div className="flex flex-col justify-center items-center h-full text-center p-4">
                   <MessageCircle className="h-16 w-16 text-gray-300 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900">Aucun message sélectionné</h3>
+                  <h3 className="text-lg font-medium text-gray-900">Sélectionnez une conversation</h3>
                   <p className="text-gray-500 max-w-md mt-2">
-                    Sélectionnez un message dans la liste ou créez un nouveau message en cliquant sur le bouton "Nouveau Message".
+                    Choisissez une conversation dans la liste ou créez un nouveau message.
                   </p>
                 </div>
               )}

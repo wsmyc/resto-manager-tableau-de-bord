@@ -6,22 +6,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Send } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface MessageDetailProps {
-  message: Message;
+  messages: Message[];
+  contact: string;
   onReply: (content: string, recipient: string) => void;
   currentUser: string;
 }
 
-export const MessageDetail = ({ message, onReply, currentUser }: MessageDetailProps) => {
+export const MessageDetail = ({ messages, contact, onReply, currentUser }: MessageDetailProps) => {
   const [replyContent, setReplyContent] = useState("");
-  const recipient = message.sender === currentUser ? message.recipient : message.sender;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (replyContent.trim()) {
-      onReply(replyContent.trim(), recipient);
+      onReply(replyContent.trim(), contact);
       setReplyContent("");
     }
   };
@@ -29,36 +30,56 @@ export const MessageDetail = ({ message, onReply, currentUser }: MessageDetailPr
   return (
     <div className="flex flex-col h-full">
       <div className="border-b p-4">
-        <div className="flex items-center space-x-3 mb-2">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={message.senderAvatar} alt={message.sender} />
-            <AvatarFallback>{message.sender.substring(0, 2).toUpperCase()}</AvatarFallback>
+        <div className="flex items-center space-x-3">
+          <Avatar className="h-10 w-10 bg-restaurant-primary">
+            <AvatarFallback>
+              {contact.split(' ').map(n => n[0]).join('').toUpperCase()}
+            </AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-medium">{message.sender}</h3>
-            <span className="text-xs text-gray-500">
-              {formatDistanceToNow(message.timestamp, { addSuffix: true, locale: fr })}
-            </span>
+            <h3 className="font-medium">{contact}</h3>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-        <div className="whitespace-pre-wrap">{message.content}</div>
-      </div>
+      <ScrollArea className="flex-1 p-4">
+        <div className="space-y-4">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.sender === currentUser ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`max-w-[80%] rounded-lg p-3 ${
+                  message.sender === currentUser
+                    ? 'bg-restaurant-primary text-white'
+                    : 'bg-gray-100 text-gray-900'
+                }`}
+              >
+                <div className="text-sm whitespace-pre-wrap break-words">{message.content}</div>
+                <div className={`text-xs mt-1 ${
+                  message.sender === currentUser ? 'text-white/80' : 'text-gray-500'
+                }`}>
+                  {formatDistanceToNow(message.timestamp, { addSuffix: true, locale: fr })}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
 
-      <form onSubmit={handleSubmit} className="border-t p-4">
+      <form onSubmit={handleSubmit} className="border-t p-4 bg-gray-50">
         <div className="flex items-end space-x-2">
           <div className="flex-1">
             <Textarea
-              placeholder={`Répondre à ${recipient}...`}
+              placeholder={`Écrire un message à ${contact}...`}
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
-              className="resize-none"
+              className="resize-none bg-white"
               rows={3}
             />
           </div>
-          <Button type="submit" disabled={!replyContent.trim()} size="icon">
+          <Button type="submit" disabled={!replyContent.trim()} size="icon" variant="default">
             <Send className="h-5 w-5" />
           </Button>
         </div>
