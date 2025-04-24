@@ -22,6 +22,7 @@ export interface Employee {
   phone: string;
   role: 'Chef' | 'Serveur';
   salary: number;
+  tempPassword?: string; // Add the tempPassword property as optional
 }
 
 export const EmployeeList = ({ employees, onMessageSent }: { 
