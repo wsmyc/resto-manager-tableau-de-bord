@@ -1,380 +1,180 @@
+// src/firebase.ts
 
-// Firebase Configuration and Services
+// 1. Import Firebase SDK modules
+import { initializeApp } from 'firebase/app'; // Initialize Firebase App
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile as firebaseUpdateProfile,
+  User as FirebaseUser
+} from 'firebase/auth'; // Firebase Authentication
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where
+} from 'firebase/firestore'; // Firestore Database
 
-// Define proper types for our data structures
-interface User {
-  uid: string;
-  email: string;
-  displayName?: string;
-  photoURL?: string;
-}
-
-interface FirebaseAuthResponse {
-  user: User;
-}
-
-interface DocumentData {
-  id?: string;
-  [key: string]: unknown; // Changed from any to unknown
-}
-
-interface DocumentSnapshot {
-  exists: boolean;
-  id: string;
-  data: () => DocumentData;
-}
-
-interface QuerySnapshot {
-  docs: DocumentSnapshot[];
-}
-
-interface Employee {
-  id?: string | number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  role: string;
-  salary: number;
-}
-
-// 1. Firebase Configuration
-// Replace these values with your own Firebase project configuration
-export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+// 2. Your Firebase project configuration
+//    Replace the placeholder values below with those from your Firebase console
+const firebaseConfig = {
+  apiKey: "AIzaSyAYqym7Dcr1k_VhyP54L8mxpzT7QctiCQ8",
+  authDomain: "pferestau25.firebaseapp.com",
+  projectId: "pferestau25",
+  storageBucket: "pferestau25.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // TODO: Enter your messaging sender ID
+  appId: "YOUR_APP_ID" // TODO: Enter your app ID
 };
 
-// 2. Firebase Authentication Functions
-export const auth = {
-  // Sign in with email and password
-  signInWithEmailAndPassword: async (email: string, password: string): Promise<FirebaseAuthResponse> => {
-    // TODO: Replace with actual Firebase Auth implementation
-    // return signInWithEmailAndPassword(auth, email, password);
-    
-    // Simulate API call
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email && password) {
-          resolve({ user: { uid: 'user123', email } });
-        } else {
-          reject(new Error('Invalid email or password'));
-        }
-      }, 1000);
-    });
-  },
-  
-  // Create user with email and password
-  createUserWithEmailAndPassword: async (email: string, password: string): Promise<FirebaseAuthResponse> => {
-    // TODO: Replace with actual Firebase Auth implementation
-    // return createUserWithEmailAndPassword(auth, email, password);
-    
-    // Simulate API call
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email && password) {
-          resolve({ user: { uid: `user-${Date.now()}`, email } });
-        } else {
-          reject(new Error('Invalid email or password'));
-        }
-      }, 1000);
-    });
-  },
-  
-  // Sign out
-  signOut: async (): Promise<void> => {
-    // TODO: Replace with actual Firebase Auth implementation
-    // return signOut(auth);
-    
-    return new Promise(resolve => {
-      setTimeout(resolve, 500);
-    });
-  },
-  
-  // Get current user
-  currentUser: null,
+// 3. Initialize Firebase App, Auth, and Firestore
+const firebaseApp = initializeApp(firebaseConfig);          // Initialize the Firebase app instance
+export const auth = getAuth(firebaseApp);                   // Authentication service
+export const db = getFirestore(firebaseApp);                // Firestore service
 
-  // Update user profile
-  updateProfile: async (user: User, profile: {displayName?: string, photoURL?: string}): Promise<boolean> => {
-    // TODO: Replace with actual Firebase Auth implementation
-    // return updateProfile(user, profile);
-    
-    return new Promise(resolve => {
-      setTimeout(() => {
-        console.log("Profile updated:", profile);
-        resolve(true);
-      }, 500);
-    });
-  }
-};
+// --- Authentication Functions ---
 
-// 3. Firestore Database Functions
-export const firestore = {
-  // Get collection reference
-  collection: (path: string) => ({
-    // Get document by ID
-    doc: (id: string) => ({
-      // Get document data
-      get: async (): Promise<DocumentSnapshot> => {
-        // TODO: Replace with actual Firestore implementation
-        // return getDoc(doc(db, path, id));
-        
-        // Simulate API call
-        return new Promise(resolve => {
-          setTimeout(() => {
-            resolve({
-              exists: true,
-              data: () => ({ id, name: 'Sample Data' }),
-              id
-            });
-          }, 500);
-        });
-      },
-      
-      // Set document data
-      set: async (data: DocumentData): Promise<void> => {
-        // TODO: Replace with actual Firestore implementation
-        // return setDoc(doc(db, path, id), data);
-        
-        // Simulate API call
-        return new Promise(resolve => {
-          console.log(`Setting ${path}/${id}:`, data);
-          setTimeout(resolve, 500);
-        });
-      },
-      
-      // Update document data
-      update: async (data: DocumentData): Promise<void> => {
-        // TODO: Replace with actual Firestore implementation
-        // return updateDoc(doc(db, path, id), data);
-        
-        // Simulate API call
-        return new Promise(resolve => {
-          console.log(`Updating ${path}/${id}:`, data);
-          setTimeout(resolve, 500);
-        });
-      },
-      
-      // Delete document
-      delete: async (): Promise<void> => {
-        // TODO: Replace with actual Firestore implementation
-        // return deleteDoc(doc(db, path, id));
-        
-        // Simulate API call
-        return new Promise(resolve => {
-          console.log(`Deleting ${path}/${id}`);
-          setTimeout(resolve, 500);
-        });
-      }
-    }),
-    
-    // Add document to collection
-    add: async (data: DocumentData): Promise<{id: string}> => {
-      // TODO: Replace with actual Firestore implementation
-      // return addDoc(collection(db, path), data);
-      
-      // Simulate API call
-      return new Promise(resolve => {
-        const docId = `doc-${Date.now()}`;
-        console.log(`Adding to ${path}:`, data);
-        setTimeout(() => {
-          resolve({ id: docId });
-        }, 500);
-      });
-    },
-    
-    // Get collection data
-    get: async (): Promise<QuerySnapshot> => {
-      // TODO: Replace with actual Firestore implementation
-      // return getDocs(collection(db, path));
-      
-      // Simulate API call
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve({
-            docs: [
-              {
-                id: 'doc1',
-                data: () => ({ name: 'Sample Data 1' }),
-                exists: true
-              },
-              {
-                id: 'doc2',
-                data: () => ({ name: 'Sample Data 2' }),
-                exists: true
-              }
-            ]
-          });
-        }, 500);
-      });
-    },
-    
-    // Query collection
-    where: (field: string, operator: string, value: string | number | boolean) => ({
-      get: async (): Promise<QuerySnapshot> => {
-        // TODO: Replace with actual Firestore implementation
-        // const q = query(collection(db, path), where(field, operator, value));
-        // return getDocs(q);
-        
-        // Simulate API call
-        return new Promise(resolve => {
-          console.log(`Querying ${path} where ${field} ${operator} ${value}`);
-          setTimeout(() => {
-            resolve({
-              docs: [
-                {
-                  id: 'doc1',
-                  data: () => ({ name: 'Filtered Data' }),
-                  exists: true
-                }
-              ]
-            });
-          }, 500);
-        });
-      }
-    })
-  })
-};
-
-// 4. Employee Services
-export const employeeService = {
-  // Get all employees
-  getEmployees: async (): Promise<Employee[]> => {
-    // TODO: Replace with actual Firestore implementation
-    // const employeesCollection = collection(db, 'employees');
-    // const employeeSnapshot = await getDocs(employeesCollection);
-    // return employeeSnapshot.docs.map(doc => ({
-    //   id: doc.id,
-    //   ...doc.data()
-    // }));
-    
-    // Simulate API call
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve([
-          {
-            id: 1,
-            firstName: "Jean",
-            lastName: "Dupont",
-            email: "jean.dupont@restaurant.fr",
-            phone: "06 12 34 56 78",
-            role: "Chef",
-            salary: 2800
-          },
-          {
-            id: 2,
-            firstName: "Marie",
-            lastName: "Laurent",
-            email: "marie.laurent@restaurant.fr",
-            phone: "06 98 76 54 32",
-            role: "Serveur",
-            salary: 1800
-          },
-        ]);
-      }, 500);
-    });
-  },
-  
-  // Add new employee
-  addEmployee: async (employee: Employee): Promise<{id: string}> => {
-    // TODO: Replace with actual Firestore implementation
-    // const employeesCollection = collection(db, 'employees');
-    // return addDoc(employeesCollection, employee);
-    
-    // Simulate API call
-    return new Promise(resolve => {
-      console.log("Adding employee:", employee);
-      setTimeout(() => {
-        resolve({ id: `emp-${Date.now()}` });
-      }, 500);
-    });
-  },
-  
-  // Update employee
-  updateEmployee: async (id: string, data: Partial<Employee>): Promise<{success: boolean}> => {
-    // TODO: Replace with actual Firestore implementation
-    // const employeeDoc = doc(db, 'employees', id);
-    // return updateDoc(employeeDoc, data);
-    
-    // Simulate API call
-    return new Promise(resolve => {
-      console.log(`Updating employee ${id}:`, data);
-      setTimeout(() => {
-        resolve({ success: true });
-      }, 500);
-    });
-  },
-  
-  // Delete employee
-  deleteEmployee: async (id: string): Promise<{success: boolean}> => {
-    // TODO: Replace with actual Firestore implementation
-    // const employeeDoc = doc(db, 'employees', id);
-    // return deleteDoc(employeeDoc);
-    
-    // Simulate API call
-    return new Promise(resolve => {
-      console.log(`Deleting employee ${id}`);
-      setTimeout(() => {
-        resolve({ success: true });
-      }, 500);
-    });
-  }
-};
-
-/*
- * GUIDE D'INTÉGRATION DE FIREBASE
- * 
- * Pour connecter cette application à Firebase et remplacer les données statiques:
- * 
- * 1. CONFIGURATION
- *    - Créez un projet Firebase sur https://console.firebase.google.com/
- *    - Ajoutez une application Web et copiez la configuration
- *    - Installez Firebase: npm install firebase
- *    - Remplacez firebaseConfig avec votre configuration
- * 
- * 2. INITIALISATION
- *    - Décommentez ce code et placez-le en haut du fichier:
- * 
- *    import { initializeApp } from 'firebase/app';
- *    import { 
- *      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
- *      signOut, updateProfile
- *    } from 'firebase/auth';
- *    import { 
- *      getFirestore, collection, doc, getDoc, setDoc, updateDoc, 
- *      deleteDoc, addDoc, getDocs, query, where
- *    } from 'firebase/firestore';
- * 
- *    const app = initializeApp(firebaseConfig);
- *    const auth = getAuth(app);
- *    const db = getFirestore(app);
- * 
- * 3. REMPLACER LES FONCTIONS SIMULÉES
- *    - Pour chaque fonction simulée (Promise avec setTimeout), remplacez par
- *      l'appel réel à Firebase (commenté avec "TODO: Replace with actual...")
- * 
- * 4. IMPORTATION DE DONNÉES
- *    - Si vous avez des données JSON existantes, vous pouvez les importer avec:
- *      
- *    async function importData(collectionName, data) {
- *      const batch = writeBatch(db);
- *      data.forEach(item => {
- *        const docRef = doc(collection(db, collectionName));
- *        batch.set(docRef, item);
- *      });
- *      await batch.commit();
- *    }
- *    
- *    // Exemple d'utilisation:
- *    // import employeesData from './data/employees.json';
- *    // importData('employees', employeesData);
- *
- * 5. SÉCURITÉ
- *    - Configurez les règles de sécurité Firebase pour contrôler l'accès
- *    - Pour Firestore: https://console.firebase.google.com/project/YOUR_PROJECT/firestore/rules
- *    - Pour Auth: https://console.firebase.google.com/project/YOUR_PROJECT/authentication/emails
+/**
+ * Sign up a new user with email and password
+ * @param email User's email
+ * @param password User's chosen password
+ * @returns The created FirebaseUser object
  */
+export async function signUpUser(email: string, password: string): Promise<FirebaseUser> {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  return userCredential.user;
+}
+
+/**
+ * Sign in an existing user with email and password
+ * @param email User's email
+ * @param password User's password
+ * @returns The signed-in FirebaseUser object
+ */
+export async function signInUser(email: string, password: string): Promise<FirebaseUser> {
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  return userCredential.user;
+}
+
+/**
+ * Sign out the currently logged-in user
+ */
+export async function signOutUser(): Promise<void> {
+  await signOut(auth);
+}
+
+/**
+ * Update the current user's profile (displayName, photoURL)
+ * @param updates Object containing displayName and/or photoURL
+ * @throws Error if no user is signed in
+ * @returns true if update succeeds
+ */
+export async function updateUserProfile(updates: { displayName?: string; photoURL?: string; }): Promise<boolean> {
+  if (!auth.currentUser) {
+    throw new Error('No user is currently signed in');
+  }
+  await firebaseUpdateProfile(auth.currentUser, {
+    displayName: updates.displayName,
+    photoURL: updates.photoURL
+  });
+  return true;
+}
+
+// --- Firestore Types & Functions ---
+
+/**
+ * Employee data structure for Firestore documents
+ */
+export interface Employee {
+  id?: string;            // Firestore document ID
+  firstName: string;      // Employee's first name
+  lastName: string;       // Employee's last name
+  email: string;          // Employee's email address
+  phone: string;          // Employee's phone number
+  role: string;           // Employee's job role/title
+  salary: number;         // Employee's salary
+}
+
+/**
+ * Retrieve all employees from Firestore "employees" collection
+ * @returns Array of Employee objects
+ */
+export async function getAllEmployees(): Promise<Employee[]> {
+  const employeesCol = collection(db, 'employees');                // Reference to collection
+  const snapshot = await getDocs(employeesCol);                   // Fetch all docs
+
+  const employees: Employee[] = [];
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data() as Omit<Employee, 'id'>;
+    employees.push({ id: docSnap.id, ...data });                  // Include doc ID
+  });
+  return employees;
+}
+
+/**
+ * Retrieve a single employee by document ID
+ * @param id Document ID of the employee
+ * @returns Employee object or null if not found
+ */
+export async function getEmployeeById(id: string): Promise<Employee | null> {
+  const docRef = doc(db, 'employees', id);                        // Document reference
+  const docSnap = await getDoc(docRef);                           // Fetch doc
+
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...(docSnap.data() as Omit<Employee, 'id'>) };
+  }
+  return null;
+}
+
+/**
+ * Add a new employee to Firestore
+ * @param employee The Employee data (without ID)
+ * @returns The new document ID
+ */
+export async function addEmployee(employee: Employee): Promise<string> {
+  const docRef = await addDoc(collection(db, 'employees'), employee);
+  return docRef.id;
+}
+
+/**
+ * Update an existing employee document
+ * @param id Document ID of the employee
+ * @param data Partial fields to update
+ */
+export async function updateEmployee(id: string, data: Partial<Employee>): Promise<void> {
+  const docRef = doc(db, 'employees', id);
+  await updateDoc(docRef, data);
+}
+
+/**
+ * Delete an employee document by ID
+ * @param id Document ID of the employee
+ */
+export async function deleteEmployee(id: string): Promise<void> {
+  const docRef = doc(db, 'employees', id);
+  await deleteDoc(docRef);
+}
+
+/**
+ * Example query: retrieve employees by role
+ * @param role Role to filter by (e.g., 'Chef')
+ * @returns Array of Employee objects matching the role
+ */
+export async function queryEmployeesByRole(role: string): Promise<Employee[]> {
+  const q = query(collection(db, 'employees'), where('role', '==', role));
+  const snapshot = await getDocs(q);
+
+  const results: Employee[] = [];
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data() as Omit<Employee, 'id'>;
+    results.push({ id: docSnap.id, ...data });
+  });
+  return results;
+}
