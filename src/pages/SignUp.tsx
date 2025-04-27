@@ -16,7 +16,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isManager, setIsManager] = useState(true);
+ 
   const [managerCode, setManagerCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const SignUp = () => {
     }
 
     // Vérification du code manager (dans un vrai système, ceci serait vérifié côté serveur)
-    if (isManager && managerCode !== "MANAGER2024") {
+    if (managerCode !== "MANAGER2024") {
       toast.error("Code manager invalide.");
       setIsLoading(false);
       return;
@@ -136,16 +136,9 @@ const SignUp = () => {
               </div>
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="manager-mode"
-                checked={isManager}
-                onCheckedChange={setIsManager}
-              />
-              <Label htmlFor="manager-mode">Compte Manager</Label>
-            </div>
             
-            {isManager && (
+            
+            {(
               <div className="space-y-2">
                 <Label htmlFor="managerCode">Code Manager</Label>
                 <Input
