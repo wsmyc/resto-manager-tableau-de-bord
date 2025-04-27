@@ -1,7 +1,7 @@
 // src/firebase.ts
 
 // 1. Import Firebase SDK modules
-import { initializeApp } from 'firebase/app'; // Initialize Firebase App
+import { getApps, initializeApp } from 'firebase/app'; // Initialize or reuse Firebase App instance
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -24,7 +24,7 @@ import {
 } from 'firebase/firestore'; // Firestore Database
 
 // 2. Your Firebase project configuration
-//    Replace the placeholder values below with those from your Firebase console
+//    These values link your code to your existing Firebase project (no new project is created)
 const firebaseConfig = {
   apiKey: "AIzaSyAYqym7Dcr1k_VhyP54L8mxpzT7QctiCQ8",
   authDomain: "pferestau25.firebaseapp.com",
@@ -34,10 +34,14 @@ const firebaseConfig = {
   appId: "YOUR_APP_ID" // TODO: Enter your app ID
 };
 
-// 3. Initialize Firebase App, Auth, and Firestore
-const firebaseApp = initializeApp(firebaseConfig);          // Initialize the Firebase app instance
-export const auth = getAuth(firebaseApp);                   // Authentication service
-export const db = getFirestore(firebaseApp);                // Firestore service
+// 3. Initialize or reuse Firebase App, Auth, and Firestore
+//    For hot-reload environments, avoid duplicate initialization by reusing an existing app if present
+const firebaseApp = !getApps().length
+  ? initializeApp(firebaseConfig)  // Link to your existing Firebase project using provided config
+  : getApps()[0];                 // Reuse already initialized app instance
+
+export const auth = getAuth(firebaseApp);  // Authentication service linked to existing project
+export const db = getFirestore(firebaseApp); // Firestore service linked to existing project
 
 // --- Authentication Functions ---
 

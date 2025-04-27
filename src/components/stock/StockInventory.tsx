@@ -21,7 +21,7 @@ export interface StockItem {
   expiryDate: string;
   alertThreshold: number;
   costPerUnit: number;
-  supplier: string;
+  
 }
 
 const sampleStock: StockItem[] = [
@@ -34,7 +34,7 @@ const sampleStock: StockItem[] = [
     expiryDate: "2025-05-15",
     alertThreshold: 5,
     costPerUnit: 1.75,
-    supplier: "Légumes du Marché"
+    
   },
   {
     id: "ing-002",
@@ -45,7 +45,7 @@ const sampleStock: StockItem[] = [
     expiryDate: "2025-04-25",
     alertThreshold: 3,
     costPerUnit: 2.25,
-    supplier: "Légumes du Marché"
+    
   },
   {
     id: "ing-003",
@@ -56,7 +56,7 @@ const sampleStock: StockItem[] = [
     expiryDate: "2025-04-21",
     alertThreshold: 2,
     costPerUnit: 12.50,
-    supplier: "Boucherie Martin"
+    
   },
   {
     id: "ing-004",
@@ -67,7 +67,7 @@ const sampleStock: StockItem[] = [
     expiryDate: "2025-08-10",
     alertThreshold: 5,
     costPerUnit: 1.20,
-    supplier: "Grossiste Alimentaire"
+    
   },
   {
     id: "ing-005",
@@ -78,7 +78,7 @@ const sampleStock: StockItem[] = [
     expiryDate: "2025-04-20",
     alertThreshold: 4,
     costPerUnit: 1.00,
-    supplier: "Ferme Laitière"
+   
   }
 ];
 
@@ -90,7 +90,7 @@ const formSchema = z.object({
   expiryDate: z.string().min(1, { message: "La date d'expiration est requise" }),
   alertThreshold: z.number().min(0, { message: "Le seuil d'alerte doit être positif" }),
   costPerUnit: z.number().min(0.01, { message: "Le coût par unité doit être positif" }),
-  supplier: z.string().min(1, { message: "Le fournisseur est requis" }),
+  
 });
 
 const StockInventory = () => {
@@ -111,13 +111,13 @@ const StockInventory = () => {
       expiryDate: new Date().toISOString().split("T")[0],
       alertThreshold: 5,
       costPerUnit: 1,
-      supplier: "",
+      
     },
   });
 
   const filteredItems = stockItems.filter((item) => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          item.supplier.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+                          
     const matchesCategory = categoryFilter === "all" || item.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
@@ -132,7 +132,7 @@ const StockInventory = () => {
       expiryDate: values.expiryDate,
       alertThreshold: values.alertThreshold,
       costPerUnit: values.costPerUnit,
-      supplier: values.supplier
+     
     };
     
     setStockItems([...stockItems, newItem]);
@@ -196,7 +196,7 @@ const StockInventory = () => {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-2 md:flex-row md:items-center">
           <Input
-            placeholder="Rechercher par nom ou fournisseur..."
+            placeholder="Rechercher par nom..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="max-w-md"
@@ -351,19 +351,7 @@ const StockInventory = () => {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name="supplier"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Fournisseur</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    
                   </div>
                   <DialogFooter>
                     <Button type="submit">Ajouter au stock</Button>
@@ -384,7 +372,7 @@ const StockInventory = () => {
               <TableHead>Quantité</TableHead>
               <TableHead>Date d'expiration</TableHead>
               <TableHead>Coût</TableHead>
-              <TableHead>Fournisseur</TableHead>
+              
               <TableHead>Statut</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -408,7 +396,7 @@ const StockInventory = () => {
                     {new Date(item.expiryDate).toLocaleDateString()}
                   </TableCell>
                   <TableCell>{item.costPerUnit.toFixed(2)} €/{item.unit}</TableCell>
-                  <TableCell>{item.supplier}</TableCell>
+                  
                   <TableCell>
                     {isExpired(item.expiryDate) && (
                       <Badge variant="destructive" className="mr-1">Expiré</Badge>
