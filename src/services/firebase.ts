@@ -26,12 +26,12 @@ import {
 // 2. Your Firebase project configuration
 //    These values link your code to your existing Firebase project (no new project is created)
 const firebaseConfig = {
-  apiKey: "AIzaSyAYqym7Dcr1k_VhyP54L8mxpzT7QctiCQ8",
+  apiKey: "AIzaSyAh_qXAMGvuayCYU0Dany2RIgC5Z4NQg1M",
   authDomain: "pferestau25.firebaseapp.com",
   projectId: "pferestau25",
-  storageBucket: "pferestau25.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // TODO: Enter your messaging sender ID
-  appId: "YOUR_APP_ID" // TODO: Enter your app ID
+  storageBucket: "pferestau25.firebasestorage.app",
+  messagingSenderId: "180090883215", // TODO: Enter your messaging sender ID
+  appId: "1:180090883215:web:caa2a13100d2bd6b4e34fa" // TODO: Enter your app ID
 };
 
 // 3. Initialize or reuse Firebase App, Auth, and Firestore
