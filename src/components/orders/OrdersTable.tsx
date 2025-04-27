@@ -74,14 +74,7 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
                   </Select>
                 ) : (
                   <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onStatusChange(order.id, "Lancée")}
-                      disabled={order.status === "Lancée" || order.status === "Annulée"}
-                    >
-                      <ArrowRight className="h-4 w-4 text-green-600" />
-                    </Button>
+                    
                     <Button
                       variant="ghost"
                       size="icon"
