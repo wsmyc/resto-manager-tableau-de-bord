@@ -27,48 +27,52 @@ interface MenuItemCost {
   profitPercentage: number;
 }
 
-// Mock ingredient cost data
+// Mock ingredient cost data (with Algerian costs)
 const mockIngredientCost: IngredientCost[] = [
-  { ingredientId: "ing-001", ingredientName: "Oignons", category: "Légumes", costPerUnit: 1.75, unit: "kg" },
-  { ingredientId: "ing-002", ingredientName: "Tomates", category: "Légumes", costPerUnit: 2.25, unit: "kg" },
-  { ingredientId: "ing-003", ingredientName: "Bœuf haché", category: "Viandes", costPerUnit: 12.50, unit: "kg" },
-  { ingredientId: "ing-004", ingredientName: "Farine", category: "Secs", costPerUnit: 1.20, unit: "kg" },
-  { ingredientId: "ing-005", ingredientName: "Lait", category: "Produits Laitiers", costPerUnit: 1.00, unit: "L" },
+  { ingredientId: "ing-001", ingredientName: "Oignons", category: "Légumes", costPerUnit: 70, unit: "kg" },
+  { ingredientId: "ing-002", ingredientName: "Tomates", category: "Légumes", costPerUnit: 80, unit: "kg" },
+  { ingredientId: "ing-003", ingredientName: "Agneau haché", category: "Viandes", costPerUnit: 2800, unit: "kg" },
+  { ingredientId: "ing-004", ingredientName: "Frik (blé vert)", category: "Secs", costPerUnit: 100, unit: "kg" },
+  { ingredientId: "ing-005", ingredientName: "Pois chiches", category: "Légumineuses", costPerUnit: 400, unit: "kg" },
+  { ingredientId: "ing-006", ingredientName: "Ail", category: "Légumes", costPerUnit: 300, unit: "kg" },
+  { ingredientId: "ing-007", ingredientName: "Poulet", category: "Viandes", costPerUnit: 400, unit: "kg" },
+  { ingredientId: "ing-008", ingredientName: "Semoule", category: "Céréales", costPerUnit: 120, unit: "kg" },
+  { ingredientId: "ing-009", ingredientName: "Merguez", category: "Viandes", costPerUnit: 1600, unit: "kg" },
 ];
 
-// Mock menu item cost data
+// Mock menu item cost data with Algerian menu items
 const mockMenuItemCosts: MenuItemCost[] = [
-  { menuItemId: "101", menuItemName: "Soupe à l'Oignon", category: "Entrées", subcategory: "Soupes et Potages", sellingPrice: 7.50, ingredientCost: 2.15, profitMargin: 5.35, profitPercentage: 71.3 },
-  { menuItemId: "102", menuItemName: "Salade Niçoise", category: "Entrées", subcategory: "Salades et Crudités", sellingPrice: 9.00, ingredientCost: 3.65, profitMargin: 5.35, profitPercentage: 59.4 },
-  { menuItemId: "201", menuItemName: "Burger Bistrot", category: "Plats", subcategory: "Sandwichs et Burgers", sellingPrice: 15.00, ingredientCost: 5.75, profitMargin: 9.25, profitPercentage: 61.7 },
-  { menuItemId: "301", menuItemName: "Coq au Vin", category: "Plats", subcategory: "Cuisine Traditionnelle", sellingPrice: 16.00, ingredientCost: 6.20, profitMargin: 9.80, profitPercentage: 61.3 },
-  { menuItemId: "501", menuItemName: "Frites Maison", category: "Accompagnements", subcategory: "Féculents", sellingPrice: 5.00, ingredientCost: 1.30, profitMargin: 3.70, profitPercentage: 74.0 },
-  { menuItemId: "801", menuItemName: "Crème Brûlée", category: "Desserts", subcategory: "Crèmes et Mousses", sellingPrice: 6.50, ingredientCost: 1.90, profitMargin: 4.60, profitPercentage: 70.8 },
+  { menuItemId: "101", menuItemName: "Chorba Frik", category: "Entrées", subcategory: "Soupes et Potages", sellingPrice: 500, ingredientCost: 260, profitMargin: 240, profitPercentage: 48.0 },
+  { menuItemId: "102", menuItemName: "Lablabi", category: "Entrées", subcategory: "Soupes et Potages", sellingPrice: 450, ingredientCost: 100, profitMargin: 350, profitPercentage: 77.8 },
+  { menuItemId: "201", menuItemName: "Couscous Poulet", category: "Plats", subcategory: "Cuisine Traditionnelle", sellingPrice: 750, ingredientCost: 240, profitMargin: 510, profitPercentage: 68.0 },
+  { menuItemId: "207", menuItemName: "Tagine Agneau Pruneaux", category: "Plats", subcategory: "Cuisine Traditionnelle", sellingPrice: 3400, ingredientCost: 850, profitMargin: 2550, profitPercentage: 75.0 },
+  { menuItemId: "211", menuItemName: "Steak Haché", category: "Plats", subcategory: "Viandes", sellingPrice: 2200, ingredientCost: 600, profitMargin: 1600, profitPercentage: 72.7 },
+  { menuItemId: "501", menuItemName: "Thé à la Menthe", category: "Boissons", subcategory: "Boissons Chaudes", sellingPrice: 300, ingredientCost: 80, profitMargin: 220, profitPercentage: 73.3 },
 ];
 
-// Monthly expense data
+// Monthly expense data in DZD
 const mockMonthlyExpenses = [
-  { month: "Jan", expenses: 3850 },
-  { month: "Fév", expenses: 4230 },
-  { month: "Mar", expenses: 3950 },
-  { month: "Avr", expenses: 4100 },
-  { month: "Mai", expenses: 4320 },
-  { month: "Juin", expenses: 4580 },
-  { month: "Juil", expenses: 4900 },
-  { month: "Août", expenses: 5120 },
-  { month: "Sep", expenses: 4750 },
-  { month: "Oct", expenses: 4380 },
-  { month: "Nov", expenses: 4200 },
-  { month: "Déc", expenses: 4650 },
+  { month: "Jan", expenses: 385000 },
+  { month: "Fév", expenses: 423000 },
+  { month: "Mar", expenses: 395000 },
+  { month: "Avr", expenses: 410000 },
+  { month: "Mai", expenses: 432000 },
+  { month: "Juin", expenses: 458000 },
+  { month: "Juil", expenses: 490000 },
+  { month: "Août", expenses: 512000 },
+  { month: "Sep", expenses: 475000 },
+  { month: "Oct", expenses: 438000 },
+  { month: "Nov", expenses: 420000 },
+  { month: "Déc", expenses: 465000 },
 ];
 
-// Category expense data
+// Category expense data in DZD
 const mockCategoryExpenses = [
-  { name: "Légumes", value: 1450 },
-  { name: "Viandes", value: 2850 },
-  { name: "Produits Laitiers", value: 1200 },
-  { name: "Boissons", value: 850 },
-  { name: "Secs", value: 750 },
+  { name: "Légumes", value: 145000 },
+  { name: "Viandes", value: 285000 },
+  { name: "Produits Laitiers", value: 120000 },
+  { name: "Boissons", value: 85000 },
+  { name: "Secs", value: 75000 },
 ];
 
 // COLORS for pie chart
@@ -109,7 +113,7 @@ const ExpenseAnalytics = () => {
                 <SelectValue placeholder="Trier par" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="profitMargin">Marge (€)</SelectItem>
+                <SelectItem value="profitMargin">Marge (DZD)</SelectItem>
                 <SelectItem value="profitPercentage">Marge (%)</SelectItem>
                 <SelectItem value="ingredientCost">Coût des Ingrédients</SelectItem>
                 <SelectItem value="sellingPrice">Prix de Vente</SelectItem>
@@ -131,7 +135,7 @@ const ExpenseAnalytics = () => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="menuItemName" angle={-45} textAnchor="end" height={70} />
                     <YAxis />
-                    <Tooltip formatter={(value) => `${value} €`} />
+                    <Tooltip formatter={(value) => `${value} DZD`} />
                     <Legend />
                     <Bar dataKey="ingredientCost" stackId="a" fill="#8884d8" name="Coût des Ingrédients" />
                     <Bar dataKey="profitMargin" stackId="a" fill="#82ca9d" name="Marge" />
@@ -174,7 +178,7 @@ const ExpenseAnalytics = () => {
                     <TableHead>Catégorie</TableHead>
                     <TableHead>Prix de Vente</TableHead>
                     <TableHead>Coût des Ingrédients</TableHead>
-                    <TableHead>Marge (€)</TableHead>
+                    <TableHead>Marge (DZD)</TableHead>
                     <TableHead>Marge (%)</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -183,9 +187,9 @@ const ExpenseAnalytics = () => {
                     <TableRow key={item.menuItemId}>
                       <TableCell className="font-medium">{item.menuItemName}</TableCell>
                       <TableCell>{item.category}</TableCell>
-                      <TableCell>{item.sellingPrice.toFixed(2)} €</TableCell>
-                      <TableCell>{item.ingredientCost.toFixed(2)} €</TableCell>
-                      <TableCell>{item.profitMargin.toFixed(2)} €</TableCell>
+                      <TableCell>{item.sellingPrice.toFixed(2)} DZD</TableCell>
+                      <TableCell>{item.ingredientCost.toFixed(2)} DZD</TableCell>
+                      <TableCell>{item.profitMargin.toFixed(2)} DZD</TableCell>
                       <TableCell>{item.profitPercentage.toFixed(1)} %</TableCell>
                     </TableRow>
                   ))}
@@ -234,7 +238,7 @@ const ExpenseAnalytics = () => {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value) => `${value} €`} />
+                    <Tooltip formatter={(value) => `${value} DZD`} />
                   </PieChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -260,7 +264,7 @@ const ExpenseAnalytics = () => {
                       <TableRow key={ingredient.ingredientId}>
                         <TableCell className="font-medium">{ingredient.ingredientName}</TableCell>
                         <TableCell>{ingredient.category}</TableCell>
-                        <TableCell>{ingredient.costPerUnit.toFixed(2)} €/{ingredient.unit}</TableCell>
+                        <TableCell>{ingredient.costPerUnit.toFixed(2)} DZD/{ingredient.unit}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -285,7 +289,7 @@ const ExpenseAnalytics = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
-                  <Tooltip formatter={(value) => `${value} €`} />
+                  <Tooltip formatter={(value) => `${value} DZD`} />
                   <Legend />
                   <Line
                     type="monotone"
