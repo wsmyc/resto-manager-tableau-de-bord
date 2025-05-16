@@ -66,7 +66,7 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
       email: "",
       phone: "",
       role: "Serveur",
-      salary: 1800,
+      salary: 50000,
     },
   })
 
@@ -116,7 +116,7 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
               <FormItem>
                 <FormLabel>Prénom</FormLabel>
                 <FormControl>
-                  <Input placeholder="Jean" {...field} />
+                  <Input placeholder="Fares" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -129,7 +129,7 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
               <FormItem>
                 <FormLabel>Nom</FormLabel>
                 <FormControl>
-                  <Input placeholder="Dupont" {...field} />
+                  <Input placeholder="Cherif" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -143,7 +143,7 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="jean.dupont@restaurant.fr" {...field} />
+                <Input type="email" placeholder="fares.cherif@example.dz" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -157,7 +157,7 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
               <FormLabel>Téléphone</FormLabel>
               <FormControl>
                 <Input 
-                  placeholder="06 12 34 56 78" 
+                  placeholder="05 12 34 56 78" 
                   {...field} 
                   onChange={(e) => {
                     const formatted = formatPhoneNumber(e.target.value);
@@ -196,9 +196,9 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
             name="salary"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Salaire (€/mois)</FormLabel>
+                <FormLabel>Salaire (DZD/mois)</FormLabel>
                 <FormControl>
-                  <Input type="number" min={0} step={100} {...field} />
+                  <Input type="number" min={0} step={1000} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

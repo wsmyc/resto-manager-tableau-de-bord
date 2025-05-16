@@ -52,7 +52,7 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
                   {order.items.join(", ")}
                 </div>
               </TableCell>
-              <TableCell>{order.total.toFixed(2)}€</TableCell>
+              <TableCell>{order.total.toFixed(2)} DZD</TableCell>
               <TableCell>
                 <OrderStatusBadge status={order.status} />
               </TableCell>

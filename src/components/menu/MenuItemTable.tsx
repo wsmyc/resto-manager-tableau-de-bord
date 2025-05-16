@@ -130,7 +130,7 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
                     )}
                   </div>
                 </TableCell>
-                <TableCell>{item.price.toFixed(2)}€</TableCell>
+                <TableCell>{item.price.toFixed(2)} DZD</TableCell>
                 <TableCell>
                   <Badge variant="outline" className="bg-restaurant-primary/10 text-restaurant-primary border-restaurant-primary/20">
                     {item.category}
@@ -151,7 +151,7 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
                         onClick={() => openCostDialog(item.id)}
                       >
                         <FileText className="h-3 w-3" />
-                        {costAmount > 0 ? `${costAmount.toFixed(2)}€` : "N/A"}
+                        {costAmount > 0 ? `${costAmount.toFixed(2)} DZD` : "N/A"}
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-md">
@@ -168,15 +168,15 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
                             <div className="grid grid-cols-2 gap-4 py-4">
                               <div className="flex flex-col">
                                 <span className="text-sm text-muted-foreground">Prix de vente</span>
-                                <span className="text-xl font-bold">{item.price.toFixed(2)}€</span>
+                                <span className="text-xl font-bold">{item.price.toFixed(2)} DZD</span>
                               </div>
                               <div className="flex flex-col">
                                 <span className="text-sm text-muted-foreground">Coût total</span>
-                                <span className="text-xl font-bold">{costData.totalCost.toFixed(2)}€</span>
+                                <span className="text-xl font-bold">{costData.totalCost.toFixed(2)} DZD</span>
                               </div>
                               <div className="flex flex-col">
                                 <span className="text-sm text-muted-foreground">Marge</span>
-                                <span className="text-xl font-bold text-emerald-600">{profitMargin.toFixed(2)}€</span>
+                                <span className="text-xl font-bold text-emerald-600">{profitMargin.toFixed(2)} DZD</span>
                               </div>
                               <div className="flex flex-col">
                                 <span className="text-sm text-muted-foreground">Marge (%)</span>
@@ -195,13 +195,13 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
                                         ({detail.quantity} {detail.unit})
                                       </span>
                                     </div>
-                                    <span>{detail.cost.toFixed(2)}€</span>
+                                    <span>{detail.cost.toFixed(2)} DZD</span>
                                   </div>
                                 ))}
                               </div>
                               <div className="mt-2 pt-2 border-t flex justify-between font-bold">
                                 <span>Total</span>
-                                <span>{costData.totalCost.toFixed(2)}€</span>
+                                <span>{costData.totalCost.toFixed(2)} DZD</span>
                               </div>
                             </Card>
                           </>

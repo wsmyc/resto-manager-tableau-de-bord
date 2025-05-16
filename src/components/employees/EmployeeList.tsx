@@ -22,7 +22,7 @@ export interface Employee {
   phone: string;
   role: 'Chef' | 'Serveur';
   salary: number;
-  tempPassword?: string; // Add the tempPassword property as optional
+  tempPassword?: string;
 }
 
 export const EmployeeList = ({ employees, onMessageSent }: { 
@@ -43,7 +43,7 @@ export const EmployeeList = ({ employees, onMessageSent }: {
               <TableHead className="w-[220px]">Email</TableHead>
               <TableHead className="w-[160px]">Téléphone</TableHead>
               <TableHead className="w-[120px]">Rôle</TableHead>
-              <TableHead className="w-[140px]">Salaire (€)</TableHead>
+              <TableHead className="w-[140px]">Salaire (DZD)</TableHead>
               <TableHead className="w-[120px] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -85,7 +85,7 @@ export const EmployeeList = ({ employees, onMessageSent }: {
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <DollarSign className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      <span>{employee.salary} €/mois</span>
+                      <span>{employee.salary} DZD/mois</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-right">

@@ -72,7 +72,7 @@ const SignUp = () => {
                 <Label htmlFor="firstName">Prénom</Label>
                 <Input
                   id="firstName"
-                  placeholder="Jean"
+                  placeholder="Fares"
                   required
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
@@ -82,7 +82,7 @@ const SignUp = () => {
                 <Label htmlFor="lastName">Nom</Label>
                 <Input
                   id="lastName"
-                  placeholder="Dupont"
+                  placeholder="Cherif"
                   required
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
@@ -94,7 +94,7 @@ const SignUp = () => {
               <Label htmlFor="username">Nom d'utilisateur</Label>
               <Input
                 id="username"
-                placeholder="jean.dupont"
+                placeholder="fares.cherif"
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -106,7 +106,7 @@ const SignUp = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="jean.dupont@restaurant.com"
+                placeholder="fares.cherif@example.dz"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
