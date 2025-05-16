@@ -1,0 +1,170 @@
+// src/apiService.ts
+
+import axios, { AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
+import { auth } from './firebase';
+import type {
+  commandes,
+  Reservation,
+  Ingredient,
+  Plat,
+  commandePlat,
+  SalesBySubcategory,
+  Employe
+} from './types';
+
+// 1. Create an Axios instance pointing at your Cloud Functions base URL
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE,
+});
+
+// 2. Interceptor to auto-attach Firebase Auth ID token
+api.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig) => {
+    const user = auth.currentUser;
+    if (user) {
+      const token = await user.getIdToken();
+      // Ensure headers exists and is an AxiosHeaders instance
+      if (!config.headers) {
+        config.headers = new AxiosHeaders();
+      }
+      // Use AxiosHeaders.set to attach the token
+      config.headers.set('Authorization', `Bearer ${token}`);
+    }
+    return config;
+  },
+  error => Promise.reject(error)
+);
+
+// ----- Authentication -----
+export function managerSignup(data: { username: string; password: string }) {
+  return api.post('/auth/signup/', data);
+}
+
+export function managerLogin(data: { username: string; password: string }) {
+  return api.post('/auth/login/', data);
+}
+
+export function createEmploye(data: Partial<Employe>) {
+  return api.post('/employes/create/', data);
+}
+
+// ----- Commandes -----
+export function getAllCommandes(): Promise<commandes[]> {
+  return api.get('/commandes/').then(res => res.data);
+}
+
+export function getCommandesEnAttente(): Promise<commandes[]> {
+  return api.get('/commandes/en-attente/').then(res => res.data);
+}
+
+export function getCommandesLancees(): Promise<commandes[]> {
+  return api.get('/commandes/lancees/').then(res => res.data);
+}
+
+export function getCommandesServies(): Promise<commandes[]> {
+  return api.get('/commandes/servies/').then(res => res.data);
+}
+
+export function getCommandesAnnulees(): Promise<commandes[]> {
+  return api.get('/commandes/annulees/').then(res => res.data);
+}
+
+export function getTotalCommandes(): Promise<{ total: number }> {
+  return api.get('/commandes/total/').then(res => res.data);
+}
+
+// ----- Commande Plat -----
+export function getCommandePlatList(): Promise<commandePlat[]> {
+  return api.get('/commande-plat/').then(res => res.data);
+}
+
+// ----- Categories & Sous-Categories -----
+export function getCategories(): Promise<string[]> {
+  return api.get('/categories/').then(res => res.data);
+}
+
+export function getSousCategories(): Promise<string[]> {
+  return api.get('/sous-categories/').then(res => res.data);
+}
+
+export function getSousCategoriesByCategory(categoryId: string): Promise<string[]> {
+  return api.get(`/categories/sous-categories/?category_id=${categoryId}`).then(res => res.data);
+}
+
+// ----- Plats -----
+export function getAllPlats(): Promise<Plat[]> {
+  return api.get('/plats/').then(res => res.data);
+}
+
+export function addPlat(data: Plat) {
+  return api.post('/plats/add/', data);
+}
+
+export function updatePlat(platId: string, data: Partial<Plat>) {
+  return api.put(`/plats/${platId}/`, data);
+}
+
+export function deletePlat(platId: string) {
+  return api.delete(`/plats/${platId}/delete/`);
+}
+
+export function getPlatCostDetails(platId: string) {
+  return api.get(`/plats/${platId}/cost-details/`).then(res => res.data);
+}
+
+// ----- Ingredients -----
+export function getAllIngredients(): Promise<Ingredient[]> {
+  return api.get('/ingredients/').then(res => res.data);
+}
+
+export function addIngredient(data: Ingredient) {
+  return api.post('/ingredients/add/', data);
+}
+
+export function restockIngredient(ingredientId: string, quantity: number) {
+  return api.post(`/ingredients/${ingredientId}/restock/`, { quantity });
+}
+
+// ----- Reservations -----
+export function getAllReservations(): Promise<Reservation[]> {
+  return api.get('/reservations/').then(res => res.data);
+}
+
+export function getActiveReservations(): Promise<Reservation[]> {
+  return api.get('/reservations/active/').then(res => res.data);
+}
+
+export function addReservation(data: Partial<Reservation>) {
+  return api.post('/reservations/add/', data);
+}
+
+export function confirmReservation(reservationId: string) {
+  return api.post(`/reservations/${reservationId}/confirm/`);
+}
+
+export function cancelReservation(reservationId: string) {
+  return api.post(`/reservations/${reservationId}/cancel/`);
+}
+
+// ----- Revenue -----
+export function getDailyRevenue(): Promise<{ date: string; revenue: number }[]> {
+  return api.get('/revenue/daily/').then(res => res.data);
+}
+
+export function getWeeklyRevenue(): Promise<{ weekly: number }> {
+  return api.get('/revenue/weekly/').then(res => res.data);
+}
+
+// ----- Employees -----
+export function getAllEmployees(): Promise<Employe[]> {
+  return api.get('/employes/').then(res => res.data);
+}
+
+export function updateEmployeeSalary(employeeId: string, salary: string) {
+  return api.post(`/employes/${employeeId}/update-salary/`, { salary });
+}
+
+// ----- Sales by Subcategory -----
+export function getSalesBySubcategory(): Promise<SalesBySubcategory[]> {
+  return api.get('/sales-by-subcategory/').then(res => res.data);
+}
