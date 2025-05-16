@@ -1,4 +1,3 @@
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,22 +24,19 @@ export interface MenuItem {
     | "Boissons"
     | "Desserts";
   subcategory:
-    | "Soupe"
-    | "Salade"
-    | "Feuilleté"
-    | "Couscous"
-    | "Tagine"
-    | "Viande"
-    | "Poisson"
+    | "Soupes et Potages"
+    | "Salades et Crudités"
+    | "Spécialités Chaudes"
+    | "Cuisine Traditionnelle"
+    | "Viandes"
+    | "Poissons et Fruits de Mer"
     | "Végétarien"
-    | "Riz"
+    | "Féculents"
     | "Légumes"
-    | "Pain"
-    | "Chaude"
-    | "Froid"
-    | "Gâteau"
-    | "Pâtisserie"
-    | "Glace";
+    | "Pâtisseries"
+    | "Fruits et Sorbets"
+    | "Boissons Chaudes"
+    | "Boissons Froides";
   ingredients?: string;
 }
 
