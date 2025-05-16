@@ -55,23 +55,42 @@ const mockIngredientCosts = [
   {
     menuItemId: "101",
     costDetails: [
-      { name: "Oignons", quantity: 0.2, unit: "kg", cost: 0.35 },
-      { name: "Bouillon de bœuf", quantity: 0.3, unit: "L", cost: 0.60 },
-      { name: "Comté", quantity: 0.05, unit: "kg", cost: 0.85 },
-      { name: "Pain baguette", quantity: 0.1, unit: "kg", cost: 0.35 },
+      { name: "Oignons", quantity: 0.2, unit: "kg", cost: 35 },
+      { name: "Frik (blé vert)", quantity: 0.3, unit: "kg", cost: 60 },
+      { name: "Agneau haché", quantity: 0.1, unit: "kg", cost: 150 },
+      { name: "Épices", quantity: 0.01, unit: "kg", cost: 15 },
     ],
-    totalCost: 2.15
+    totalCost: 260
   },
   {
     menuItemId: "102",
     costDetails: [
-      { name: "Thon", quantity: 0.1, unit: "kg", cost: 1.75 },
-      { name: "Olives noires", quantity: 0.02, unit: "kg", cost: 0.25 },
-      { name: "Œufs", quantity: 1, unit: "unité", cost: 0.30 },
-      { name: "Tomates", quantity: 0.15, unit: "kg", cost: 0.35 },
-      { name: "Vinaigrette", quantity: 0.03, unit: "L", cost: 0.10 },
+      { name: "Pois chiches", quantity: 0.2, unit: "kg", cost: 50 },
+      { name: "Ail", quantity: 0.02, unit: "kg", cost: 10 },
+      { name: "Pain", quantity: 0.1, unit: "kg", cost: 25 },
+      { name: "Épices", quantity: 0.01, unit: "kg", cost: 15 },
     ],
-    totalCost: 2.75
+    totalCost: 100
+  },
+  {
+    menuItemId: "201",
+    costDetails: [
+      { name: "Poulet", quantity: 0.3, unit: "kg", cost: 120 },
+      { name: "Semoule", quantity: 0.2, unit: "kg", cost: 40 },
+      { name: "Légumes", quantity: 0.2, unit: "kg", cost: 60 },
+      { name: "Épices", quantity: 0.01, unit: "kg", cost: 20 },
+    ],
+    totalCost: 240
+  },
+  {
+    menuItemId: "207",
+    costDetails: [
+      { name: "Agneau", quantity: 0.4, unit: "kg", cost: 600 },
+      { name: "Pruneaux", quantity: 0.1, unit: "kg", cost: 120 },
+      { name: "Amandes", quantity: 0.05, unit: "kg", cost: 100 },
+      { name: "Épices", quantity: 0.02, unit: "kg", cost: 30 },
+    ],
+    totalCost: 850
   },
 ];
 

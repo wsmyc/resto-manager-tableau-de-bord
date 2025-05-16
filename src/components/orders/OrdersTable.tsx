@@ -74,7 +74,6 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
                   </Select>
                 ) : (
                   <div className="flex gap-2">
-                    
                     <Button
                       variant="ghost"
                       size="icon"
