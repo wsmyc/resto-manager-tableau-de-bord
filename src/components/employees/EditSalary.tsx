@@ -61,20 +61,20 @@ export const EditSalary = ({ employee, onClose, onSuccess }: EditSalaryProps) =>
         <Label htmlFor="currentSalary">Salaire actuel</Label>
         <Input 
           id="currentSalary" 
-          value={`${employee.salary} €/mois`} 
+          value={`${employee.salary} DZD/mois`} 
           disabled 
         />
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="newSalary">Nouveau salaire (€/mois)</Label>
+        <Label htmlFor="newSalary">Nouveau salaire (DZD/mois)</Label>
         <Input 
           id="newSalary" 
           type="number"
           value={salary}
           onChange={(e) => setSalary(Number(e.target.value))}
           min={0}
-          step={100}
+          step={1000}
           required
         />
       </div>

@@ -9,22 +9,31 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 const mockEmployees: Employee[] = [
   {
     id: 1,
-    firstName: "Jean",
-    lastName: "Dupont",
-    email: "jean.dupont@restaurant.fr",
-    phone: "06 12 34 56 78",
+    firstName: "Fares",
+    lastName: "Cherif",
+    email: "fares.cherif@example.dz",
+    phone: "05 12 34 56 78",
     role: "Chef",
-    salary: 2800
+    salary: 50000
   },
   {
     id: 2,
-    firstName: "Marie",
-    lastName: "Laurent",
-    email: "marie.laurent@restaurant.fr",
+    firstName: "Omar",
+    lastName: "Benkirane",
+    email: "omar.benkirane@example.dz",
     phone: "06 98 76 54 32",
     role: "Serveur",
-    salary: 1800
+    salary: 35000
   },
+  {
+    id: 3,
+    firstName: "Kaouthar",
+    lastName: "Bensalah",
+    email: "kaouthar.bensalah@example.dz",
+    phone: "05 55 44 33 22",
+    role: "Serveur",
+    salary: 35000
+  }
 ];
 
 const Employees = () => {

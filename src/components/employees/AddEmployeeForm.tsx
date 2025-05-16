@@ -66,7 +66,7 @@ export const AddEmployeeForm = ({ onSuccess }: AddEmployeeFormProps) => {
       email: "",
       phone: "",
       role: "Serveur",
-      salary: 50000,
+      salary: 35000,
     },
   })
 

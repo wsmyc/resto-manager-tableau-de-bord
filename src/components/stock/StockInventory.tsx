@@ -21,7 +21,6 @@ export interface StockItem {
   expiryDate: string;
   alertThreshold: number;
   costPerUnit: number;
-  
 }
 
 const sampleStock: StockItem[] = [
@@ -33,8 +32,7 @@ const sampleStock: StockItem[] = [
     unit: "kg",
     expiryDate: "2025-05-15",
     alertThreshold: 5,
-    costPerUnit: 1.75,
-    
+    costPerUnit: 175,
   },
   {
     id: "ing-002",
@@ -44,8 +42,7 @@ const sampleStock: StockItem[] = [
     unit: "kg",
     expiryDate: "2025-04-25",
     alertThreshold: 3,
-    costPerUnit: 2.25,
-    
+    costPerUnit: 225,
   },
   {
     id: "ing-003",
@@ -55,8 +52,7 @@ const sampleStock: StockItem[] = [
     unit: "kg",
     expiryDate: "2025-04-21",
     alertThreshold: 2,
-    costPerUnit: 12.50,
-    
+    costPerUnit: 1250,
   },
   {
     id: "ing-004",
@@ -66,8 +62,7 @@ const sampleStock: StockItem[] = [
     unit: "kg",
     expiryDate: "2025-08-10",
     alertThreshold: 5,
-    costPerUnit: 1.20,
-    
+    costPerUnit: 120,
   },
   {
     id: "ing-005",
@@ -77,8 +72,7 @@ const sampleStock: StockItem[] = [
     unit: "L",
     expiryDate: "2025-04-20",
     alertThreshold: 4,
-    costPerUnit: 1.00,
-   
+    costPerUnit: 100,
   }
 ];
 
@@ -90,7 +84,6 @@ const formSchema = z.object({
   expiryDate: z.string().min(1, { message: "La date d'expiration est requise" }),
   alertThreshold: z.number().min(0, { message: "Le seuil d'alerte doit être positif" }),
   costPerUnit: z.number().min(0.01, { message: "Le coût par unité doit être positif" }),
-  
 });
 
 const StockInventory = () => {
@@ -110,8 +103,7 @@ const StockInventory = () => {
       unit: "kg",
       expiryDate: new Date().toISOString().split("T")[0],
       alertThreshold: 5,
-      costPerUnit: 1,
-      
+      costPerUnit: 100,
     },
   });
 
@@ -132,7 +124,6 @@ const StockInventory = () => {
       expiryDate: values.expiryDate,
       alertThreshold: values.alertThreshold,
       costPerUnit: values.costPerUnit,
-     
     };
     
     setStockItems([...stockItems, newItem]);
@@ -372,7 +363,6 @@ const StockInventory = () => {
               <TableHead>Quantité</TableHead>
               <TableHead>Date d'expiration</TableHead>
               <TableHead>Coût</TableHead>
-              
               <TableHead>Statut</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -392,11 +382,10 @@ const StockInventory = () => {
                   <TableCell>
                     {item.quantity} {item.unit}
                   </TableCell>
-                  <TableCell className={isExpired(item.expiryDate) ? "text-red-500" : isNearExpiry(item.expiryDate) ? "text-amber-500" : ""}>
+                  <TableCell>
                     {new Date(item.expiryDate).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>{item.costPerUnit.toFixed(2)} €/{item.unit}</TableCell>
-                  
+                  <TableCell>{item.costPerUnit.toFixed(2)} DZD/{item.unit}</TableCell>
                   <TableCell>
                     {isExpired(item.expiryDate) && (
                       <Badge variant="destructive" className="mr-1">Expiré</Badge>

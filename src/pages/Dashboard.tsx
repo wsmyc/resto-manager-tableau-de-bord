@@ -4,15 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ShoppingCart, Calendar, CircleDollarSign, UtensilsCrossed, TrendingUp, Users } from "lucide-react";
 
-// Dummy data for the charts
+// Données révisées pour le tableau de bord
 const weeklyRevenueData = [
-  { name: 'Lun', revenue: 2400 },
-  { name: 'Mar', revenue: 1398 },
-  { name: 'Mer', revenue: 3800 },
-  { name: 'Jeu', revenue: 3908 },
-  { name: 'Ven', revenue: 4800 },
-  { name: 'Sam', revenue: 5800 },
-  { name: 'Dim', revenue: 4300 },
+  { name: 'Lun', revenue: 24000 },
+  { name: 'Mar', revenue: 13980 },
+  { name: 'Mer', revenue: 38000 },
+  { name: 'Jeu', revenue: 39080 },
+  { name: 'Ven', revenue: 48000 },
+  { name: 'Sam', revenue: 58000 },
+  { name: 'Dim', revenue: 43000 },
 ];
 
 const ordersByCategory = [
@@ -39,12 +39,12 @@ const Dashboard = () => {
       setStats({
         totalOrders: 187,
         activeReservations: 24,
-        weeklyRevenue: 12580,
+        weeklyRevenue: 125800,
         popularItems: [
-          { name: "Bœuf Bourguignon", count: 32 },
-          { name: "Coq au Vin", count: 28 },
-          { name: "Crème Brûlée", count: 23 },
-          { name: "Salade Niçoise", count: 19 },
+          { name: "Chorba Frik", count: 32 },
+          { name: "Couscous Agneau", count: 28 },
+          { name: "Tagine Agneau Pruneaux", count: 23 },
+          { name: "Tajine Kefta", count: 19 },
         ]
       });
     };
@@ -96,7 +96,7 @@ const Dashboard = () => {
             <CircleDollarSign className="h-4 w-4 text-restaurant-accent" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.weeklyRevenue.toLocaleString()}€</div>
+            <div className="text-2xl font-bold">{stats.weeklyRevenue.toLocaleString()} DZD</div>
             <p className="text-xs text-muted-foreground mt-1">
               +12.5% depuis la semaine dernière
             </p>
@@ -124,7 +124,7 @@ const Dashboard = () => {
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip 
-                    formatter={(value) => [`${value}€`, 'Revenus']}
+                    formatter={(value) => [`${value} DZD`, 'Revenus']}
                     contentStyle={{
                       backgroundColor: 'white',
                       borderRadius: '0.5rem',

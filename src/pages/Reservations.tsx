@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -80,54 +79,54 @@ const Reservations = () => {
         const mockReservations: Reservation[] = [
           {
             id: "RSV-001",
-            customerName: "Jean Dupont",
+            customerName: "Karim Benzema",
             people: 4,
             date: today,
             time: "19:30",
             status: "Confirmée",
-            phone: "06 12 34 56 78"
+            phone: "05 55 12 34 56"
           },
           {
             id: "RSV-002",
-            customerName: "Marie Lefebvre",
+            customerName: "Inès Abdelli",
             people: 2,
             date: today,
             time: "20:00",
             status: "En attente",
             notes: "Table près de la fenêtre",
-            phone: "06 23 45 67 89"
+            phone: "06 61 23 45 67"
           },
           {
             id: "RSV-003",
-            customerName: "Philippe Martin",
+            customerName: "Mohammed Lamine",
             people: 6,
             date: tomorrow,
             time: "19:00",
             status: "Confirmée",
-            phone: "06 34 56 78 90"
+            phone: "07 70 34 56 78"
           },
           {
             id: "RSV-004",
-            customerName: "Sophie Bernard",
+            customerName: "Amina Khelif",
             people: 3,
             date: tomorrow,
             time: "20:30",
             status: "En attente",
-            phone: "06 45 67 89 01"
+            phone: "05 41 67 89 01"
           },
           {
             id: "RSV-005",
-            customerName: "Lucas Petit",
+            customerName: "Riyad Mahrez",
             people: 2,
             date: dayAfterTomorrow,
             time: "21:00",
             status: "Confirmée",
             notes: "Anniversaire",
-            phone: "06 56 78 90 12"
+            phone: "05 57 78 90 12"
           },
           {
             id: "RSV-006",
-            customerName: "Emma Dubois",
+            customerName: "Doria Achour",
             people: 8,
             date: yesterday,
             time: "19:30",
@@ -136,22 +135,22 @@ const Reservations = () => {
           },
           {
             id: "RSV-007",
-            customerName: "Thomas Leroy",
+            customerName: "Mourad Oudia",
             people: 5,
             date: today,
             time: "12:30",
             status: "Confirmée",
             notes: "Allergie aux fruits de mer",
-            phone: "06 78 90 12 34"
+            phone: "07 90 12 34 56"
           },
           {
             id: "RSV-008",
-            customerName: "Camille Roux",
+            customerName: "Samira Bouzidi",
             people: 2,
             date: tomorrow,
             time: "13:00",
             status: "En attente",
-            phone: "06 89 01 23 45"
+            phone: "05 59 01 23 45"
           }
         ];
         
@@ -363,7 +362,7 @@ const Reservations = () => {
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-restaurant-accent"></div>
               <p className="mt-2 text-restaurant-primary">Chargement des réservations...</p>
             </div>
-          ) : sortedReservations.length === 0 ? (
+          ) : reservations.length === 0 ? (
             <div className="text-center py-8 flex flex-col items-center">
               <AlertCircle className="h-12 w-12 text-gray-400 mb-2" />
               <h3 className="font-medium text-lg text-restaurant-primary">Aucune réservation trouvée</h3>
@@ -386,7 +385,7 @@ const Reservations = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {sortedReservations.map((reservation) => (
+                  {reservations.map((reservation) => (
                     <TableRow key={reservation.id}>
                       <TableCell className="font-medium">{reservation.id}</TableCell>
                       <TableCell>{reservation.customerName}</TableCell>
@@ -397,10 +396,8 @@ const Reservations = () => {
                       <TableCell>
                         <ReservationStatusBadge status={reservation.status} />
                       </TableCell>
-                      <TableCell>
-                        <div className="max-w-xs truncate">
-                          {reservation.notes || "-"}
-                        </div>
+                      <TableCell className="max-w-xs truncate">
+                        {reservation.notes || "-"}
                       </TableCell>
                       <TableCell>
                         <div className="flex space-x-2">

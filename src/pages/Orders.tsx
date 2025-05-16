@@ -32,83 +32,83 @@ const Orders = () => {
         const mockedOrders: Order[] = [
           {
             id: "ORD-001",
-            customerName: "Jean Dupont",
-            items: ["Bœuf Bourguignon", "Crème Brûlée", "Vin Rouge"],
-            total: 42.50,
+            customerName: "Ahmed Mokhtar",
+            items: ["Chorba Frik", "Kalb el Louz", "Thé à la Menthe"],
+            total: 1050,
             status: "En attente",
             time: "14:30",
             tableNumber: "T01",
-            server: "Marie Laurent"
+            server: "Fares Cherif"
           },
           {
             id: "ORD-002",
-            customerName: "Marie Lefebvre",
-            items: ["Salade Niçoise", "Coq au Vin", "Eau Minérale"],
-            total: 35.80,
+            customerName: "Meriem Boulmerka",
+            items: ["Salade Mechouia", "Couscous Poulet", "Eau Minérale"],
+            total: 1200,
             status: "En attente",
             time: "14:45",
             tableNumber: "T03",
-            server: "Philippe Martin"
+            server: "Omar Benkirane"
           },
           {
             id: "ORD-003",
-            customerName: "Philippe Martin",
-            items: ["Quiche Lorraine", "Ratatouille", "Tarte Tatin", "Vin Blanc"],
-            total: 53.20,
+            customerName: "Karim Ziani",
+            items: ["Bourek Viande", "Tagine Agneau Pruneaux", "Baklava", "Thé Vert Nature"],
+            total: 4200,
             status: "Lancée",
             time: "14:15",
             tableNumber: "T05",
-            server: "Sophie Bernard"
+            server: "Kaouthar Bensalah"
           },
           {
             id: "ORD-004",
-            customerName: "Sophie Bernard",
-            items: ["Cassoulet", "Mousse au Chocolat"],
-            total: 28.90,
+            customerName: "Souad Amidou",
+            items: ["Shakshouka", "Ghribia"],
+            total: 800,
             status: "Lancée",
             time: "13:50",
             tableNumber: "T02",
-            server: "Marie Laurent"
+            server: "Fares Cherif"
           },
           {
             id: "ORD-005",
-            customerName: "Lucas Petit",
-            items: ["Escargots", "Magret de Canard", "Tarte aux Pommes"],
-            total: 45.60,
+            customerName: "Hakim Medane",
+            items: ["Bourek Fromage", "Assiette Mixte", "Makroud"],
+            total: 3700,
             status: "Annulée",
             time: "14:00",
             tableNumber: "T07",
-            server: "Thomas Leroy"
+            server: "Omar Benkirane"
           },
           {
             id: "ORD-006",
-            customerName: "Emma Dubois",
-            items: ["Soupe à l'Oignon", "Steak Frites", "Crêpes Suzette"],
-            total: 39.70,
+            customerName: "Amina Belouizdad",
+            items: ["Harira", "Couscous Merguez", "Baghrir"],
+            total: 1800,
             status: "En attente",
             time: "15:00",
             tableNumber: "T04",
-            server: "Camille Roux"
+            server: "Kaouthar Bensalah"
           },
           {
             id: "ORD-007",
-            customerName: "Thomas Leroy",
-            items: ["Foie Gras", "Blanquette de Veau", "Éclair au Chocolat"],
-            total: 58.30,
+            customerName: "Djamel Haddadi",
+            items: ["Salade Fattoush", "Brochette d'Agneau", "Zlabia"],
+            total: 3050,
             status: "En attente",
             time: "15:15",
             tableNumber: "T06",
-            server: "Philippe Martin"
+            server: "Omar Benkirane"
           },
           {
             id: "ORD-008",
-            customerName: "Camille Roux",
-            items: ["Salade de Chèvre Chaud", "Bouillabaisse", "Tarte au Citron"],
-            total: 47.90,
+            customerName: "Louisa Hanoune",
+            items: ["Salade Tabbouleh", "Tagine Kefta", "Mhalbi"],
+            total: 3750,
             status: "En attente",
             time: "15:30",
             tableNumber: "T08",
-            server: "Marie Laurent"
+            server: "Fares Cherif"
           }
         ];
         setOrders(mockedOrders);

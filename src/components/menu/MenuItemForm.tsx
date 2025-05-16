@@ -62,7 +62,7 @@ const MenuItemForm = ({
         />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="price">Prix (€)</Label>
+        <Label htmlFor="price">Prix (DZD)</Label>
         <Input
           id="price"
           name="price"
@@ -103,22 +103,22 @@ const MenuItemForm = ({
             <SelectValue placeholder="Sélectionner une sous-catégorie" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Soupes et Potages">Soupes et Potages</SelectItem>
-            <SelectItem value="Salades et Crudités">Salades et Crudités</SelectItem>
-            <SelectItem value="Spécialités Froides">Spécialités Froides</SelectItem>
-            <SelectItem value="Spécialités Chaudes">Spécialités Chaudes</SelectItem>
-            <SelectItem value="Sandwichs et Burgers">Sandwichs et Burgers</SelectItem>
-            <SelectItem value="Cuisine Traditionnelle">Cuisine Traditionnelle</SelectItem>
-            <SelectItem value="Poissons et Fruits de Mer">Poissons et Fruits de Mer</SelectItem>
-            <SelectItem value="Viandes">Viandes</SelectItem>
+            <SelectItem value="Soupe">Soupe</SelectItem>
+            <SelectItem value="Salade">Salade</SelectItem>
+            <SelectItem value="Feuilleté">Feuilleté</SelectItem>
+            <SelectItem value="Couscous">Couscous</SelectItem>
+            <SelectItem value="Tagine">Tagine</SelectItem>
+            <SelectItem value="Viande">Viande</SelectItem>
+            <SelectItem value="Poisson">Poisson</SelectItem>
             <SelectItem value="Végétarien">Végétarien</SelectItem>
-            <SelectItem value="Féculents">Féculents</SelectItem>
+            <SelectItem value="Riz">Riz</SelectItem>
             <SelectItem value="Légumes">Légumes</SelectItem>
-            <SelectItem value="Boissons Chaudes">Boissons Chaudes</SelectItem>
-            <SelectItem value="Boissons Froides">Boissons Froides</SelectItem>
-            <SelectItem value="Crèmes et Mousses">Crèmes et Mousses</SelectItem>
-            <SelectItem value="Pâtisseries">Pâtisseries</SelectItem>
-            <SelectItem value="Fruits et Sorbets">Fruits et Sorbets</SelectItem>
+            <SelectItem value="Pain">Pain</SelectItem>
+            <SelectItem value="Chaude">Boissons Chaudes</SelectItem>
+            <SelectItem value="Froid">Boissons Froides</SelectItem>
+            <SelectItem value="Gâteau">Gâteaux</SelectItem>
+            <SelectItem value="Pâtisserie">Pâtisseries</SelectItem>
+            <SelectItem value="Glace">Glaces</SelectItem>
           </SelectContent>
         </Select>
       </div>

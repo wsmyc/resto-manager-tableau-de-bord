@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,41 +8,41 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { FileDown, FileText, Calendar, CircleDollarSign, PieChart as PieChartIcon } from "lucide-react";
 import { toast } from "sonner";
 
-// Sample data for reports
+// Sample data for reports - updated to DZD
 const weeklyRevenueData = [
-  { name: 'Lun', revenue: 1380 },
-  { name: 'Mar', revenue: 1520 },
-  { name: 'Mer', revenue: 1650 },
-  { name: 'Jeu', revenue: 1800 },
-  { name: 'Ven', revenue: 2540 },
-  { name: 'Sam', revenue: 2820 },
-  { name: 'Dim', revenue: 1870 }
+  { name: 'Lun', revenue: 13800 },
+  { name: 'Mar', revenue: 15200 },
+  { name: 'Mer', revenue: 16500 },
+  { name: 'Jeu', revenue: 18000 },
+  { name: 'Ven', revenue: 25400 },
+  { name: 'Sam', revenue: 28200 },
+  { name: 'Dim', revenue: 18700 }
 ];
 
 const monthlyRevenueData = [
-  { name: 'Jan', revenue: 42000 },
-  { name: 'Fév', revenue: 38000 },
-  { name: 'Mar', revenue: 45000 },
-  { name: 'Avr', revenue: 40000 },
-  { name: 'Mai', revenue: 52000 },
-  { name: 'Juin', revenue: 58000 },
-  { name: 'Juil', revenue: 65000 },
-  { name: 'Aoû', revenue: 68000 },
-  { name: 'Sep', revenue: 56000 },
-  { name: 'Oct', revenue: 49000 },
-  { name: 'Nov', revenue: 47000 },
-  { name: 'Déc', revenue: 55000 }
+  { name: 'Jan', revenue: 420000 },
+  { name: 'Fév', revenue: 380000 },
+  { name: 'Mar', revenue: 450000 },
+  { name: 'Avr', revenue: 400000 },
+  { name: 'Mai', revenue: 520000 },
+  { name: 'Juin', revenue: 580000 },
+  { name: 'Juil', revenue: 650000 },
+  { name: 'Aoû', revenue: 680000 },
+  { name: 'Sep', revenue: 560000 },
+  { name: 'Oct', revenue: 490000 },
+  { name: 'Nov', revenue: 470000 },
+  { name: 'Déc', revenue: 550000 }
 ];
 
 const salesByCategoryData = [
   { name: 'Entrées', value: 10 },
-  { name: 'Burgers & Sandwichs', value: 15 },
-  { name: 'Plats Traditionnels', value: 25 },
-  { name: 'Options Végétariennes', value: 12 },
-  { name: 'Accompagnements', value: 8 },
-  { name: 'Boissons Chaudes', value: 7 },
-  { name: 'Boissons Froides', value: 13 },
-  { name: 'Desserts', value: 10 }
+  { name: 'Couscous', value: 15 },
+  { name: 'Tagines', value: 25 },
+  { name: 'Brochettes', value: 12 },
+  { name: 'Boissons', value: 8 },
+  { name: 'Desserts', value: 7 },
+  { name: 'Accompagnements', value: 13 },
+  { name: 'Poissons', value: 10 }
 ];
 
 const COLORS = [
@@ -50,11 +51,11 @@ const COLORS = [
 ];
 
 const popularDishesData = [
-  { name: 'Bœuf Bourguignon', orders: 68 },
-  { name: 'Coq au Vin', orders: 52 },
-  { name: 'Crème Brûlée', orders: 45 },
-  { name: 'Salade Niçoise', orders: 40 },
-  { name: 'Soupe à l\'Oignon', orders: 38 }
+  { name: 'Chorba Frik', orders: 68 },
+  { name: 'Couscous Agneau', orders: 52 },
+  { name: 'Tagine Agneau Pruneaux', orders: 45 },
+  { name: 'Brochette de Kefta', orders: 40 },
+  { name: 'Thé à la Menthe', orders: 38 }
 ];
 
 const Reports = () => {
@@ -109,7 +110,7 @@ const Reports = () => {
                           : "Revenus Annuels"}
                       </CardTitle>
                       <div className="text-sm text-muted-foreground">
-                        Total: {calculateTotalRevenue(reportType === "weekly" ? weeklyRevenueData : monthlyRevenueData).toLocaleString()}€
+                        Total: {calculateTotalRevenue(reportType === "weekly" ? weeklyRevenueData : monthlyRevenueData).toLocaleString()} DZD
                       </div>
                     </CardHeader>
                     <CardContent>
@@ -123,7 +124,7 @@ const Reports = () => {
                             <XAxis dataKey="name" />
                             <YAxis />
                             <Tooltip 
-                              formatter={(value) => [`${value}€`, 'Revenus']}
+                              formatter={(value) => [`${value} DZD`, 'Revenus']}
                               contentStyle={{
                                 backgroundColor: 'white',
                                 borderRadius: '0.5rem',

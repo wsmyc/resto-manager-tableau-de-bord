@@ -25,22 +25,22 @@ export interface MenuItem {
     | "Boissons"
     | "Desserts";
   subcategory:
-    | "Soupes et Potages"
-    | "Salades et Crudités"
-    | "Spécialités Froides"
-    | "Spécialités Chaudes"
-    | "Sandwichs et Burgers"
-    | "Cuisine Traditionnelle"
-    | "Poissons et Fruits de Mer"
-    | "Viandes"
+    | "Soupe"
+    | "Salade"
+    | "Feuilleté"
+    | "Couscous"
+    | "Tagine"
+    | "Viande"
+    | "Poisson"
     | "Végétarien"
-    | "Féculents"
+    | "Riz"
     | "Légumes"
-    | "Boissons Chaudes"
-    | "Boissons Froides"
-    | "Crèmes et Mousses"
-    | "Pâtisseries"
-    | "Fruits et Sorbets";
+    | "Pain"
+    | "Chaude"
+    | "Froid"
+    | "Gâteau"
+    | "Pâtisserie"
+    | "Glace";
   ingredients?: string;
 }
 
