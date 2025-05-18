@@ -51,7 +51,7 @@ const MenuItemForm = ({
         />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="ingredients">Ingrédients</Label>
+        <Label htmlFor="ingredients">Ingrédients (séparés par des virgules)</Label>
         <Textarea
           id="ingredients"
           name="ingredients"
@@ -59,6 +59,7 @@ const MenuItemForm = ({
           onChange={handleInputChange}
           className="input-field"
           rows={3}
+          placeholder="Exemple: poulet, tomate, oignon, épices"
         />
       </div>
       <div className="grid gap-2">

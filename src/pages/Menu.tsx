@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import MenuItemForm from "@/components/menu/MenuItemForm";
 import MenuItemTable, { MenuItem } from "@/components/menu/MenuItemTable";
 import MenuFilters from "@/components/menu/MenuFilters";
+import { addMenuItemToFirebase, updateMenuItemInFirebase } from "@/services/menuServices";
 
 // Map categories from CSV to our menu item categories
 const categoryMapping: Record<string, MenuItem["category"]> = {
@@ -921,7 +922,7 @@ const Menu = () => {
     });
   };
 
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
     if (!formData.name || !formData.description || formData.price === undefined || !formData.category || !formData.subcategory) {
       toast.error("Veuillez remplir tous les champs");
       return;
@@ -934,46 +935,89 @@ const Menu = () => {
       price: formData.price,
       category: formData.category,
       subcategory: formData.subcategory,
-      ingredients: formData.ingredients
+      ingredients: formData.ingredients || ""
     };
 
-    setMenuItems([...menuItems, newItem]);
-    toast.success("Article ajouté au menu");
-    setIsAddDialogOpen(false);
-    resetForm();
+    try {
+      // Add to Firebase
+      const dishId = await addMenuItemToFirebase(newItem);
+      
+      // Update the item with the generated Firebase ID
+      newItem.id = dishId;
+      
+      // Add to local state
+      setMenuItems([...menuItems, newItem]);
+      toast.success(`Article ajouté au menu avec ID: ${dishId}`);
+      setIsAddDialogOpen(false);
+      resetForm();
+    } catch (error) {
+      console.error("Error adding menu item:", error);
+      toast.error("Erreur lors de l'ajout de l'article au menu");
+    }
   };
 
-  const handleEditItem = () => {
+  const handleEditItem = async () => {
     if (!formData.name || !formData.description || formData.price === undefined || !formData.category || !formData.subcategory) {
       toast.error("Veuillez remplir tous les champs");
       return;
     }
 
-    setMenuItems(prevItems => 
-      prevItems.map(item => 
-        item.id === currentItemId 
-          ? { 
-              ...item, 
-              name: formData.name!, 
-              description: formData.description!, 
-              price: formData.price!, 
-              category: formData.category!,
-              subcategory: formData.subcategory!,
-              ingredients: formData.ingredients 
-            } 
-          : item
-      )
-    );
-    
-    toast.success("Article mis à jour");
-    setIsEditDialogOpen(false);
-    resetForm();
+    try {
+      // Update in Firebase if it's a Firebase item (has numeric ID)
+      if (currentItemId && !currentItemId.startsWith('item-')) {
+        await updateMenuItemInFirebase(currentItemId, {
+          id: currentItemId,
+          name: formData.name,
+          description: formData.description,
+          price: formData.price,
+          category: formData.category,
+          subcategory: formData.subcategory,
+          ingredients: formData.ingredients || ""
+        });
+      }
+      
+      // Update local state
+      setMenuItems(prevItems => 
+        prevItems.map(item => 
+          item.id === currentItemId 
+            ? { 
+                ...item, 
+                name: formData.name!, 
+                description: formData.description!, 
+                price: formData.price!, 
+                category: formData.category!,
+                subcategory: formData.subcategory!,
+                ingredients: formData.ingredients 
+              } 
+            : item
+        )
+      );
+      
+      toast.success("Article mis à jour");
+      setIsEditDialogOpen(false);
+      resetForm();
+    } catch (error) {
+      console.error("Error updating menu item:", error);
+      toast.error("Erreur lors de la mise à jour de l'article");
+    }
   };
 
-  const handleDeleteItem = () => {
-    setMenuItems(prevItems => prevItems.filter(item => item.id !== currentItemId));
-    toast.success("Article supprimé");
-    setIsDeleteDialogOpen(false);
+  const handleDeleteItem = async () => {
+    try {
+      // Delete from Firebase if it's a Firebase item (has numeric ID)
+      if (currentItemId && !currentItemId.startsWith('item-')) {
+        // For now, we'll just log this as the delete function is a placeholder
+        console.log(`Would delete item with ID ${currentItemId} from Firebase`);
+      }
+      
+      // Update local state
+      setMenuItems(prevItems => prevItems.filter(item => item.id !== currentItemId));
+      toast.success("Article supprimé");
+      setIsDeleteDialogOpen(false);
+    } catch (error) {
+      console.error("Error deleting menu item:", error);
+      toast.error("Erreur lors de la suppression de l'article");
+    }
   };
 
   const openEditDialog = (item: MenuItem) => {

@@ -126,9 +126,18 @@ export interface FirestorePlatIngredient {
 
 /** Mappage catégorie -> ID */
 export const CATEGORY_TO_ID: Record<string, string> = {
-  "Entrée": "CAT1",
-  "Plat": "CAT2",
-  "Dessert": "CAT3",
-  "Accompagnement": "CAT4",
-  "Boisson": "CAT5"
+  "Entrées": "100",
+  "Plats": "200",
+  "Desserts": "300",
+  "Accompagnements": "400",
+  "Boissons": "500"
+};
+
+/** Mappage des noms de catégories français vers anglais pour la compatibilité */
+export const CATEGORY_NAME_MAPPING: Record<string, string> = {
+  "Entrées": "Entrée",
+  "Plats": "Plat",
+  "Desserts": "Dessert",
+  "Accompagnements": "Accompagnement",
+  "Boissons": "Boisson"
 };
