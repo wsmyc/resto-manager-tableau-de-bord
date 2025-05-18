@@ -1,6 +1,6 @@
 
 import { db } from './firebase';
-import { collection, getDocs, updateDoc, doc, query, where, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc, query, where, Timestamp, getDoc } from 'firebase/firestore';
 import { Notification } from './types';
 
 // Fetch all notifications
@@ -57,30 +57,34 @@ export async function handleNotificationAction(
     });
     
     // Get notification to access related data
-    const notificationDoc = await doc(db, "notifications", notificationId).get();
-    const notificationData = notificationDoc.data();
+    const notificationDocRef = doc(db, "notifications", notificationId);
+    const notificationDocSnap = await getDoc(notificationDocRef);
     
-    if (type === 'commande' && notificationData?.data?.commandeId) {
-      // Update commande status if command cancellation was approved
-      if (action === 'approve') {
-        const commandeRef = doc(db, "commandes", notificationData.data.commandeId);
-        await updateDoc(commandeRef, {
-          etat: 'cancelled'
-        });
-      }
-    } else if (type === 'reservation' && notificationData?.data?.tableId) {
-      // Update table status if table release was approved
-      if (action === 'approve') {
-        const tableRef = doc(db, "tables", notificationData.data.tableId);
-        await updateDoc(tableRef, {
-          status: 'available'
-        });
-        
-        if (notificationData?.data?.reservationId) {
-          const reservationRef = doc(db, "reservations", notificationData.data.reservationId);
-          await updateDoc(reservationRef, {
-            status: 'cancelled'
+    if (notificationDocSnap.exists()) {
+      const notificationData = notificationDocSnap.data();
+      
+      if (type === 'commande' && notificationData?.data?.commandeId) {
+        // Update commande status if command cancellation was approved
+        if (action === 'approve') {
+          const commandeRef = doc(db, "commandes", notificationData.data.commandeId);
+          await updateDoc(commandeRef, {
+            etat: 'cancelled'
           });
+        }
+      } else if (type === 'reservation' && notificationData?.data?.tableId) {
+        // Update table status if table release was approved
+        if (action === 'approve') {
+          const tableRef = doc(db, "tables", notificationData.data.tableId);
+          await updateDoc(tableRef, {
+            status: 'available'
+          });
+          
+          if (notificationData?.data?.reservationId) {
+            const reservationRef = doc(db, "reservations", notificationData.data.reservationId);
+            await updateDoc(reservationRef, {
+              status: 'cancelled'
+            });
+          }
         }
       }
     }

@@ -32,6 +32,9 @@ const App = () => (
           {/* Redirect from / to /dashboard */}
           <Route path="/" element={<Navigate to="/dashboard" />} />
           
+          {/* Redirect from /messagerie to /notifications (to handle legacy URLs) */}
+          <Route path="/messagerie" element={<Navigate to="/notifications" />} />
+          
           {/* Protected routes inside the AppLayout */}
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
