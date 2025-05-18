@@ -12,7 +12,7 @@ import {
   X,
   Package,
   Users,
-  MessageSquare
+  Bell
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -78,9 +78,9 @@ const AppLayout = () => {
       icon: <Users size={20} />,
     },
     {
-      name: "Messagerie",
-      path: "/messagerie",
-      icon: <MessageSquare size={20} />,
+      name: "Notifications",
+      path: "/notifications",
+      icon: <Bell size={20} />,
     },
     {
       name: "Rapports",
