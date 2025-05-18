@@ -4,10 +4,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import StockInventory from "@/components/stock/StockInventory";
 import IngredientUsage from "@/components/stock/IngredientUsage";
 import ExpenseAnalytics from "@/components/stock/ExpenseAnalytics";
+import IngredientInventory from "@/components/stock/IngredientInventory";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const StockManagement = () => {
   const [activeTab, setActiveTab] = useState("inventory");
+  const [useNewInventory, setUseNewInventory] = useState(true);
 
   return (
     <div className="space-y-6">
@@ -24,14 +27,22 @@ const StockManagement = () => {
         
         <TabsContent value="inventory" className="space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Inventaire des Ingrédients</CardTitle>
-              <CardDescription>
-                Gérez votre inventaire, dates d'expiration et commandez des réapprovisionnements
-              </CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Inventaire des Ingrédients</CardTitle>
+                <CardDescription>
+                  Gérez votre inventaire, dates d'expiration et commandez des réapprovisionnements
+                </CardDescription>
+              </div>
+              <Button 
+                variant="outline" 
+                onClick={() => setUseNewInventory(!useNewInventory)}
+              >
+                {useNewInventory ? "Vue simplifiée" : "Vue détaillée"}
+              </Button>
             </CardHeader>
             <CardContent>
-              <StockInventory />
+              {useNewInventory ? <IngredientInventory /> : <StockInventory />}
             </CardContent>
           </Card>
         </TabsContent>

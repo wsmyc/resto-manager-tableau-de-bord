@@ -1,3 +1,4 @@
+
 // src/types.ts
 
 import type { Timestamp } from 'firebase/firestore';
@@ -73,3 +74,18 @@ export interface SalesBySubcategory {
   sous_catégorie: string;
   sales: number;
 }
+
+/** Types pour le calcul des coûts des plats */
+export interface IngredientCostDetail {
+  name: string;
+  quantity: number;
+  unit: 'kg' | 'g' | 'L' | 'ml' | 'unité';
+  cost: number;
+}
+
+export interface PlatCostDetails {
+  menuItemId: string;
+  costDetails: IngredientCostDetail[];
+  totalCost: number;
+}
+

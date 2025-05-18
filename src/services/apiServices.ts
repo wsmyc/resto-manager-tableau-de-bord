@@ -9,7 +9,8 @@ import type {
   Plat,
   commandePlat,
   SalesBySubcategory,
-  Employe
+  Employe,
+  PlatCostDetails
 } from './types';
 
 // 1. Create an Axios instance pointing at your Cloud Functions base URL
@@ -108,7 +109,7 @@ export function deletePlat(platId: string) {
   return api.delete(`/plats/${platId}/delete/`);
 }
 
-export function getPlatCostDetails(platId: string) {
+export function getPlatCostDetails(platId: string): Promise<PlatCostDetails> {
   return api.get(`/plats/${platId}/cost-details/`).then(res => res.data);
 }
 

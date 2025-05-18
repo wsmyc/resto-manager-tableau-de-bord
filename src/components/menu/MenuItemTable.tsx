@@ -12,6 +12,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
+import { ingredientCostDetails, generateCompleteCostDetails } from "@/data/ingredientCosts";
 
 export interface MenuItem {
   id: string;
@@ -47,177 +48,6 @@ interface MenuItemTableProps {
   onDelete: (itemId: string) => void;
 }
 
-// Ingredient cost data with values based on the provided Algerian costs
-const mockIngredientCosts = [
-  {
-    menuItemId: "101", // Chorba Frik
-    costDetails: [
-      { name: "Oignons", quantity: 0.2, unit: "kg", cost: 70 * 0.2 },
-      { name: "Frik (blé vert)", quantity: 0.3, unit: "kg", cost: 100 * 0.3 },
-      { name: "Agneau haché", quantity: 0.08, unit: "kg", cost: 2800 * 0.08 },
-      { name: "Tomates", quantity: 0.15, unit: "kg", cost: 80 * 0.15 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 15 },
-    ],
-    totalCost: 260
-  },
-  {
-    menuItemId: "102", // Lablabi
-    costDetails: [
-      { name: "Pois chiches", quantity: 0.2, unit: "kg", cost: 400 * 0.2 },
-      { name: "Ail", quantity: 0.02, unit: "kg", cost: 300 * 0.02 },
-      { name: "Pain", quantity: 0.1, unit: "unité", cost: 20 * 0.1 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 15 },
-    ],
-    totalCost: 100
-  },
-  {
-    menuItemId: "103", // Harira
-    costDetails: [
-      { name: "Lentilles", quantity: 0.1, unit: "kg", cost: 350 * 0.1 },
-      { name: "Pois chiches", quantity: 0.1, unit: "kg", cost: 400 * 0.1 },
-      { name: "Viande hachée", quantity: 0.05, unit: "kg", cost: 2300 * 0.05 },
-      { name: "Oignons", quantity: 0.1, unit: "kg", cost: 70 * 0.1 },
-      { name: "Tomates", quantity: 0.15, unit: "kg", cost: 80 * 0.15 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 15 },
-    ],
-    totalCost: 195
-  },
-  {
-    menuItemId: "104", // Chorba Beïda
-    costDetails: [
-      { name: "Vermicelles", quantity: 0.1, unit: "kg", cost: 120 * 0.1 },
-      { name: "Poulet", quantity: 0.15, unit: "kg", cost: 400 * 0.15 },
-      { name: "Oignons", quantity: 0.1, unit: "kg", cost: 70 * 0.1 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 15 },
-    ],
-    totalCost: 87
-  },
-  {
-    menuItemId: "105", // Chorba Loubia
-    costDetails: [
-      { name: "Haricots blancs", quantity: 0.15, unit: "kg", cost: 600 * 0.15 },
-      { name: "Oignons", quantity: 0.1, unit: "kg", cost: 70 * 0.1 },
-      { name: "Tomates", quantity: 0.15, unit: "kg", cost: 80 * 0.15 },
-      { name: "Ail", quantity: 0.01, unit: "kg", cost: 300 * 0.01 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 15 },
-    ],
-    totalCost: 113
-  },
-  {
-    menuItemId: "201", // Couscous Poulet
-    costDetails: [
-      { name: "Poulet", quantity: 0.3, unit: "kg", cost: 400 * 0.3 },
-      { name: "Semoule", quantity: 0.2, unit: "kg", cost: 120 * 0.2 },
-      { name: "Légumes", quantity: 0.2, unit: "kg", cost: 60 },
-      { name: "Pois chiches", quantity: 0.05, unit: "kg", cost: 400 * 0.05 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 20 },
-    ],
-    totalCost: 240
-  },
-  {
-    menuItemId: "202", // Couscous Agneau
-    costDetails: [
-      { name: "Agneau", quantity: 0.2, unit: "kg", cost: 2600 * 0.2 },
-      { name: "Semoule", quantity: 0.2, unit: "kg", cost: 120 * 0.2 },
-      { name: "Légumes", quantity: 0.2, unit: "kg", cost: 60 },
-      { name: "Pois chiches", quantity: 0.05, unit: "kg", cost: 400 * 0.05 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 20 },
-    ],
-    totalCost: 600
-  },
-  {
-    menuItemId: "203", // Couscous Merguez
-    costDetails: [
-      { name: "Merguez", quantity: 0.2, unit: "kg", cost: 1600 * 0.2 },
-      { name: "Semoule", quantity: 0.2, unit: "kg", cost: 120 * 0.2 },
-      { name: "Légumes", quantity: 0.2, unit: "kg", cost: 60 },
-      { name: "Pois chiches", quantity: 0.05, unit: "kg", cost: 400 * 0.05 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 20 },
-    ],
-    totalCost: 420
-  },
-  {
-    menuItemId: "207", // Tagine Agneau Pruneaux
-    costDetails: [
-      { name: "Agneau", quantity: 0.25, unit: "kg", cost: 2600 * 0.25 },
-      { name: "Pruneaux", quantity: 0.1, unit: "kg", cost: 800 * 0.1 },
-      { name: "Amandes", quantity: 0.05, unit: "kg", cost: 1600 * 0.05 },
-      { name: "Oignons", quantity: 0.1, unit: "kg", cost: 70 * 0.1 },
-      { name: "Miel", quantity: 0.02, unit: "kg", cost: 2000 * 0.02 },
-      { name: "Épices", quantity: 0.02, unit: "kg", cost: 30 },
-    ],
-    totalCost: 850
-  },
-  {
-    menuItemId: "208", // Tagine Kefta
-    costDetails: [
-      { name: "Viande hachée", quantity: 0.25, unit: "kg", cost: 2300 * 0.25 },
-      { name: "Oignons", quantity: 0.1, unit: "kg", cost: 70 * 0.1 },
-      { name: "Tomates", quantity: 0.2, unit: "kg", cost: 80 * 0.2 },
-      { name: "Ail", quantity: 0.01, unit: "kg", cost: 300 * 0.01 },
-      { name: "Œufs", quantity: 2, unit: "unité", cost: 20 * 2 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 15 },
-    ],
-    totalCost: 621
-  },
-  {
-    menuItemId: "211", // Steak Haché
-    costDetails: [
-      { name: "Viande hachée", quantity: 0.25, unit: "kg", cost: 2300 * 0.25 },
-      { name: "Œuf", quantity: 1, unit: "unité", cost: 20 * 1 },
-      { name: "Oignons", quantity: 0.05, unit: "kg", cost: 70 * 0.05 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 15 },
-    ],
-    totalCost: 600
-  },
-  {
-    menuItemId: "226", // Falafel
-    costDetails: [
-      { name: "Pois chiches", quantity: 0.2, unit: "kg", cost: 400 * 0.2 },
-      { name: "Oignons", quantity: 0.1, unit: "kg", cost: 70 * 0.1 },
-      { name: "Ail", quantity: 0.01, unit: "kg", cost: 300 * 0.01 },
-      { name: "Épices", quantity: 0.01, unit: "kg", cost: 15 },
-    ],
-    totalCost: 95
-  },
-  {
-    menuItemId: "302", // Kalb el Louz
-    costDetails: [
-      { name: "Semoule", quantity: 0.2, unit: "kg", cost: 120 * 0.2 },
-      { name: "Amandes", quantity: 0.1, unit: "kg", cost: 1600 * 0.1 },
-      { name: "Sucre", quantity: 0.1, unit: "kg", cost: 100 * 0.1 },
-      { name: "Eau de rose", quantity: 0.02, unit: "L", cost: 100 * 0.02 },
-    ],
-    totalCost: 188
-  },
-  {
-    menuItemId: "501", // Thé à la Menthe
-    costDetails: [
-      { name: "Thé vert", quantity: 0.01, unit: "kg", cost: 50 },
-      { name: "Menthe fraîche", quantity: 0.02, unit: "kg", cost: 25 },
-      { name: "Sucre", quantity: 0.005, unit: "kg", cost: 100 * 0.005 },
-    ],
-    totalCost: 80
-  },
-  {
-    menuItemId: "507", // Jus d'Orange Frais
-    costDetails: [
-      { name: "Oranges", quantity: 0.5, unit: "kg", cost: 150 * 0.5 },
-      { name: "Sucre", quantity: 0.02, unit: "kg", cost: 100 * 0.02 },
-    ],
-    totalCost: 77
-  },
-  {
-    menuItemId: "512", // Limonade Maison
-    costDetails: [
-      { name: "Citron", quantity: 0.2, unit: "kg", cost: 150 * 0.2 },
-      { name: "Sucre", quantity: 0.05, unit: "kg", cost: 100 * 0.05 },
-      { name: "Menthe", quantity: 0.01, unit: "kg", cost: 25 },
-    ],
-    totalCost: 60
-  }
-];
-
 const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
@@ -226,7 +56,12 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
   };
 
   const getItemCost = (itemId: string) => {
-    return mockIngredientCosts.find(cost => cost.menuItemId === itemId);
+    return ingredientCostDetails.find(cost => cost.menuItemId === itemId);
+  };
+  
+  // Fallback estimation for items without detailed costs (approximately 35% of selling price)
+  const estimateCost = (price: number) => {
+    return Math.round(price * 0.35);
   };
 
   return (
@@ -246,9 +81,9 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
         <TableBody>
           {items.map((item) => {
             const costData = getItemCost(item.id);
-            const costAmount = costData?.totalCost || 0;
+            const costAmount = costData?.totalCost || estimateCost(item.price);
             const profitMargin = item.price - costAmount;
-            const profitPercentage = costAmount > 0 ? ((profitMargin / item.price) * 100).toFixed(1) : "N/A";
+            const profitPercentage = ((profitMargin / item.price) * 100).toFixed(1);
             
             return (
               <TableRow key={item.id}>
@@ -294,7 +129,7 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
                         onClick={() => openCostDialog(item.id)}
                       >
                         <FileText className="h-3 w-3" />
-                        {costAmount > 0 ? `${costAmount.toFixed(2)} DZD` : "N/A"}
+                        {costAmount.toFixed(2)} DZD
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-md">
@@ -306,53 +141,52 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
                       </DialogHeader>
                       
                       <div className="space-y-4">
-                        {costData ? (
-                          <>
-                            <div className="grid grid-cols-2 gap-4 py-4">
-                              <div className="flex flex-col">
-                                <span className="text-sm text-muted-foreground">Prix de vente</span>
-                                <span className="text-xl font-bold">{item.price.toFixed(2)} DZD</span>
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="text-sm text-muted-foreground">Coût total</span>
-                                <span className="text-xl font-bold">{costData.totalCost.toFixed(2)} DZD</span>
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="text-sm text-muted-foreground">Marge</span>
-                                <span className="text-xl font-bold text-emerald-600">{profitMargin.toFixed(2)} DZD</span>
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="text-sm text-muted-foreground">Marge (%)</span>
-                                <span className="text-xl font-bold text-emerald-600">{profitPercentage}%</span>
-                              </div>
-                            </div>
-                            
-                            <Card className="p-4">
-                              <h4 className="font-medium mb-2">Détail des ingrédients</h4>
-                              <div className="divide-y">
-                                {costData.costDetails.map((detail, idx) => (
-                                  <div key={idx} className="flex justify-between py-2">
-                                    <div>
-                                      <span className="font-medium">{detail.name}</span>
-                                      <span className="text-sm text-muted-foreground ml-2">
-                                        ({detail.quantity} {detail.unit})
-                                      </span>
-                                    </div>
-                                    <span>{detail.cost.toFixed(2)} DZD</span>
+                        <div className="grid grid-cols-2 gap-4 py-4">
+                          <div className="flex flex-col">
+                            <span className="text-sm text-muted-foreground">Prix de vente</span>
+                            <span className="text-xl font-bold">{item.price.toFixed(2)} DZD</span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm text-muted-foreground">Coût total</span>
+                            <span className="text-xl font-bold">{costAmount.toFixed(2)} DZD</span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm text-muted-foreground">Marge</span>
+                            <span className="text-xl font-bold text-emerald-600">{profitMargin.toFixed(2)} DZD</span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm text-muted-foreground">Marge (%)</span>
+                            <span className="text-xl font-bold text-emerald-600">{profitPercentage}%</span>
+                          </div>
+                        </div>
+                        
+                        <Card className="p-4">
+                          <h4 className="font-medium mb-2">Détail des ingrédients</h4>
+                          {costData ? (
+                            <div className="divide-y">
+                              {costData.costDetails.map((detail, idx) => (
+                                <div key={idx} className="flex justify-between py-2">
+                                  <div>
+                                    <span className="font-medium">{detail.name}</span>
+                                    <span className="text-sm text-muted-foreground ml-2">
+                                      ({detail.quantity} {detail.unit})
+                                    </span>
                                   </div>
-                                ))}
-                              </div>
+                                  <span>{detail.cost.toFixed(2)} DZD</span>
+                                </div>
+                              ))}
                               <div className="mt-2 pt-2 border-t flex justify-between font-bold">
                                 <span>Total</span>
                                 <span>{costData.totalCost.toFixed(2)} DZD</span>
                               </div>
-                            </Card>
-                          </>
-                        ) : (
-                          <div className="py-8 text-center text-muted-foreground">
-                            Aucun détail de coût disponible pour cet article.
-                          </div>
-                        )}
+                            </div>
+                          ) : (
+                            <div className="py-3 text-center text-muted-foreground">
+                              <p>Estimation basée sur un coût de 35% du prix de vente.</p>
+                              <p className="mt-2">Coût estimé: {costAmount.toFixed(2)} DZD</p>
+                            </div>
+                          )}
+                        </Card>
                       </div>
                     </DialogContent>
                   </Dialog>
