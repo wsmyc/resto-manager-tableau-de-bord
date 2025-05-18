@@ -12,7 +12,7 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
-import { ingredientCostDetails, generateCompleteCostDetails } from "@/data/ingredientCosts";
+import { getCostDetailsByMenuItemId, estimateCost } from "@/data/ingredientCosts";
 
 export interface MenuItem {
   id: string;
@@ -56,12 +56,13 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
   };
 
   const getItemCost = (itemId: string) => {
-    return ingredientCostDetails.find(cost => cost.menuItemId === itemId);
+    return getCostDetailsByMenuItemId(itemId);
   };
   
   // Fallback estimation for items without detailed costs (approximately 35% of selling price)
-  const estimateCost = (price: number) => {
-    return Math.round(price * 0.35);
+  const calculateCost = (item: MenuItem) => {
+    const costData = getItemCost(item.id);
+    return costData ? costData.totalCost : estimateCost(item.price);
   };
 
   return (

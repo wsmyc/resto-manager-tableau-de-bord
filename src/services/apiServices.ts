@@ -1,7 +1,9 @@
+
 // src/apiService.ts
 
 import axios, { AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
+import { doc, collection, setDoc, addDoc } from 'firebase/firestore';
 import type {
   commandes,
   Reservation,
@@ -10,8 +12,12 @@ import type {
   commandePlat,
   SalesBySubcategory,
   Employe,
-  PlatCostDetails
+  PlatCostDetails,
+  FirestorePlat,
+  FirestorePlatIngredient,
+  CATEGORY_TO_ID
 } from './types';
+import { estimateCost, getCostDetailsByMenuItemId } from '../data/ingredientCosts';
 
 // 1. Create an Axios instance pointing at your Cloud Functions base URL
 const api = axios.create({
@@ -97,20 +103,88 @@ export function getAllPlats(): Promise<Plat[]> {
   return api.get('/plats/').then(res => res.data);
 }
 
-export function addPlat(data: Plat) {
-  return api.post('/plats/add/', data);
+export async function addPlat(data: Plat) {
+  // Add to local API first
+  const response = await api.post('/plats/add/', data);
+  
+  // Then sync with Firebase
+  await syncPlatWithFirebase(data);
+  
+  return response;
 }
 
-export function updatePlat(platId: string, data: Partial<Plat>) {
-  return api.put(`/plats/${platId}/`, data);
+export async function updatePlat(platId: string, data: Partial<Plat>) {
+  // Update local API first
+  const response = await api.put(`/plats/${platId}/`, data);
+  
+  // Get the full updated plat
+  const updatedPlat = { ...data, idP: platId } as Plat;
+  
+  // Then sync with Firebase
+  await syncPlatWithFirebase(updatedPlat);
+  
+  return response;
 }
 
-export function deletePlat(platId: string) {
-  return api.delete(`/plats/${platId}/delete/`);
+export async function deletePlat(platId: string) {
+  // Delete from local API first
+  const response = await api.delete(`/plats/${platId}/delete/`);
+  
+  // Then delete from Firebase (you'd need to implement this based on your Firebase structure)
+  // await deletePlatFromFirebase(platId);
+  
+  return response;
 }
 
 export function getPlatCostDetails(platId: string): Promise<PlatCostDetails> {
   return api.get(`/plats/${platId}/cost-details/`).then(res => res.data);
+}
+
+// Firebase sync for plats
+export async function syncPlatWithFirebase(plat: Plat) {
+  try {
+    // Get cost details for the plat
+    const costDetails = getCostDetailsByMenuItemId(plat.idP) || { totalCost: estimateCost(plat.prix) };
+    
+    // Create Firestore plat document
+    const platDocRef = doc(db, "plats", plat.idP);
+    const firestorePlat: FirestorePlat = {
+      description: plat.description,
+      estimations: costDetails.totalCost,
+      idCat: CATEGORY_TO_ID[plat.idCat] || "CAT0",
+      nom_du_plat: plat.nom,
+      note: plat.note || 0,
+      prix: plat.prix
+    };
+    
+    // Save plat to Firestore
+    await setDoc(platDocRef, firestorePlat);
+    
+    // Get ingredients (you would need a way to retrieve these)
+    const ingredients = costDetails.costDetails?.map(detail => ({
+      nom: detail.name,
+      quantite_g: detail.quantity
+    })) || [];
+    
+    // Create or update plat_ingredients document
+    const ingredientsDocRef = doc(db, "plat_ingredients", plat.idP);
+    const firestorePlatIngredient: FirestorePlatIngredient = {
+      nom_du_plat: plat.nom,
+      ingredients,
+      idP: plat.idP,
+      nom: "", // This field seems redundant with nom_du_plat
+      quantite_g: 0 // This field seems redundant with ingredients array
+    };
+    
+    // Save ingredients to Firestore
+    await setDoc(ingredientsDocRef, firestorePlatIngredient);
+    
+    console.log(`Plat ${plat.idP} synced with Firebase successfully`);
+    return true;
+  } catch (error) {
+    console.error("Error syncing plat with Firebase:", error);
+    throw error;
+  }
 }
 
 // ----- Ingredients -----
@@ -168,4 +242,17 @@ export function updateEmployeeSalary(employeeId: string, salary: string) {
 // ----- Sales by Subcategory -----
 export function getSalesBySubcategory(): Promise<SalesBySubcategory[]> {
   return api.get('/sales-by-subcategory/').then(res => res.data);
+}
+
+// ----- Notifications -----
+export function getNotifications() {
+  return api.get('/notifications/').then(res => res.data);
+}
+
+export function markNotificationRead(notificationId: string) {
+  return api.post(`/notifications/${notificationId}/read/`);
+}
+
+export function handleNotificationAction(notificationId: string, action: 'approve' | 'reject') {
+  return api.post(`/notifications/${notificationId}/action/`, { action });
 }

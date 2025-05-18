@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format, isToday, isTomorrow, addDays } from "date-fns";
 import { fr } from "date-fns/locale";
-import { CalendarIcon, Check, X, Search, AlertCircle, PlusCircle } from "lucide-react";
+import { CalendarIcon, X, Search, AlertCircle, PlusCircle } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +23,6 @@ interface Reservation {
   date: Date;
   time: string;
   status: "En attente" | "Confirmée" | "Annulée";
-  notes?: string;
   phone: string;
 }
 
@@ -59,7 +59,6 @@ const Reservations = () => {
     people: 2,
     date: new Date(),
     time: "19:30",
-    notes: "",
     status: "En attente"
   });
 
@@ -93,7 +92,6 @@ const Reservations = () => {
             date: today,
             time: "20:00",
             status: "En attente",
-            notes: "Table près de la fenêtre",
             phone: "06 61 23 45 67"
           },
           {
@@ -121,7 +119,6 @@ const Reservations = () => {
             date: dayAfterTomorrow,
             time: "21:00",
             status: "Confirmée",
-            notes: "Anniversaire",
             phone: "05 57 78 90 12"
           },
           {
@@ -140,7 +137,6 @@ const Reservations = () => {
             date: today,
             time: "12:30",
             status: "Confirmée",
-            notes: "Allergie aux fruits de mer",
             phone: "07 90 12 34 56"
           },
           {
@@ -166,21 +162,17 @@ const Reservations = () => {
     fetchReservations();
   }, []);
 
-  const updateReservationStatus = (reservationId: string, newStatus: Reservation["status"]) => {
+  const cancelReservation = (reservationId: string) => {
     // In a real application, this would update Firebase
     setReservations(prev => 
       prev.map(reservation => 
         reservation.id === reservationId 
-          ? { ...reservation, status: newStatus } 
+          ? { ...reservation, status: "Annulée" } 
           : reservation
       )
     );
     
-    const statusMessage = 
-      newStatus === "Confirmée" ? "confirmée" : 
-      newStatus === "Annulée" ? "annulée" : "mise à jour";
-    
-    toast.success(`Réservation ${reservationId} ${statusMessage}`);
+    toast.success(`Réservation ${reservationId} annulée`);
   };
 
   const filteredReservations = reservations.filter(reservation => {
@@ -246,7 +238,6 @@ const Reservations = () => {
       people: 2,
       date: new Date(),
       time: "19:30",
-      notes: "",
       status: "En attente"
     });
   };
@@ -264,8 +255,7 @@ const Reservations = () => {
       people: formData.people,
       date: formData.date,
       time: formData.time,
-      status: "En attente",
-      notes: formData.notes
+      status: "En attente"
     };
 
     setReservations([...reservations, newReservation]);
@@ -380,12 +370,11 @@ const Reservations = () => {
                     <TableHead>Date</TableHead>
                     <TableHead>Heure</TableHead>
                     <TableHead>Statut</TableHead>
-                    <TableHead>Notes</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {reservations.map((reservation) => (
+                  {sortedReservations.map((reservation) => (
                     <TableRow key={reservation.id}>
                       <TableCell className="font-medium">{reservation.id}</TableCell>
                       <TableCell>{reservation.customerName}</TableCell>
@@ -396,30 +385,16 @@ const Reservations = () => {
                       <TableCell>
                         <ReservationStatusBadge status={reservation.status} />
                       </TableCell>
-                      <TableCell className="max-w-xs truncate">
-                        {reservation.notes || "-"}
-                      </TableCell>
                       <TableCell>
-                        <div className="flex space-x-2">
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            onClick={() => updateReservationStatus(reservation.id, "Confirmée")}
-                            disabled={reservation.status === "Confirmée"}
-                            className="h-8 w-8 text-green-500 hover:text-green-600 hover:bg-green-50"
-                          >
-                            <Check className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            onClick={() => updateReservationStatus(reservation.id, "Annulée")}
-                            disabled={reservation.status === "Annulée"}
-                            className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          onClick={() => cancelReservation(reservation.id)}
+                          disabled={reservation.status === "Annulée"}
+                          className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

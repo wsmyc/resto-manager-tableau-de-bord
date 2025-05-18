@@ -8,7 +8,7 @@ export interface commandes {
   idCmd: string;
   confirmation: boolean;
   dateCreation: Timestamp;
-  etat: 'pending' | 'confirmed' | 'cancelled';
+  etat: 'pending' | 'confirmed' | 'cancelled' | 'en preparation' | 'prete';
   idC: string;
   idT: string;
   montant: number;
@@ -89,3 +89,46 @@ export interface PlatCostDetails {
   totalCost: number;
 }
 
+/** Types pour les notifications */
+export interface Notification {
+  id: string;
+  type: 'stock' | 'commande' | 'reservation';
+  title: string;
+  content: string;
+  timestamp: Date;
+  read: boolean;
+  actionRequired: boolean;
+  data?: {
+    commandeId?: string;
+    reservationId?: string;
+    ingredientId?: string;
+    tableId?: string;
+  };
+}
+
+/** Types pour Firebase menu */
+export interface FirestorePlat {
+  description: string;
+  estimations: number;
+  idCat: string;
+  nom_du_plat: string;
+  note: number;
+  prix: number;
+}
+
+export interface FirestorePlatIngredient {
+  nom: string;
+  quantite_g: number;
+  nom_du_plat: string;
+  ingredients: Array<{nom: string, quantite_g: number}>;
+  idP: string;
+}
+
+/** Mappage catégorie -> ID */
+export const CATEGORY_TO_ID: Record<string, string> = {
+  "Entrée": "CAT1",
+  "Plat": "CAT2",
+  "Dessert": "CAT3",
+  "Accompagnement": "CAT4",
+  "Boisson": "CAT5"
+};
