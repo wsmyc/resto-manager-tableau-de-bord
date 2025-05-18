@@ -16,6 +16,7 @@ interface MenuItemFormProps {
   onSubmit: () => void;
   onCancel: () => void;
   submitLabel: string;
+  isSubmitting?: boolean;
 }
 
 const MenuItemForm = ({
@@ -25,29 +26,32 @@ const MenuItemForm = ({
   handleSubcategoryChange,
   onSubmit,
   onCancel,
-  submitLabel
+  submitLabel,
+  isSubmitting = false
 }: MenuItemFormProps) => {
   return (
     <div className="grid gap-4 py-4">
       
       <div className="grid gap-2">
-        <Label htmlFor="name">Nom de l'Article</Label>
+        <Label htmlFor="name">Nom de l'Article <span className="text-red-500">*</span></Label>
         <Input
           id="name"
           name="name"
           value={formData.name || ""}
           onChange={handleInputChange}
           className="input-field"
+          required
         />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Description <span className="text-red-500">*</span></Label>
         <Input
           id="description"
           name="description"
           value={formData.description || ""}
           onChange={handleInputChange}
           className="input-field"
+          required
         />
       </div>
       <div className="grid gap-2">
@@ -63,23 +67,26 @@ const MenuItemForm = ({
         />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="price">Prix (DZD)</Label>
+        <Label htmlFor="price">Prix (DZD) <span className="text-red-500">*</span></Label>
         <Input
           id="price"
           name="price"
           type="number"
           step="0.01"
+          min="0"
           value={formData.price !== undefined ? formData.price : ""}
           onChange={handleInputChange}
           className="input-field"
+          required
         />
       </div>
       
       <div className="grid gap-2">
-        <Label htmlFor="category">Catégorie</Label>
+        <Label htmlFor="category">Catégorie <span className="text-red-500">*</span></Label>
         <Select 
           value={formData.category || ""} 
           onValueChange={handleCategoryChange}
+          required
         >
           <SelectTrigger className="input-field">
             <SelectValue placeholder="Sélectionner une catégorie" />
@@ -95,39 +102,41 @@ const MenuItemForm = ({
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="subcategory">Sous-Catégorie</Label>
+        <Label htmlFor="subcategory">Sous-Catégorie <span className="text-red-500">*</span></Label>
         <Select 
           value={formData.subcategory || ""} 
           onValueChange={handleSubcategoryChange}
+          required
         >
           <SelectTrigger className="input-field">
             <SelectValue placeholder="Sélectionner une sous-catégorie" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Soupe">Soupe</SelectItem>
-            <SelectItem value="Salade">Salade</SelectItem>
-            <SelectItem value="Feuilleté">Feuilleté</SelectItem>
-            <SelectItem value="Couscous">Couscous</SelectItem>
-            <SelectItem value="Tagine">Tagine</SelectItem>
-            <SelectItem value="Viande">Viande</SelectItem>
-            <SelectItem value="Poisson">Poisson</SelectItem>
+            <SelectItem value="Soupes et Potages">Soupes et Potages</SelectItem>
+            <SelectItem value="Salades et Crudités">Salades et Crudités</SelectItem>
+            <SelectItem value="Spécialités Chaudes">Spécialités Chaudes</SelectItem>
+            <SelectItem value="Cuisine Traditionnelle">Cuisine Traditionnelle</SelectItem>
+            <SelectItem value="Viandes">Viandes</SelectItem>
+            <SelectItem value="Poissons et Fruits de Mer">Poissons et Fruits de Mer</SelectItem>
             <SelectItem value="Végétarien">Végétarien</SelectItem>
-            <SelectItem value="Riz">Riz</SelectItem>
+            <SelectItem value="Féculents">Féculents</SelectItem>
             <SelectItem value="Légumes">Légumes</SelectItem>
-            <SelectItem value="Pain">Pain</SelectItem>
-            <SelectItem value="Chaude">Boissons Chaudes</SelectItem>
-            <SelectItem value="Froid">Boissons Froides</SelectItem>
-            <SelectItem value="Gâteau">Gâteaux</SelectItem>
-            <SelectItem value="Pâtisserie">Pâtisseries</SelectItem>
-            <SelectItem value="Glace">Glaces</SelectItem>
+            <SelectItem value="Pâtisseries">Pâtisseries</SelectItem>
+            <SelectItem value="Fruits et Sorbets">Fruits et Sorbets</SelectItem>
+            <SelectItem value="Boissons Chaudes">Boissons Chaudes</SelectItem>
+            <SelectItem value="Boissons Froides">Boissons Froides</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <DialogFooter>
-        <Button variant="outline" onClick={onCancel}>Annuler</Button>
-        <Button className="bg-restaurant-primary hover:bg-restaurant-primary/90" onClick={onSubmit}>
-          {submitLabel}
+        <Button variant="outline" onClick={onCancel} disabled={isSubmitting}>Annuler</Button>
+        <Button 
+          className="bg-restaurant-primary hover:bg-restaurant-primary/90" 
+          onClick={onSubmit} 
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Traitement...' : submitLabel}
         </Button>
       </DialogFooter>
     </div>
