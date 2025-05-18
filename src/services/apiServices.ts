@@ -1,4 +1,3 @@
-
 // src/apiService.ts
 
 import axios, { AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
@@ -14,9 +13,9 @@ import type {
   Employe,
   PlatCostDetails,
   FirestorePlat,
-  FirestorePlatIngredient,
-  CATEGORY_TO_ID
+  FirestorePlatIngredient
 } from './types';
+import { CATEGORY_TO_ID } from './types';
 import { estimateCost, getCostDetailsByMenuItemId } from '../data/ingredientCosts';
 
 // 1. Create an Axios instance pointing at your Cloud Functions base URL
@@ -160,17 +159,19 @@ export async function syncPlatWithFirebase(plat: Plat) {
     // Save plat to Firestore
     await setDoc(platDocRef, firestorePlat);
     
-    // Get ingredients (you would need a way to retrieve these)
-    const ingredients = costDetails.costDetails?.map(detail => ({
-      nom: detail.name,
-      quantite_g: detail.quantity
-    })) || [];
+    // Get ingredients (handle the case where costDetails might not have costDetails property)
+    const ingredients = 'costDetails' in costDetails 
+      ? costDetails.costDetails?.map(detail => ({
+          nom: detail.name,
+          quantite_g: detail.quantity
+        })) 
+      : [];
     
     // Create or update plat_ingredients document
     const ingredientsDocRef = doc(db, "plat_ingredients", plat.idP);
     const firestorePlatIngredient: FirestorePlatIngredient = {
       nom_du_plat: plat.nom,
-      ingredients,
+      ingredients: ingredients || [],
       idP: plat.idP,
       nom: "", // This field seems redundant with nom_du_plat
       quantite_g: 0 // This field seems redundant with ingredients array
