@@ -187,7 +187,10 @@ export async function queryEmployeesByRole(role: string): Promise<Employee[]> {
   return results;
 }
 
+// Définition du type pour le paramètre data de logDebug
+type LogData = string | number | boolean | object | null | undefined;
+
 // Fonction d'aide pour les traces de débogage
-export const logDebug = (message: string, data?: any) => {
+export const logDebug = (message: string, data?: LogData) => {
   console.log(`[Firebase] ${message}`, data || '');
 };
