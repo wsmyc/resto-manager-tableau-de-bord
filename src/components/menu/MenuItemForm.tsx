@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { MenuItem } from './MenuItemTable';
+import { Loader2 } from 'lucide-react';
 
 interface MenuItemFormProps {
   formData: Partial<MenuItem>;
@@ -29,9 +30,45 @@ const MenuItemForm = ({
   submitLabel,
   isSubmitting = false
 }: MenuItemFormProps) => {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.name?.trim()) {
+      newErrors.name = "Le nom est requis";
+    }
+    
+    if (!formData.description?.trim()) {
+      newErrors.description = "La description est requise";
+    }
+    
+    if (formData.price === undefined || formData.price <= 0) {
+      newErrors.price = "Un prix valide est requis";
+    }
+    
+    if (!formData.category) {
+      newErrors.category = "La catégorie est requise";
+    }
+    
+    if (!formData.subcategory) {
+      newErrors.subcategory = "La sous-catégorie est requise";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
+  const handleSubmit = () => {
+    if (validateForm()) {
+      onSubmit();
+    } else {
+      console.log("Formulaire invalide:", errors);
+    }
+  };
+  
   return (
     <div className="grid gap-4 py-4">
-      
       <div className="grid gap-2">
         <Label htmlFor="name">Nom de l'Article <span className="text-red-500">*</span></Label>
         <Input
@@ -39,10 +76,12 @@ const MenuItemForm = ({
           name="name"
           value={formData.name || ""}
           onChange={handleInputChange}
-          className="input-field"
+          className={`input-field ${errors.name ? "border-red-500" : ""}`}
           required
         />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </div>
+      
       <div className="grid gap-2">
         <Label htmlFor="description">Description <span className="text-red-500">*</span></Label>
         <Input
@@ -50,10 +89,12 @@ const MenuItemForm = ({
           name="description"
           value={formData.description || ""}
           onChange={handleInputChange}
-          className="input-field"
+          className={`input-field ${errors.description ? "border-red-500" : ""}`}
           required
         />
+        {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
       </div>
+      
       <div className="grid gap-2">
         <Label htmlFor="ingredients">Ingrédients (séparés par des virgules)</Label>
         <Textarea
@@ -66,6 +107,7 @@ const MenuItemForm = ({
           placeholder="Exemple: poulet, tomate, oignon, épices"
         />
       </div>
+      
       <div className="grid gap-2">
         <Label htmlFor="price">Prix (DZD) <span className="text-red-500">*</span></Label>
         <Input
@@ -76,9 +118,10 @@ const MenuItemForm = ({
           min="0"
           value={formData.price !== undefined ? formData.price : ""}
           onChange={handleInputChange}
-          className="input-field"
+          className={`input-field ${errors.price ? "border-red-500" : ""}`}
           required
         />
+        {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
       </div>
       
       <div className="grid gap-2">
@@ -88,7 +131,7 @@ const MenuItemForm = ({
           onValueChange={handleCategoryChange}
           required
         >
-          <SelectTrigger className="input-field">
+          <SelectTrigger className={`input-field ${errors.category ? "border-red-500" : ""}`}>
             <SelectValue placeholder="Sélectionner une catégorie" />
           </SelectTrigger>
           <SelectContent>
@@ -99,6 +142,7 @@ const MenuItemForm = ({
             <SelectItem value="Desserts">Desserts</SelectItem>
           </SelectContent>
         </Select>
+        {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
       </div>
 
       <div className="grid gap-2">
@@ -108,7 +152,7 @@ const MenuItemForm = ({
           onValueChange={handleSubcategoryChange}
           required
         >
-          <SelectTrigger className="input-field">
+          <SelectTrigger className={`input-field ${errors.subcategory ? "border-red-500" : ""}`}>
             <SelectValue placeholder="Sélectionner une sous-catégorie" />
           </SelectTrigger>
           <SelectContent>
@@ -127,16 +171,22 @@ const MenuItemForm = ({
             <SelectItem value="Boissons Froides">Boissons Froides</SelectItem>
           </SelectContent>
         </Select>
+        {errors.subcategory && <p className="text-red-500 text-sm">{errors.subcategory}</p>}
       </div>
 
       <DialogFooter>
         <Button variant="outline" onClick={onCancel} disabled={isSubmitting}>Annuler</Button>
         <Button 
           className="bg-restaurant-primary hover:bg-restaurant-primary/90" 
-          onClick={onSubmit} 
+          onClick={handleSubmit} 
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Traitement...' : submitLabel}
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Traitement...
+            </>
+          ) : submitLabel}
         </Button>
       </DialogFooter>
     </div>

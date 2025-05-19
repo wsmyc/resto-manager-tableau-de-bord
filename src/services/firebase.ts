@@ -20,7 +20,11 @@ import {
   updateDoc,
   deleteDoc,
   query,
-  where
+  where,
+  setDoc,
+  serverTimestamp,
+  orderBy,
+  limit
 } from 'firebase/firestore'; // Firestore Database
 
 // 2. Your Firebase project configuration
@@ -29,9 +33,9 @@ const firebaseConfig = {
   apiKey: "AIzaSyAh_qXAMGvuayCYU0Dany2RIgC5Z4NQg1M",
   authDomain: "pferestau25.firebaseapp.com",
   projectId: "pferestau25",
-  storageBucket: "pferestau25.firebasestorage.app",
-  messagingSenderId: "180090883215", // TODO: Enter your messaging sender ID
-  appId: "1:180090883215:web:caa2a13100d2bd6b4e34fa" // TODO: Enter your app ID
+  storageBucket: "pferestau25.appspot.com", // Corrigé
+  messagingSenderId: "180090883215",
+  appId: "1:180090883215:web:caa2a13100d2bd6b4e34fa"
 };
 
 // 3. Initialize or reuse Firebase App, Auth, and Firestore
@@ -182,3 +186,8 @@ export async function queryEmployeesByRole(role: string): Promise<Employee[]> {
   });
   return results;
 }
+
+// Fonction d'aide pour les traces de débogage
+export const logDebug = (message: string, data?: any) => {
+  console.log(`[Firebase] ${message}`, data || '');
+};
