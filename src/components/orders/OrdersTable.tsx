@@ -5,6 +5,9 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { Button } from "@/components/ui/button";
 import { ArrowRight, X } from "lucide-react";
 import OrderStatusBadge from "./OrderStatusBadge";
+import { useEffect, useState } from "react";
+import { collection, onSnapshot, doc, updateDoc } from "firebase/firestore";
+import { db, logDebug } from "@/services/firebase";
 
 interface Order {
   id: string;
