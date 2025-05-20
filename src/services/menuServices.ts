@@ -1,3 +1,4 @@
+
 import { db } from './firebase';
 import { collection, getDocs, setDoc, doc, query, where, orderBy, limit, serverTimestamp } from 'firebase/firestore';
 import { MenuItem } from '../components/menu/MenuItemTable';
@@ -124,11 +125,11 @@ async function generateDishId(category: string): Promise<string> {
       console.log("Résultat de la requête:", snapshot.empty ? "Aucun plat existant" : "Plats existants trouvés");
       
       // 3. Generate a new ID
-      let newId: number;
+      let newId: string;
       
       if (snapshot.empty) {
         // If no dishes exist in this category yet, start with 01
-        newId = parseInt(categoryPrefix) + 1;
+        newId = String(Number(categoryPrefix) + 1);
         console.log("Aucun plat existant, nouvel ID:", newId);
       } else {
         // Get the highest existing ID and increment by 1
@@ -140,16 +141,16 @@ async function generateDishId(category: string): Promise<string> {
         if (isNaN(parseInt(highestDishId))) {
           console.error("ID du plat n'est pas un nombre:", highestDishId);
           // Fallback - commencer à 01
-          newId = parseInt(categoryPrefix) + 1;
+          newId = String(Number(categoryPrefix) + 1);
         } else {
           const highestNumber = parseInt(highestDishId);
-          newId = highestNumber + 1;
+          newId = String(highestNumber + 1);
         }
         
         console.log("Nouvel ID calculé:", newId);
       }
       
-      return newId.toString();
+      return newId;
     } catch (queryError) {
       console.error("Erreur lors de la requête Firestore:", queryError);
       

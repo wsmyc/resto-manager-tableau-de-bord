@@ -1,5 +1,5 @@
 
-// src/types.ts
+// src/services/types.ts
 
 import type { Timestamp } from 'firebase/firestore';
 
@@ -28,18 +28,38 @@ export interface Plat {
   id?: string;
   description: string;
   estimations: number;
-  idCat: number;
+  idCat: number | string;
   nom_du_plat: string;
   note: number;
   prix?: number;
+}
+
+/** Used for Firebase Plat documents */
+export interface FirestorePlat {
+  description: string;
+  estimations: number;
+  idCat: number | string;
+  nom_du_plat: string;
+  note: number;
+  prix?: number;
+}
+
+/** Used for Firebase Plat Ingredients */
+export interface FirestorePlatIngredient {
+  nom_du_plat: string;
+  ingredients: Array<{ nom: string; quantite_g: number }>;
+  idP: string;
+  nom: string;
+  quantite_g: number;
 }
 
 /** 4. Collection `reservations` */
 export interface Reservation {
   id?: string;
   client_name: string;
+  client_id?: string;
   created_at: Timestamp;
-  date_time: string;
+  date_time: string | Timestamp;
   notes?: string;
   party_size: number;
   status: 'pending' | 'confirmed' | 'cancelled';
@@ -51,6 +71,7 @@ export interface Reservation {
 /** 5. Collection `ingredient` */
 export interface Ingredient {
   id?: string;
+  idIng?: string; // For backward compatibility
   categorie: string;
   cout_par_unite: number;
   createdAt: Timestamp;
@@ -59,6 +80,10 @@ export interface Ingredient {
   quantite: number;
   seuil_alerte: number;
   unite: string;
+  // Legacy properties for compatibility
+  nbrMax?: number;
+  nbrMin?: number;
+  nomIng?: string;
 }
 
 /** 6. Collection `employes` */
@@ -74,6 +99,7 @@ export interface Employe {
   role: string;
   salaire: string;
   usernameE: string;
+  idE?: string; // For backward compatibility
 }
 
 /** 7. Collection 'montant_encaisse' */
@@ -146,3 +172,7 @@ export const CATEGORY_NAME_MAPPING: Record<string, string> = {
   "Accompagnements": "Accompagnement",
   "Boissons": "Boisson"
 };
+
+// Legacy type aliases for backward compatibility
+export type commandes = Commande;
+export type commandePlat = CommandePlat;

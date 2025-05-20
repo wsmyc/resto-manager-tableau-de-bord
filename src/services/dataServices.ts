@@ -1,3 +1,4 @@
+
 // src/dataService.ts
 
 import {
@@ -13,13 +14,13 @@ import {
 } from 'firebase/firestore';
 import { db, logDebug } from './firebase';
 import type {
-  commandes,
+  Commande,
   Reservation,
   Ingredient,
   Employe,
   Plat,
   SalesBySubcategory,
-  commandePlat
+  CommandePlat
 } from './types';
 
 /////////////////////////
@@ -67,13 +68,15 @@ export async function getActiveReservations(): Promise<Reservation[]> {
     const reservations = snap.docs.map(docSnap => {
       const d = docSnap.data() as DocumentData;
       return {
-        idRes:      docSnap.id,
-        client_id:  d.client_id    as string,
-        created_at: d.created_at   as Timestamp,
-        date_time:  d.date_time    as Timestamp,
-        party_size: d.party_size   as number,
-        status:     d.status       as 'pending' | 'confirmed' | 'cancelled',
-        table_id:   d.table_id     as string
+        id: docSnap.id,
+        client_name: d.client_name || "Client inconnu",
+        client_id: d.client_id as string,
+        created_at: d.created_at as Timestamp,
+        date_time: d.date_time as string,
+        party_size: d.party_size as number,
+        status: d.status as 'pending' | 'confirmed' | 'cancelled',
+        table_id: d.table_id as string,
+        telephone: d.telephone || "+000000000"
       };
     });
     logDebug('getActiveReservations: retrieved active reservations', reservations.length);
@@ -96,13 +99,15 @@ export function listenToActiveReservations(callback: (reservations: Reservation[
       const reservations = snapshot.docs.map(docSnap => {
         const d = docSnap.data() as DocumentData;
         return {
-          idRes:      docSnap.id,
-          client_id:  d.client_id    as string,
-          created_at: d.created_at   as Timestamp,
-          date_time:  d.date_time    as Timestamp,
-          party_size: d.party_size   as number,
-          status:     d.status       as 'pending' | 'confirmed' | 'cancelled',
-          table_id:   d.table_id     as string
+          id: docSnap.id,
+          client_name: d.client_name || "Client inconnu",
+          client_id: d.client_id as string,
+          created_at: d.created_at as Timestamp,
+          date_time: d.date_time as string,
+          party_size: d.party_size as number,
+          status: d.status as 'pending' | 'confirmed' | 'cancelled',
+          table_id: d.table_id as string,
+          telephone: d.telephone || "+000000000"
         };
       });
       callback(reservations);
@@ -298,7 +303,7 @@ export function listenToDailyRevenue(callback: (data: { name: string; date: stri
 /////////////////////////
 export async function getPopularDishes(topN = 5): Promise<{ item: Plat; count: number }[]> {
   try {
-    const cpSnap = await getDocs(collection(db, 'commande_plat'));
+    const cpSnap = await getDocs(collection(db, 'commande_plats'));
     const counts = new Map<string, number>();
     cpSnap.docs.forEach(docSnap => {
       const d = docSnap.data() as DocumentData;
@@ -310,7 +315,16 @@ export async function getPopularDishes(topN = 5): Promise<{ item: Plat; count: n
     const platsSnap = await getDocs(collection(db, 'plats'));
     const mapPlat = new Map<string, Plat>();
     platsSnap.docs.forEach(docSnap => {
-      mapPlat.set(docSnap.id, docSnap.data() as Plat);
+      const platData = docSnap.data();
+      mapPlat.set(docSnap.id, {
+        id: docSnap.id,
+        description: platData.description,
+        estimations: platData.estimations,
+        idCat: platData.idCat,
+        nom_du_plat: platData.nom_du_plat,
+        note: platData.note,
+        prix: platData.prix
+      });
     });
     
     const result = Array.from(counts.entries())
@@ -333,7 +347,7 @@ export async function getPopularDishes(topN = 5): Promise<{ item: Plat; count: n
 
 // Real-time version for listening to popular dishes
 export function listenToPopularDishes(topN = 5, callback: (dishes: { item: Plat; count: number }[]) => void): () => void {
-  const commandePlatsRef = collection(db, 'commande_plat');
+  const commandePlatsRef = collection(db, 'commande_plats');
   
   const unsubscribe = onSnapshot(commandePlatsRef, 
     async (snapshot) => {
@@ -349,7 +363,16 @@ export function listenToPopularDishes(topN = 5, callback: (dishes: { item: Plat;
         const platsSnap = await getDocs(collection(db, 'plats'));
         const mapPlat = new Map<string, Plat>();
         platsSnap.docs.forEach(docSnap => {
-          mapPlat.set(docSnap.id, docSnap.data() as Plat);
+          const platData = docSnap.data();
+          mapPlat.set(docSnap.id, {
+            id: docSnap.id,
+            description: platData.description,
+            estimations: platData.estimations,
+            idCat: platData.idCat,
+            nom_du_plat: platData.nom_du_plat,
+            note: platData.note,
+            prix: platData.prix
+          });
         });
         
         const result = Array.from(counts.entries())
@@ -383,9 +406,9 @@ export function listenToPopularDishes(topN = 5, callback: (dishes: { item: Plat;
 /////////////////////////
 export async function getOrdersByCategory(): Promise<{ name: string; orders: number }[]> {
   try {
-    const cpSnap = await getDocs(collection(db, 'commande_plat'));
+    const cpSnap = await getDocs(collection(db, 'commande_plats'));
     const platsSnap = await getDocs(collection(db, 'plats'));
-    const catMap = new Map<string, string>();
+    const catMap = new Map<string, string | number>();
     
     platsSnap.docs.forEach(docSnap => {
       const p = docSnap.data() as Plat;
@@ -402,24 +425,28 @@ export async function getOrdersByCategory(): Promise<{ name: string; orders: num
       
       // Map category ID to a human-readable name
       let categoryName;
-      switch (categoryId) {
-        case '100':
-          categoryName = 'Entrées';
-          break;
-        case '200':
-          categoryName = 'Plats';
-          break;
-        case '300':
-          categoryName = 'Desserts';
-          break;
-        case '400':
-          categoryName = 'Accompagnements';
-          break;
-        case '500':
-          categoryName = 'Boissons';
-          break;
-        default:
-          categoryName = categoryId;
+      if (typeof categoryId === 'number') {
+        switch (categoryId) {
+          case 100:
+            categoryName = 'Entrées';
+            break;
+          case 200:
+            categoryName = 'Plats';
+            break;
+          case 300:
+            categoryName = 'Desserts';
+            break;
+          case 400:
+            categoryName = 'Accompagnements';
+            break;
+          case 500:
+            categoryName = 'Boissons';
+            break;
+          default:
+            categoryName = `Catégorie ${categoryId}`;
+        }
+      } else {
+        categoryName = categoryId;
       }
       
       counts.set(categoryName, (counts.get(categoryName) || 0) + qte);
@@ -439,13 +466,13 @@ export async function getOrdersByCategory(): Promise<{ name: string; orders: num
 
 // Real-time version for listening to orders by category
 export function listenToOrdersByCategory(callback: (categories: { name: string; orders: number }[]) => void): () => void {
-  const commandePlatsRef = collection(db, 'commande_plat');
+  const commandePlatsRef = collection(db, 'commande_plats');
   
   const unsubscribe = onSnapshot(commandePlatsRef, 
     async (snapshot) => {
       try {
         const platsSnap = await getDocs(collection(db, 'plats'));
-        const catMap = new Map<string, string>();
+        const catMap = new Map<string, string | number>();
         
         platsSnap.docs.forEach(docSnap => {
           const p = docSnap.data() as Plat;
@@ -462,24 +489,28 @@ export function listenToOrdersByCategory(callback: (categories: { name: string; 
           
           // Map category ID to a human-readable name
           let categoryName;
-          switch (categoryId) {
-            case '100':
-              categoryName = 'Entrées';
-              break;
-            case '200':
-              categoryName = 'Plats';
-              break;
-            case '300':
-              categoryName = 'Desserts';
-              break;
-            case '400':
-              categoryName = 'Accompagnements';
-              break;
-            case '500':
-              categoryName = 'Boissons';
-              break;
-            default:
-              categoryName = categoryId;
+          if (typeof categoryId === 'number') {
+            switch (categoryId) {
+              case 100:
+                categoryName = 'Entrées';
+                break;
+              case 200:
+                categoryName = 'Plats';
+                break;
+              case 300:
+                categoryName = 'Desserts';
+                break;
+              case 400:
+                categoryName = 'Accompagnements';
+                break;
+              case 500:
+                categoryName = 'Boissons';
+                break;
+              default:
+                categoryName = `Catégorie ${categoryId}`;
+            }
+          } else {
+            categoryName = categoryId;
           }
           
           counts.set(categoryName, (counts.get(categoryName) || 0) + qte);
@@ -508,19 +539,19 @@ export function listenToOrdersByCategory(callback: (categories: { name: string; 
 /////////////////////////
 // 7. Commandes (tableau)
 /////////////////////////
-export async function getOrdersTable(): Promise<commandes[]> {
+export async function getOrdersTable(): Promise<Commande[]> {
   const snap = await getDocs(collection(db, 'commandes'));
   return snap.docs.map(docSnap => {
     const d = docSnap.data() as DocumentData;
     return {
-      idCmd:        docSnap.id,
+      id: docSnap.id,
       confirmation: d.confirmation as boolean,
       dateCreation: d.dateCreation as Timestamp,
-      etat:         d.etat as 'pending' | 'confirmed' | 'cancelled',
-      idC:          d.idC as string,
-      idT:          d.idT as string,
-      montant:      d.montant as number,
-      notes:        d.notes as string
+      etat: d.etat as 'pending' | 'confirmed' | 'cancelled',
+      idC: d.idC as string,
+      idTable: d.idTable as string,
+      montant: d.montant as number,
+      notes: d.notes as string
     };
   });
 }
@@ -529,11 +560,20 @@ export async function getOrdersTable(): Promise<commandes[]> {
 // 8. Stock des ingrédients
 /////////////////////////
 export async function getIngredientsStock(): Promise<Ingredient[]> {
-  const snap = await getDocs(collection(db, 'ingredient'));
+  const snap = await getDocs(collection(db, 'ingredients'));
   return snap.docs.map(docSnap => {
     const d = docSnap.data() as DocumentData;
     return {
-      idIng:  docSnap.id,
+      id: docSnap.id,
+      categorie: d.categorie || "Non catégorisé",
+      cout_par_unite: d.cout_par_unite || 0,
+      createdAt: d.createdAt as Timestamp,
+      date_expiration: d.date_expiration || "",
+      nom: d.nom || d.nomIng || "Ingrédient sans nom",
+      quantite: d.quantite || 0,
+      seuil_alerte: d.seuil_alerte || 0,
+      unite: d.unite || "unité",
+      // Legacy fields
       nbrMax: d.nbrMax as number,
       nbrMin: d.nbrMin as number,
       nomIng: d.nomIng as string
@@ -549,13 +589,17 @@ export async function getReservationsTable(): Promise<Reservation[]> {
   return snap.docs.map(docSnap => {
     const d = docSnap.data() as DocumentData;
     return {
-      idRes:      docSnap.id,
-      client_id:  d.client_id as string,
+      id: docSnap.id,
+      client_name: d.client_name || "Client inconnu",
+      client_id: d.client_id as string,
       created_at: d.created_at as Timestamp,
-      date_time:  d.date_time as Timestamp,
+      date_time: d.date_time as string,
+      notes: d.notes as string,
       party_size: d.party_size as number,
-      status:     d.status as 'pending' | 'confirmed' | 'cancelled',
-      table_id:   d.table_id as string
+      status: d.status as 'pending' | 'confirmed' | 'cancelled',
+      table_id: d.table_id as string,
+      telephone: d.telephone || "+000000000",
+      updated_at: d.updated_at as Timestamp
     };
   });
 }
@@ -568,17 +612,17 @@ export async function getEmployeesList(): Promise<Employe[]> {
   return snap.docs.map(docSnap => {
     const d = docSnap.data() as DocumentData;
     return {
-      idE:           docSnap.id,
-      adresseE:      d.adresseE as string,
-      dateEmbauche:  d.dateEmbauche as Timestamp,
-      emailE:        d.emailE as string,
-      firebase_uid:  d.firebase_uid as string,
-      nomE:          d.nomE as string,
-      numeroE:       d.numeroE as string,
-      prenomE:       d.prenomE as string,
-      role:          d.role as 'serveur' | 'chef' | 'manager',
-      salaire:       d.salaire as string,
-      usernameE:     d.usernameE as string
+      id: docSnap.id,
+      adresseE: d.adresseE as string,
+      dateEmbauche: d.dateEmbauche as Timestamp,
+      emailE: d.emailE as string,
+      firebase_uid: d.firebase_uid as string,
+      nomE: d.nomE as string,
+      numeroE: d.numeroE as string,
+      prenomE: d.prenomE as string,
+      role: d.role as string,
+      salaire: d.salaire as string,
+      usernameE: d.usernameE as string
     };
   });
 }
@@ -587,10 +631,10 @@ export async function getEmployeesList(): Promise<Employe[]> {
 // 11. Ventes par sous-catégorie
 /////////////////////////
 export async function getSalesBySubcategory(): Promise<SalesBySubcategory[]> {
-  const cpSnap = await getDocs(collection(db, 'commande_plat'));
+  const cpSnap = await getDocs(collection(db, 'commande_plats'));
   const platsSnap = await getDocs(collection(db, 'plats'));
-  const catMap = new Map<string, string>();
-  const priceMap = new Map<string, number>();
+  const catMap = new Map<string, string | number>();
+  const priceMap = new Map<string, number | undefined>();
 
   platsSnap.docs.forEach(docSnap => {
     const p = docSnap.data() as Plat;
@@ -601,7 +645,7 @@ export async function getSalesBySubcategory(): Promise<SalesBySubcategory[]> {
   const sales = new Map<string, number>();
   cpSnap.docs.forEach(docSnap => {
     const d = docSnap.data() as DocumentData;
-    const cat = catMap.get(d.idP as string) || 'Inconnue';
+    const cat = String(catMap.get(d.idP as string) || 'Inconnue');
     const qte = d.quantité as number;
     const price = priceMap.get(d.idP as string) || 0;
     sales.set(cat, (sales.get(cat) || 0) + qte * price);

@@ -1,14 +1,15 @@
+
 // src/apiService.ts
 
 import axios, { AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
 import { auth, db } from './firebase';
 import { doc, collection, setDoc, addDoc } from 'firebase/firestore';
 import type {
-  commandes,
+  Commande,
   Reservation,
   Ingredient,
   Plat,
-  commandePlat,
+  CommandePlat,
   SalesBySubcategory,
   Employe,
   PlatCostDetails,
@@ -55,23 +56,23 @@ export function createEmploye(data: Partial<Employe>) {
 }
 
 // ----- Commandes -----
-export function getAllCommandes(): Promise<commandes[]> {
+export function getAllCommandes(): Promise<Commande[]> {
   return api.get('/commandes/').then(res => res.data);
 }
 
-export function getCommandesEnAttente(): Promise<commandes[]> {
+export function getCommandesEnAttente(): Promise<Commande[]> {
   return api.get('/commandes/en-attente/').then(res => res.data);
 }
 
-export function getCommandesLancees(): Promise<commandes[]> {
+export function getCommandesLancees(): Promise<Commande[]> {
   return api.get('/commandes/lancees/').then(res => res.data);
 }
 
-export function getCommandesServies(): Promise<commandes[]> {
+export function getCommandesServies(): Promise<Commande[]> {
   return api.get('/commandes/servies/').then(res => res.data);
 }
 
-export function getCommandesAnnulees(): Promise<commandes[]> {
+export function getCommandesAnnulees(): Promise<Commande[]> {
   return api.get('/commandes/annulees/').then(res => res.data);
 }
 
@@ -80,7 +81,7 @@ export function getTotalCommandes(): Promise<{ total: number }> {
 }
 
 // ----- Commande Plat -----
-export function getCommandePlatList(): Promise<commandePlat[]> {
+export function getCommandePlatList(): Promise<CommandePlat[]> {
   return api.get('/commande-plat/').then(res => res.data);
 }
 
@@ -117,7 +118,7 @@ export async function updatePlat(platId: string, data: Partial<Plat>) {
   const response = await api.put(`/plats/${platId}/`, data);
   
   // Get the full updated plat
-  const updatedPlat = { ...data, idP: platId } as Plat;
+  const updatedPlat = { ...data, id: platId } as Plat;
   
   // Then sync with Firebase
   await syncPlatWithFirebase(updatedPlat);
@@ -143,15 +144,15 @@ export function getPlatCostDetails(platId: string): Promise<PlatCostDetails> {
 export async function syncPlatWithFirebase(plat: Plat) {
   try {
     // Get cost details for the plat
-    const costDetails = getCostDetailsByMenuItemId(plat.idP) || { totalCost: estimateCost(plat.prix) };
+    const costDetails = getCostDetailsByMenuItemId(plat.id || '') || { totalCost: estimateCost(plat.prix) };
     
     // Create Firestore plat document
-    const platDocRef = doc(db, "plats", plat.idP);
+    const platDocRef = doc(db, "plats", plat.id || '');
     const firestorePlat: FirestorePlat = {
       description: plat.description,
       estimations: costDetails.totalCost,
-      idCat: CATEGORY_TO_ID[plat.idCat] || "CAT0",
-      nom_du_plat: plat.nom,
+      idCat: plat.idCat,
+      nom_du_plat: plat.nom_du_plat,
       note: plat.note || 0,
       prix: plat.prix
     };
@@ -168,19 +169,19 @@ export async function syncPlatWithFirebase(plat: Plat) {
       : [];
     
     // Create or update plat_ingredients document
-    const ingredientsDocRef = doc(db, "plat_ingredients", plat.idP);
+    const ingredientsDocRef = doc(db, "plat_ingredients", plat.id || '');
     const firestorePlatIngredient: FirestorePlatIngredient = {
-      nom_du_plat: plat.nom,
+      nom_du_plat: plat.nom_du_plat,
       ingredients: ingredients || [],
-      idP: plat.idP,
-      nom: "", // This field seems redundant with nom_du_plat
+      idP: plat.id || '',
+      nom: plat.nom_du_plat, // Use nom_du_plat since nom doesn't exist in Plat
       quantite_g: 0 // This field seems redundant with ingredients array
     };
     
     // Save ingredients to Firestore
     await setDoc(ingredientsDocRef, firestorePlatIngredient);
     
-    console.log(`Plat ${plat.idP} synced with Firebase successfully`);
+    console.log(`Plat ${plat.id} synced with Firebase successfully`);
     return true;
   } catch (error) {
     console.error("Error syncing plat with Firebase:", error);
