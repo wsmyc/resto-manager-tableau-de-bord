@@ -46,8 +46,7 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
             
             // Get items for this order from commande_plat collection
             const orderItemsQuery = query(
-              collection(db, 'commande_plat'), 
-              // where('idCmd', '==', docSnap.id)
+              collection(db, 'commande_plats')
             );
             
             let orderItems: string[] = [];
@@ -55,7 +54,6 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
             
             try {
               // For simplicity, we're just displaying order ID for now
-              // In a real implementation, you would fetch the actual items
               orderItems = [`Commande #${docSnap.id.substring(0, 4)}`];
             } catch (error) {
               console.error("Error fetching order items:", error);
@@ -66,9 +64,14 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
             let status: Order["status"] = "En attente";
             switch (commandeData.etat) {
               case "confirmed":
+              case "confirmee":
+              case "en_preparation":
+              case "prete":
+              case "servie":
                 status = "Lancée";
                 break;
               case "cancelled":
+              case "annulee":
                 status = "Annulée";
                 break;
               default:
@@ -89,7 +92,7 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
               total: orderTotal,
               status: status,
               time: timeString,
-              tableNumber: commandeData.idT || "N/A",
+              tableNumber: commandeData.idTable || "N/A",
               server: commandeData.serveur || "N/A"
             });
           }
@@ -129,13 +132,13 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
       let firestoreStatus;
       switch (newStatus) {
         case "Lancée":
-          firestoreStatus = "confirmed";
+          firestoreStatus = "confirmee"; // Using French status names to match your schema
           break;
         case "Annulée":
-          firestoreStatus = "cancelled";
+          firestoreStatus = "annulee";
           break;
         default:
-          firestoreStatus = "pending";
+          firestoreStatus = "en_attente";
       }
       
       // Update the order in Firestore

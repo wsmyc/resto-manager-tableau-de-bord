@@ -4,19 +4,20 @@
 import type { Timestamp } from 'firebase/firestore';
 
 /** 1. Collection `commandes` */
-export interface commandes {
-  idCmd: string;
+export interface Commande {
+  id?: string;
   confirmation: boolean;
   dateCreation: Timestamp;
-  etat: 'pending' | 'confirmed' | 'cancelled' | 'en preparation' | 'prete';
+  discount_applied?: boolean;
+  etat: 'en_attente' | 'confirmee' | 'annulee' | 'en_preparation' | 'prete' | 'servie' | 'pending' | 'confirmed' | 'cancelled';
   idC: string;
-  idT: string;
+  idTable: string;
   montant: number;
-  notes: string;
+  notes?: string;
 }
 
 /** 2. Collection `commande_plat` */
-export interface commandePlat {
+export interface CommandePlat {
   idCmd: string;
   idP: string;
   quantité: number;
@@ -24,39 +25,45 @@ export interface commandePlat {
 
 /** 3. Collection `plats` */
 export interface Plat {
-  idP: string;
+  id?: string;
   description: string;
-  estimation: number;
-  idCat: string;
-  ingrédients: string[];
-  nom: string;
+  estimations: number;
+  idCat: number;
+  nom_du_plat: string;
   note: number;
-  prix: number;
-  quantité: number;
+  prix?: number;
 }
 
 /** 4. Collection `reservations` */
 export interface Reservation {
-  idRes: string;
-  client_id: string;
+  id?: string;
+  client_name: string;
   created_at: Timestamp;
-  date_time: Timestamp;
+  date_time: string;
+  notes?: string;
   party_size: number;
   status: 'pending' | 'confirmed' | 'cancelled';
   table_id: string;
+  telephone: string;
+  updated_at?: Timestamp;
 }
 
 /** 5. Collection `ingredient` */
 export interface Ingredient {
-  idIng: string;
-  nbrMax: number;
-  nbrMin: number;
-  nomIng: string;
+  id?: string;
+  categorie: string;
+  cout_par_unite: number;
+  createdAt: Timestamp;
+  date_expiration: string;
+  nom: string;
+  quantite: number;
+  seuil_alerte: number;
+  unite: string;
 }
 
 /** 6. Collection `employes` */
 export interface Employe {
-  idE: string;
+  id?: string;
   adresseE: string;
   dateEmbauche: Timestamp;
   emailE: string;
@@ -64,9 +71,25 @@ export interface Employe {
   nomE: string;
   numeroE: string;
   prenomE: string;
-  role: 'serveur' | 'chef' | 'manager';
+  role: string;
   salaire: string;
   usernameE: string;
+}
+
+/** 7. Collection 'montant_encaisse' */
+export interface MontantEncaisse {
+  id?: string;
+  dateMontant: string;
+  totalEncaissé: number;
+}
+
+/** 8. Collection 'reapprovisionnements' */
+export interface Reapprovisionnement {
+  id?: string;
+  date_reapprovisionnement: Timestamp;
+  idIng: string;
+  quantite: number;
+  user_id: string;
 }
 
 /** Pour la fonction ventes par sous-catégorie */
@@ -79,7 +102,7 @@ export interface SalesBySubcategory {
 export interface IngredientCostDetail {
   name: string;
   quantity: number;
-  unit: 'kg' | 'g' | 'L' | 'ml' | 'unité';
+  unit: string;
   cost: number;
 }
 
@@ -106,31 +129,13 @@ export interface Notification {
   };
 }
 
-/** Types pour Firebase menu */
-export interface FirestorePlat {
-  description: string;
-  estimations: number;
-  idCat: string;
-  nom_du_plat: string;
-  note: number;
-  prix: number;
-}
-
-export interface FirestorePlatIngredient {
-  nom: string;
-  quantite_g: number;
-  nom_du_plat: string;
-  ingredients: Array<{nom: string, quantite_g: number}>;
-  idP: string;
-}
-
 /** Mappage catégorie -> ID */
-export const CATEGORY_TO_ID: Record<string, string> = {
-  "Entrées": "100",
-  "Plats": "200",
-  "Desserts": "300",
-  "Accompagnements": "400",
-  "Boissons": "500"
+export const CATEGORY_TO_ID: Record<string, number> = {
+  "Entrées": 100,
+  "Plats": 200,
+  "Desserts": 300,
+  "Accompagnements": 400,
+  "Boissons": 500
 };
 
 /** Mappage des noms de catégories français vers anglais pour la compatibilité */
