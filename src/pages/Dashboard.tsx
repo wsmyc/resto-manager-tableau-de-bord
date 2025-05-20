@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -209,7 +210,7 @@ const Dashboard = () => {
         
         platsSnapshot.forEach(doc => {
           const data = doc.data() as Plat;
-          platCategoryMap.set(doc.id, data.idCat);
+          platCategoryMap.set(doc.id, data.idCat as number);
         });
         
         // Count orders by category
@@ -218,7 +219,7 @@ const Dashboard = () => {
         commandePlatsSnapshot.forEach(doc => {
           const data = doc.data() as CommandePlat;
           const platId = data.idP;
-          const quantity = data.quantité || 1;
+          const quantity = Number(data.quantité || 0);
           
           const categoryId = platCategoryMap.get(platId);
           if (categoryId) {
@@ -239,7 +240,7 @@ const Dashboard = () => {
         const categoryData = Array.from(categoryCounts.entries())
           .map(([categoryId, count]) => ({
             name: categoryMapping[categoryId] || `Catégorie ${categoryId}`,
-            orders: Number(count) // Ensure count is always a number
+            orders: Number(count) // Explicit conversion to number to ensure type safety
           }))
           .sort((a, b) => b.orders - a.orders);
         
