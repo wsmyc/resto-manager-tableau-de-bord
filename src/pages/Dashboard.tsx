@@ -12,7 +12,7 @@ import type { Commande, Plat, Reservation, CommandePlat } from "@/services/types
 
 const Dashboard = () => {
   // State for real-time data
-  const [totalOrders, setTotalOrders] = useState<number>(0);
+  const [totalOrders, setTotalOrders] = useState<number>(100);
   const [activeReservations, setActiveReservations] = useState<number>(0);
   const [todayReservations, setTodayReservations] = useState<number>(0);
   const [weeklyRevenue, setWeeklyRevenue] = useState<number>(0);
