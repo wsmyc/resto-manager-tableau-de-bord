@@ -239,7 +239,7 @@ const Dashboard = () => {
         const categoryData = Array.from(categoryCounts.entries())
           .map(([categoryId, count]) => ({
             name: categoryMapping[categoryId] || `Catégorie ${categoryId}`,
-            orders: count
+            orders: Number(count) // Ensure count is always a number
           }))
           .sort((a, b) => b.orders - a.orders);
         
