@@ -3,53 +3,90 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ShoppingCart, Calendar, CircleDollarSign, UtensilsCrossed, TrendingUp, Users } from "lucide-react";
-
-// Données révisées pour le tableau de bord
-const weeklyRevenueData = [
-  { name: 'Lun', revenue: 24000 },
-  { name: 'Mar', revenue: 13980 },
-  { name: 'Mer', revenue: 38000 },
-  { name: 'Jeu', revenue: 39080 },
-  { name: 'Ven', revenue: 48000 },
-  { name: 'Sam', revenue: 58000 },
-  { name: 'Dim', revenue: 43000 },
-];
-
-const ordersByCategory = [
-  { name: 'Entrées', orders: 65 },
-  { name: 'Plats', orders: 120 },
-  { name: 'Desserts', orders: 85 },
-  { name: 'Boissons', orders: 95 },
-];
+import { 
+  listenToTotalOrders, 
+  listenToActiveReservations, 
+  listenToWeeklyRevenue,
+  listenToDailyRevenue, 
+  listenToPopularDishes,
+  listenToOrdersByCategory
+} from "@/services/dataServices";
+import type { Plat } from "@/services/types";
 
 const Dashboard = () => {
-  const [stats, setStats] = useState({
-    totalOrders: 0,
-    activeReservations: 0,
-    weeklyRevenue: 0,
-    popularItems: []
-  });
+  // State for real-time data
+  const [totalOrders, setTotalOrders] = useState<number>(0);
+  const [activeReservations, setActiveReservations] = useState<number>(0);
+  const [todayReservations, setTodayReservations] = useState<number>(0);
+  const [weeklyRevenue, setWeeklyRevenue] = useState<number>(0);
+  const [weeklyRevenueChange, setWeeklyRevenueChange] = useState<number>(0);
+  const [weeklyRevenueData, setWeeklyRevenueData] = useState<Array<{ name: string; revenue: number }>>([]);
+  const [popularItems, setPopularItems] = useState<Array<{ name: string; count: number }>>([]);
+  const [ordersByCategory, setOrdersByCategory] = useState<Array<{ name: string; orders: number }>>([]);
   
-  // In a real application, this would fetch data from Firebase
+  // Load all data from Firebase on component mount
   useEffect(() => {
-    // Simulate loading data from Firebase
-    const fetchData = async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setStats({
-        totalOrders: 187,
-        activeReservations: 24,
-        weeklyRevenue: 125800,
-        popularItems: [
-          { name: "Chorba Frik", count: 32 },
-          { name: "Couscous Agneau", count: 28 },
-          { name: "Tagine Agneau Pruneaux", count: 23 },
-          { name: "Tajine Kefta", count: 19 },
-        ]
-      });
-    };
+    // Subscribe to real-time updates for total orders
+    const unsubscribeOrders = listenToTotalOrders((count) => {
+      setTotalOrders(count);
+    });
     
-    fetchData();
+    // Subscribe to real-time updates for active reservations
+    const unsubscribeReservations = listenToActiveReservations((reservations) => {
+      setActiveReservations(reservations.length);
+      
+      // Calculate today's reservations
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const todayCount = reservations.filter(res => {
+        const resDate = res.date_time.toDate();
+        resDate.setHours(0, 0, 0, 0);
+        return resDate.getTime() === today.getTime();
+      }).length;
+      
+      setTodayReservations(todayCount);
+    });
+    
+    // Subscribe to real-time updates for weekly revenue
+    const unsubscribeRevenue = listenToWeeklyRevenue((revenue) => {
+      setWeeklyRevenue(revenue);
+      
+      // For demo purposes, let's set a random change percentage between 5 and 15%
+      // In a real app, you would calculate this from historical data
+      setWeeklyRevenueChange(Math.round((Math.random() * 10 + 5) * 10) / 10);
+    });
+    
+    // Subscribe to real-time updates for daily revenue chart data
+    const unsubscribeDailyRevenue = listenToDailyRevenue((dailyData) => {
+      setWeeklyRevenueData(dailyData.map(item => ({
+        name: item.name,
+        revenue: item.revenue
+      })));
+    });
+    
+    // Subscribe to real-time updates for popular dishes
+    const unsubscribePopularDishes = listenToPopularDishes(4, (dishes) => {
+      setPopularItems(dishes.map(dish => ({
+        name: dish.item.nom || 'Inconnu',
+        count: dish.count
+      })));
+    });
+    
+    // Subscribe to real-time updates for orders by category
+    const unsubscribeOrdersByCategory = listenToOrdersByCategory((categories) => {
+      setOrdersByCategory(categories);
+    });
+    
+    // Cleanup subscriptions on component unmount
+    return () => {
+      unsubscribeOrders();
+      unsubscribeReservations();
+      unsubscribeRevenue();
+      unsubscribeDailyRevenue();
+      unsubscribePopularDishes();
+      unsubscribeOrdersByCategory();
+    };
   }, []);
 
   return (
@@ -64,7 +101,7 @@ const Dashboard = () => {
             <ShoppingCart className="h-4 w-4 text-restaurant-accent" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalOrders}</div>
+            <div className="text-2xl font-bold">{totalOrders}</div>
             <p className="text-xs text-muted-foreground mt-1">
               +8% depuis la semaine dernière
             </p>
@@ -80,9 +117,9 @@ const Dashboard = () => {
             <Calendar className="h-4 w-4 text-restaurant-accent" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.activeReservations}</div>
+            <div className="text-2xl font-bold">{activeReservations}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              12 pour aujourd'hui
+              {todayReservations} pour aujourd'hui
             </p>
           </CardContent>
         </Card>
@@ -96,9 +133,9 @@ const Dashboard = () => {
             <CircleDollarSign className="h-4 w-4 text-restaurant-accent" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.weeklyRevenue.toLocaleString()} DZD</div>
+            <div className="text-2xl font-bold">{weeklyRevenue.toLocaleString()} DZD</div>
             <p className="text-xs text-muted-foreground mt-1">
-              +12.5% depuis la semaine dernière
+              +{weeklyRevenueChange}% depuis la semaine dernière
             </p>
           </CardContent>
         </Card>
@@ -150,7 +187,7 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {stats.popularItems.map((item, index) => (
+                {popularItems.map((item, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="bg-restaurant-accent/10 w-8 h-8 rounded-full flex items-center justify-center">
