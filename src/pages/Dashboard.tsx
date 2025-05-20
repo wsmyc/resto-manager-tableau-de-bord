@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -81,7 +80,9 @@ const Dashboard = () => {
       (snapshot) => {
         const total = snapshot.docs.reduce((sum, doc) => {
           const data = doc.data();
-          return sum + (data.montant || 0);
+          // Ensure montant is treated as a number, converting from string if necessary
+          const montant = typeof data.montant === 'string' ? parseFloat(data.montant) : (data.montant || 0);
+          return sum + montant;
         }, 0);
         
         setWeeklyRevenue(total);
@@ -127,7 +128,9 @@ const Dashboard = () => {
           const querySnapshot = await getDocs(q);
           const dayRevenue = querySnapshot.docs.reduce((sum, doc) => {
             const data = doc.data();
-            return sum + (data.montant || 0);
+            // Ensure montant is treated as a number, converting from string if necessary
+            const montant = typeof data.montant === 'string' ? parseFloat(data.montant) : (data.montant || 0);
+            return sum + montant;
           }, 0);
           
           dailyData.push({
