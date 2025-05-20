@@ -136,7 +136,8 @@ const Dashboard = () => {
           dailyData.push({
             name: formattedDay,
             date: format(date, 'yyyy-MM-dd'),
-            revenue: dayRevenue
+            // Ensure this is a number before pushing into the array
+            revenue: Number(dayRevenue)
           });
         }
         
