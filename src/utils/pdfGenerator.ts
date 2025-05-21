@@ -14,6 +14,10 @@ declare module 'jspdf' {
         getWidth: () => number;
         getHeight: () => number;
       };
+      events: any;
+      scaleFactor: number;
+      pages: number[];
+      getEncryptor: (objectId: number) => (data: string) => string;
       [key: string]: any;
     };
   }
