@@ -3,12 +3,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight, X, Plus } from "lucide-react";
 import OrderStatusBadge from "./OrderStatusBadge";
 import { useEffect, useState } from "react";
 import { collection, onSnapshot, doc, updateDoc, query, orderBy } from "firebase/firestore";
 import { db, logDebug } from "@/services/firebase";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface Order {
   id: string;
@@ -102,21 +102,13 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
           logDebug("Orders fetched successfully", ordersData.length);
         } catch (error) {
           console.error("Error processing orders:", error);
-          toast({
-            title: "Erreur",
-            description: "Impossible de charger les commandes",
-            variant: "destructive"
-          });
+          toast("Erreur lors du chargement des commandes");
           setLoading(false);
         }
       },
       (error) => {
         console.error("Error listening to orders:", error);
-        toast({
-          title: "Erreur de connexion",
-          description: "Vérifiez votre connexion Firebase",
-          variant: "destructive"
-        });
+        toast("Erreur de connexion à la base de données");
         setLoading(false);
       }
     );
@@ -150,17 +142,10 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
       // Call the prop callback
       onStatusChange(orderId, newStatus);
       
-      toast({
-        title: "Statut mis à jour",
-        description: `Commande ${orderId.substring(0, 4)} est maintenant ${newStatus}`,
-      });
+      toast("Statut mis à jour");
     } catch (error) {
       console.error("Error updating order status:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour le statut",
-        variant: "destructive"
-      });
+      toast("Impossible de mettre à jour le statut");
     }
   };
 
@@ -236,6 +221,14 @@ const OrdersTable = ({ orders, onStatusChange, isChef = false }: OrdersTableProp
                           disabled={order.status === "Annulée"}
                         >
                           <X className="h-4 w-4 text-red-600" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleStatusChange(order.id, "Lancée")}
+                          disabled={order.status === "Lancée"}
+                        >
+                          <ArrowRight className="h-4 w-4 text-green-600" />
                         </Button>
                       </div>
                     )}

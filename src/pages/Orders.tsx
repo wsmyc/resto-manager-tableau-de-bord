@@ -1,13 +1,14 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Plus } from "lucide-react";
 import { toast } from "sonner";
 import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
 import OrderFilters from "@/components/orders/OrderFilters";
 import OrdersTable from "@/components/orders/OrdersTable";
+import { Button } from "@/components/ui/button";
 import { db, logDebug } from "@/services/firebase";
-import { collection, onSnapshot, query, orderBy, Timestamp } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, Timestamp, addDoc } from "firebase/firestore";
 
 interface Order {
   id: string;
@@ -111,6 +112,30 @@ const Orders = () => {
     );
   };
 
+  // Fonction pour ajouter une nouvelle commande
+  const addNewOrder = async () => {
+    try {
+      // Créer une nouvelle commande avec des valeurs par défaut
+      const newOrder = {
+        dateCreation: Timestamp.now(),
+        etat: "en_attente",
+        idC: "Nouveau client",
+        idTable: "Table 1",
+        montant: 0,
+        confirmation: false,
+        notes: ""
+      };
+
+      // Ajouter à Firebase
+      const docRef = await addDoc(collection(db, "commandes"), newOrder);
+      
+      toast("Nouvelle commande créée avec succès");
+    } catch (error) {
+      console.error("Erreur lors de la création de la commande:", error);
+      toast.error("Erreur lors de la création de la commande");
+    }
+  };
+
   const filteredOrders = orders.filter(order => {
     const matchesSearch = 
       order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -126,8 +151,15 @@ const Orders = () => {
   return (
     <div className="space-y-6 animate-fade-in">
       <Card className="card-dashboard">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-xl font-semibold text-restaurant-primary">Commandes</CardTitle>
+          <Button 
+            onClick={addNewOrder} 
+            className="bg-restaurant-primary text-white hover:bg-restaurant-primary/90"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Nouvelle Commande
+          </Button>
         </CardHeader>
         <CardContent>
           <OrderFilters
