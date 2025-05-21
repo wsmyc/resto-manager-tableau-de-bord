@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { FileDown, FileText, Calendar, CircleDollarSign, PieChart as PieChartIcon } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import 'jspdf-autotable';
 
 // Sample data for reports - updated to DZD
 const weeklyRevenueData = [
