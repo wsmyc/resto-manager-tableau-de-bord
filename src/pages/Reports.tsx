@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,10 +12,8 @@ import { PopularDishesReport } from "@/components/reports/PopularDishesReport";
 import { CategorySalesReport } from "@/components/reports/CategorySalesReport";
 import { CustomReportsSection } from "@/components/reports/CustomReportsSection";
 
-// Import utilities
+// Import utilities and data correctly
 import { generateReportPDF } from "@/utils/pdfGenerator";
-
-// Import data
 import { 
   weeklyRevenueData, 
   monthlyRevenueData, 
