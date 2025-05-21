@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,10 @@ import 'jspdf-autotable';
 declare module 'jspdf' {
   interface jsPDF {
     autoTable: (options: any) => jsPDF;
-    getNumberOfPages: () => number;
+    internal: {
+      getNumberOfPages: () => number;
+      [key: string]: any;
+    };
   }
 }
 
@@ -359,3 +363,4 @@ const Reports = () => {
 };
 
 export default Reports;
+
