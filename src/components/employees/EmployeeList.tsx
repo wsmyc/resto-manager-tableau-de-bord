@@ -8,9 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { User, Mail, Phone, Briefcase, MessageSquare, Edit, DollarSign } from 'lucide-react';
+import { User, Mail, Phone, Briefcase, Edit, DollarSign } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { MessageEmployee } from "./MessageEmployee";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EditSalary } from "./EditSalary";
 
@@ -29,7 +28,6 @@ export const EmployeeList = ({ employees, onMessageSent }: {
   employees: Employee[],
   onMessageSent?: () => void
 }) => {
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [editingSalary, setEditingSalary] = useState<Employee | null>(null);
 
   return (
@@ -37,14 +35,14 @@ export const EmployeeList = ({ employees, onMessageSent }: {
       <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-muted/50">
               <TableHead className="w-[180px]">Prénom</TableHead>
               <TableHead className="w-[180px]">Nom</TableHead>
               <TableHead className="w-[220px]">Email</TableHead>
               <TableHead className="w-[160px]">Téléphone</TableHead>
               <TableHead className="w-[120px]">Rôle</TableHead>
               <TableHead className="w-[140px]">Salaire (DZD)</TableHead>
-              <TableHead className="w-[120px] text-right">Actions</TableHead>
+              <TableHead className="w-[80px] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -56,7 +54,7 @@ export const EmployeeList = ({ employees, onMessageSent }: {
               </TableRow>
             ) : (
               employees.map((employee) => (
-                <TableRow key={employee.id}>
+                <TableRow key={employee.id} className="hover:bg-muted/30">
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
@@ -89,24 +87,14 @@ export const EmployeeList = ({ employees, onMessageSent }: {
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setEditingSalary(employee)}
-                        title="Modifier le salaire"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setSelectedEmployee(employee)}
-                        title="Envoyer un message"
-                      >
-                        <MessageSquare className="h-4 w-4" />
-                      </Button>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setEditingSalary(employee)}
+                      title="Modifier le salaire"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))
@@ -114,14 +102,6 @@ export const EmployeeList = ({ employees, onMessageSent }: {
           </TableBody>
         </Table>
       </div>
-      
-      {selectedEmployee && (
-        <MessageEmployee
-          employee={selectedEmployee}
-          onClose={() => setSelectedEmployee(null)}
-          onSuccess={onMessageSent}
-        />
-      )}
       
       {editingSalary && (
         <Dialog open={!!editingSalary} onOpenChange={(open) => !open && setEditingSalary(null)}>

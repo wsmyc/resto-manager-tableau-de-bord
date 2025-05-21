@@ -10,11 +10,19 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ingredientPrices } from "@/data/ingredientCosts";
 
+interface StockBatch {
+  id: string;
+  amount: number;
+  orderDate: string;
+  expiryDate: string;
+}
+
 interface IngredientStock {
   id: string;
   name: string;
   category: string;
   currentStock: number;
+  batches: StockBatch[];
   unit: string;
   pricePerUnit: number;
   minLevel: number;
@@ -31,8 +39,9 @@ const IngredientInventory = () => {
   const [restockAmount, setRestockAmount] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('tous');
+  const [expandedIngredient, setExpandedIngredient] = useState<string | null>(null);
   
-  // Generate ingredients from the prices database
+  // Generate ingredients from the prices database with batches
   useEffect(() => {
     const generateIngredients = () => {
       const ingredientList: IngredientStock[] = Object.entries(ingredientPrices).map(([name, info], index) => {
@@ -67,20 +76,71 @@ const IngredientInventory = () => {
         
         // Generate random stock levels for demonstration
         const maxLevel = Math.floor(Math.random() * 20) + 10; // 10-30
-        const currentStock = Math.floor(Math.random() * maxLevel);
+        
+        // Generate batches with different expiry dates
+        const batches: StockBatch[] = [];
+        let totalStock = 0;
+        
+        // First batch
+        const today = new Date();
+        const firstBatchAmount = Math.floor(Math.random() * maxLevel * 0.6) + 1;
+        totalStock += firstBatchAmount;
+        
+        // Order date between 5-20 days ago
+        const firstOrderDaysAgo = Math.floor(Math.random() * 15) + 5;
+        const firstOrderDate = new Date(today);
+        firstOrderDate.setDate(today.getDate() - firstOrderDaysAgo);
+        
+        // Expiry date between 10-30 days from now
+        const firstExpiryDaysFromNow = Math.floor(Math.random() * 20) + 10;
+        const firstExpiryDate = new Date(today);
+        firstExpiryDate.setDate(today.getDate() + firstExpiryDaysFromNow);
+        
+        batches.push({
+          id: `batch-${index}-1`,
+          amount: firstBatchAmount,
+          orderDate: firstOrderDate.toLocaleDateString('fr-FR'),
+          expiryDate: firstExpiryDate.toLocaleDateString('fr-FR')
+        });
+        
+        // Second batch (only if first batch doesn't cover the stock)
+        if (totalStock < maxLevel * 0.7) {
+          const secondBatchAmount = Math.floor(Math.random() * (maxLevel - totalStock)) + 1;
+          
+          // More recent order (1-4 days ago)
+          const secondOrderDaysAgo = Math.floor(Math.random() * 4) + 1;
+          const secondOrderDate = new Date(today);
+          secondOrderDate.setDate(today.getDate() - secondOrderDaysAgo);
+          
+          // Expiry date further in the future (30-45 days from now)
+          const secondExpiryDaysFromNow = Math.floor(Math.random() * 15) + 30;
+          const secondExpiryDate = new Date(today);
+          secondExpiryDate.setDate(today.getDate() + secondExpiryDaysFromNow);
+          
+          batches.push({
+            id: `batch-${index}-2`,
+            amount: secondBatchAmount,
+            orderDate: secondOrderDate.toLocaleDateString('fr-FR'),
+            expiryDate: secondExpiryDate.toLocaleDateString('fr-FR')
+          });
+          
+          totalStock += secondBatchAmount;
+        }
+        
         const minLevel = Math.floor(maxLevel * 0.2); // 20% of max
         
         return {
           id: `ing-${index + 100}`,
           name: name.charAt(0).toUpperCase() + name.slice(1), // Capitalize first letter
           category,
-          currentStock,
+          currentStock: totalStock,
+          batches,
           unit: info.unit,
           pricePerUnit: info.price,
           minLevel,
           maxLevel,
-          totalValue: currentStock * info.price,
-          lastRestocked: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR')
+          totalValue: totalStock * info.price,
+          lastRestocked: batches[batches.length - 1].orderDate
         };
       });
       
@@ -104,12 +164,24 @@ const IngredientInventory = () => {
     const index = newStock.findIndex(i => i.id === currentIngredient.id);
     
     if (index !== -1) {
+      const today = new Date();
+      const expiryDate = new Date();
+      expiryDate.setDate(today.getDate() + 30); // Set expiry to 30 days from now
+      
+      const newBatch: StockBatch = {
+        id: `batch-${currentIngredient.id}-${Date.now()}`,
+        amount: restockAmount,
+        orderDate: today.toLocaleDateString('fr-FR'),
+        expiryDate: expiryDate.toLocaleDateString('fr-FR')
+      };
+      
       const updatedStock = currentIngredient.currentStock + restockAmount;
       newStock[index] = {
         ...currentIngredient,
         currentStock: updatedStock,
+        batches: [...currentIngredient.batches, newBatch],
         totalValue: updatedStock * currentIngredient.pricePerUnit,
-        lastRestocked: new Date().toLocaleDateString('fr-FR')
+        lastRestocked: today.toLocaleDateString('fr-FR')
       };
       
       setIngredients(newStock);
@@ -126,6 +198,26 @@ const IngredientInventory = () => {
     } else {
       return { status: "moyen", color: "bg-yellow-100 text-yellow-800 border-yellow-200" };
     }
+  };
+  
+  const getExpiryStatus = (expiryDate: string) => {
+    const today = new Date();
+    const expiry = new Date(expiryDate.split('/').reverse().join('-'));
+    const daysToExpiry = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (daysToExpiry <= 0) {
+      return { text: "Expiré", color: "bg-red-100 text-red-800 border-red-200" };
+    } else if (daysToExpiry <= 7) {
+      return { text: "Bientôt expiré", color: "bg-orange-100 text-orange-800 border-orange-200" };
+    } else if (daysToExpiry <= 14) {
+      return { text: "À surveiller", color: "bg-yellow-100 text-yellow-800 border-yellow-200" };
+    } else {
+      return { text: "Valide", color: "bg-green-100 text-green-800 border-green-200" };
+    }
+  };
+  
+  const toggleExpand = (id: string) => {
+    setExpandedIngredient(expandedIngredient === id ? null : id);
   };
   
   const filteredIngredients = ingredients
@@ -172,6 +264,7 @@ const IngredientInventory = () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[30px]"></TableHead>
               <TableHead>Nom</TableHead>
               <TableHead>Catégorie</TableHead>
               <TableHead>Stock actuel</TableHead>
@@ -185,13 +278,13 @@ const IngredientInventory = () => {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-10">
+                <TableCell colSpan={9} className="text-center py-10">
                   Chargement des ingrédients...
                 </TableCell>
               </TableRow>
             ) : filteredIngredients.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-10">
+                <TableCell colSpan={9} className="text-center py-10">
                   Aucun ingrédient trouvé
                 </TableCell>
               </TableRow>
@@ -200,39 +293,86 @@ const IngredientInventory = () => {
                 const status = getStockStatus(ingredient);
                 
                 return (
-                  <TableRow key={ingredient.id}>
-                    <TableCell className="font-medium">{ingredient.name}</TableCell>
-                    <TableCell>{ingredient.category}</TableCell>
-                    <TableCell>
-                      {ingredient.currentStock} {ingredient.unit}
-                      <div className="mt-1 w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full ${
-                            ingredient.currentStock <= ingredient.minLevel ? "bg-red-500" :
-                            ingredient.currentStock >= ingredient.maxLevel * 0.8 ? "bg-green-500" : "bg-yellow-500"
-                          }`}
-                          style={{ width: `${(ingredient.currentStock / ingredient.maxLevel) * 100}%` }}
-                        ></div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{ingredient.pricePerUnit.toLocaleString('fr-FR')} DZD/{ingredient.unit}</TableCell>
-                    <TableCell>{ingredient.totalValue.toLocaleString('fr-FR')} DZD</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={status.color}>
-                        {status.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{ingredient.lastRestocked || "N/A"}</TableCell>
-                    <TableCell>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleRestock(ingredient)}
-                      >
-                        Réapprovisionner
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                  <>
+                    <TableRow key={ingredient.id} className={expandedIngredient === ingredient.id ? "bg-muted/30" : ""}>
+                      <TableCell>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => toggleExpand(ingredient.id)}
+                          className="p-0 h-6 w-6"
+                        >
+                          {expandedIngredient === ingredient.id ? "-" : "+"}
+                        </Button>
+                      </TableCell>
+                      <TableCell className="font-medium">{ingredient.name}</TableCell>
+                      <TableCell>{ingredient.category}</TableCell>
+                      <TableCell>
+                        {ingredient.currentStock} {ingredient.unit}
+                        <div className="mt-1 w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full ${
+                              ingredient.currentStock <= ingredient.minLevel ? "bg-red-500" :
+                              ingredient.currentStock >= ingredient.maxLevel * 0.8 ? "bg-green-500" : "bg-yellow-500"
+                            }`}
+                            style={{ width: `${(ingredient.currentStock / ingredient.maxLevel) * 100}%` }}
+                          ></div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{ingredient.pricePerUnit.toLocaleString('fr-FR')} DZD/{ingredient.unit}</TableCell>
+                      <TableCell>{ingredient.totalValue.toLocaleString('fr-FR')} DZD</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={status.color}>
+                          {status.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{ingredient.lastRestocked || "N/A"}</TableCell>
+                      <TableCell>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleRestock(ingredient)}
+                        >
+                          Réapprovisionner
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                    
+                    {expandedIngredient === ingredient.id && ingredient.batches.length > 0 && (
+                      <TableRow className="bg-muted/20">
+                        <TableCell colSpan={9} className="px-8 py-4">
+                          <div className="text-sm font-medium mb-2">Lots en stock</div>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Quantité</TableHead>
+                                <TableHead>Date de commande</TableHead>
+                                <TableHead>Date d'expiration</TableHead>
+                                <TableHead>Statut</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {ingredient.batches.map(batch => {
+                                const expiryStatus = getExpiryStatus(batch.expiryDate);
+                                return (
+                                  <TableRow key={batch.id}>
+                                    <TableCell>{batch.amount} {ingredient.unit}</TableCell>
+                                    <TableCell>{batch.orderDate}</TableCell>
+                                    <TableCell>{batch.expiryDate}</TableCell>
+                                    <TableCell>
+                                      <Badge variant="outline" className={expiryStatus.color}>
+                                        {expiryStatus.text}
+                                      </Badge>
+                                    </TableCell>
+                                  </TableRow>
+                                );
+                              })}
+                            </TableBody>
+                          </Table>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
                 );
               })
             )}
