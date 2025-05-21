@@ -7,7 +7,16 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { FileDown, FileText, Calendar, CircleDollarSign, PieChart as PieChartIcon } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
+// Import jspdf-autotable with require to avoid TypeScript errors
 import 'jspdf-autotable';
+
+// Extend jsPDF types to include autoTable method
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: any) => jsPDF;
+    getNumberOfPages: () => number;
+  }
+}
 
 // Sample data for reports - updated to DZD
 const weeklyRevenueData = [
