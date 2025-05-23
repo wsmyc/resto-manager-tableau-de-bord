@@ -1,41 +1,8 @@
 
-// src/utils/pdfGenerator.ts
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Ingredient, Plat } from "@/services/types";
 import { monthlyRevenueData, weeklyRevenueData, salesByCategoryData, popularDishesData } from "@/data/reportsData";
-
-// Fix the type declaration to avoid TypeScript errors
-declare module "jspdf" {
-  interface jsPDF {
-    internal: {
-      events: any;
-      scaleFactor: number;
-      pageSize: {
-        width: number;
-        height: number;
-        getWidth: () => number;
-        getHeight: () => number;
-      };
-      pages: number[];
-      getNumberOfPages: () => number;
-      getEncryptor: (objectId: number) => (data: string) => string;
-      [key: string]: any;
-    };
-    addHTML: (
-      element: HTMLElement,
-      x: number,
-      y: number,
-      options: any,
-      callback: (doc: jsPDF) => void
-    ) => jsPDF;
-    addPage: (format?: string | number[], orientation?: "p" | "portrait" | "l" | "landscape") => jsPDF;
-    setFont: (fontName: string, fontStyle?: string, fontWeight?: string | number) => jsPDF;
-    setLineWidth: (width: number) => jsPDF;
-    line: (x1: number, y1: number, x2: number, y2: number, style?: string) => jsPDF;
-    splitTextToSize: (text: string, maxlen: number, options?: any) => any;
-  }
-}
 
 /**
  * Génère un rapport PDF générique pour les rapports
@@ -151,16 +118,6 @@ export const generatePopularDishesPDF = (data = popularDishesData) => {
     headStyles: { fillColor: [35, 85, 54] },
   });
   
-  // Pagination
-  const totalPages = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i);
-    doc.setFontSize(10);
-    doc.text(`Page ${i} sur ${totalPages}`, 105, doc.internal.pageSize.height - 10, {
-      align: "center",
-    });
-  }
-  
   // Sauvegarde
   doc.save("rapport-plats-populaires.pdf");
 };
@@ -200,16 +157,6 @@ export const generateCategorySalesPDF = (data = salesByCategoryData) => {
     theme: "striped",
     headStyles: { fillColor: [35, 85, 54] },
   });
-  
-  // Pagination
-  const totalPages = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i);
-    doc.setFontSize(10);
-    doc.text(`Page ${i} sur ${totalPages}`, 105, doc.internal.pageSize.height - 10, {
-      align: "center",
-    });
-  }
   
   // Sauvegarde
   doc.save("rapport-categories.pdf");
@@ -256,16 +203,6 @@ export const generateMenuItemsPDF = (items: Plat[]) => {
     headStyles: { fillColor: [35, 85, 54] },
   });
   
-  // Pagination
-  const totalPages = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i);
-    doc.setFontSize(10);
-    doc.text(`Page ${i} sur ${totalPages}`, 105, doc.internal.pageSize.height - 10, {
-      align: "center",
-    });
-  }
-  
   // Sauvegarde
   doc.save("catalogue-plats.pdf");
 };
@@ -311,16 +248,6 @@ export const generateInventoryPDF = (items: Ingredient[]) => {
     headStyles: { fillColor: [35, 85, 54] },
   });
   
-  // Pagination
-  const totalPages = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i);
-    doc.setFontSize(10);
-    doc.text(`Page ${i} sur ${totalPages}`, 105, doc.internal.pageSize.height - 10, {
-      align: "center",
-    });
-  }
-  
   // Sauvegarde
   doc.save("rapport-inventaire.pdf");
 };
@@ -354,16 +281,6 @@ export const generateCustomPDF = (title: string, columns: string[], data: any[][
     theme: "striped",
     headStyles: { fillColor: [35, 85, 54] },
   });
-  
-  // Pagination
-  const totalPages = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i);
-    doc.setFontSize(10);
-    doc.text(`Page ${i} sur ${totalPages}`, 105, doc.internal.pageSize.height - 10, {
-      align: "center",
-    });
-  }
   
   // Sauvegarde
   doc.save(`rapport-${title.toLowerCase().replace(/\s+/g, '-')}.pdf`);
