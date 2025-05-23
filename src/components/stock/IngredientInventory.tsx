@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ingredientPrices } from "@/data/ingredientCosts";
+import { ChevronDown, ChevronRight, PackagePlus } from "lucide-react";
 
 interface StockBatch {
   id: string;
@@ -39,7 +40,7 @@ const IngredientInventory = () => {
   const [restockAmount, setRestockAmount] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('tous');
-  const [expandedIngredient, setExpandedIngredient] = useState<string | null>(null);
+  const [expandedIngredients, setExpandedIngredients] = useState<Record<string, boolean>>({});
   
   // Generate ingredients from the prices database with batches
   useEffect(() => {
@@ -217,7 +218,10 @@ const IngredientInventory = () => {
   };
   
   const toggleExpand = (id: string) => {
-    setExpandedIngredient(expandedIngredient === id ? null : id);
+    setExpandedIngredients(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
   
   const filteredIngredients = ingredients
@@ -291,10 +295,11 @@ const IngredientInventory = () => {
             ) : (
               filteredIngredients.map(ingredient => {
                 const status = getStockStatus(ingredient);
+                const isExpanded = expandedIngredients[ingredient.id] || false;
                 
                 return (
-                  <>
-                    <TableRow key={ingredient.id} className={expandedIngredient === ingredient.id ? "bg-muted/30" : ""}>
+                  <React.Fragment key={ingredient.id}>
+                    <TableRow className={isExpanded ? "bg-muted/30" : ""}>
                       <TableCell>
                         <Button 
                           variant="ghost" 
@@ -302,7 +307,7 @@ const IngredientInventory = () => {
                           onClick={() => toggleExpand(ingredient.id)}
                           className="p-0 h-6 w-6"
                         >
-                          {expandedIngredient === ingredient.id ? "-" : "+"}
+                          {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                         </Button>
                       </TableCell>
                       <TableCell className="font-medium">{ingredient.name}</TableCell>
@@ -333,46 +338,53 @@ const IngredientInventory = () => {
                           size="sm"
                           onClick={() => handleRestock(ingredient)}
                         >
+                          <PackagePlus size={16} className="mr-1" />
                           Réapprovisionner
                         </Button>
                       </TableCell>
                     </TableRow>
                     
-                    {expandedIngredient === ingredient.id && ingredient.batches.length > 0 && (
+                    {isExpanded && (
                       <TableRow className="bg-muted/20">
                         <TableCell colSpan={9} className="px-8 py-4">
                           <div className="text-sm font-medium mb-2">Lots en stock</div>
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead>Quantité</TableHead>
-                                <TableHead>Date de commande</TableHead>
-                                <TableHead>Date d'expiration</TableHead>
-                                <TableHead>Statut</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {ingredient.batches.map(batch => {
-                                const expiryStatus = getExpiryStatus(batch.expiryDate);
-                                return (
-                                  <TableRow key={batch.id}>
-                                    <TableCell>{batch.amount} {ingredient.unit}</TableCell>
-                                    <TableCell>{batch.orderDate}</TableCell>
-                                    <TableCell>{batch.expiryDate}</TableCell>
-                                    <TableCell>
-                                      <Badge variant="outline" className={expiryStatus.color}>
-                                        {expiryStatus.text}
-                                      </Badge>
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              })}
-                            </TableBody>
-                          </Table>
+                          {ingredient.batches.length === 0 ? (
+                            <div className="text-sm text-muted-foreground py-2">
+                              Aucun lot en stock pour cet ingrédient
+                            </div>
+                          ) : (
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Quantité</TableHead>
+                                  <TableHead>Date de commande</TableHead>
+                                  <TableHead>Date d'expiration</TableHead>
+                                  <TableHead>Statut</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {ingredient.batches.map(batch => {
+                                  const expiryStatus = getExpiryStatus(batch.expiryDate);
+                                  return (
+                                    <TableRow key={batch.id}>
+                                      <TableCell>{batch.amount} {ingredient.unit}</TableCell>
+                                      <TableCell>{batch.orderDate}</TableCell>
+                                      <TableCell>{batch.expiryDate}</TableCell>
+                                      <TableCell>
+                                        <Badge variant="outline" className={expiryStatus.color}>
+                                          {expiryStatus.text}
+                                        </Badge>
+                                      </TableCell>
+                                    </TableRow>
+                                  );
+                                })}
+                              </TableBody>
+                            </Table>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
-                  </>
+                  </React.Fragment>
                 );
               })
             )}
