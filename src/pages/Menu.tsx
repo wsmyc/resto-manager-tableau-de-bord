@@ -1,5 +1,4 @@
 import { 
-  PlusCircle, 
   AlertCircle, 
   Utensils, 
   Menu as BurgerIcon,
@@ -11,12 +10,14 @@ import {
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import MenuItemForm from "@/components/menu/MenuItemForm";
 import MenuItemTable, { MenuItem } from "@/components/menu/MenuItemTable";
 import MenuFilters from "@/components/menu/MenuFilters";
-import { addMenuItemToFirebase, updateMenuItemInFirebase } from "@/services/menuServices";
+import { updateMenuItemInFirebase } from "@/services/menuServices";
 
 // Map categories from CSV to our menu item categories
 const categoryMapping: Record<string, MenuItem["category"]> = {
@@ -50,18 +51,10 @@ const subcategoryMapping: Record<string, MenuItem["subcategory"]> = {
 const Menu = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [formData, setFormData] = useState<Partial<MenuItem>>({
-    name: "",
-    description: "",
-    price: 0,
-    category: "Plats",
-    subcategory: "Cuisine Traditionnelle",
-    ingredients: ""
-  });
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isPriceEditDialogOpen, setIsPriceEditDialogOpen] = useState(false);
   const [currentItemId, setCurrentItemId] = useState("");
+  const [currentItemName, setCurrentItemName] = useState("");
+  const [newPrice, setNewPrice] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all-categories");
   const [subcategoryFilter, setSubcategoryFilter] = useState("all-subcategories");
@@ -883,159 +876,46 @@ const Menu = () => {
     fetchMenuItems();
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    let parsedValue: string | number = value;
-    
-    if (name === "price") {
-      parsedValue = parseFloat(value) || 0;
-    }
-    
-    setFormData({
-      ...formData,
-      [name]: parsedValue
-    });
-  };
-
-  const handleCategoryChange = (value: string) => {
-    setFormData({
-      ...formData,
-      category: value as MenuItem["category"]
-    });
-  };
-
-  const handleSubcategoryChange = (value: string) => {
-    setFormData({
-      ...formData,
-      subcategory: value as MenuItem["subcategory"]
-    });
-  };
-
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      description: "",
-      price: 0,
-      category: "Plats",
-      subcategory: "Cuisine Traditionnelle",
-      ingredients: ""
-    });
-  };
-
-  const handleAddItem = async () => {
-    if (!formData.name || !formData.description || formData.price === undefined || !formData.category || !formData.subcategory) {
-      toast.error("Veuillez remplir tous les champs");
-      return;
-    }
-
-    const newItem: MenuItem = {
-      id: `item-${Date.now()}`,
-      name: formData.name,
-      description: formData.description,
-      price: formData.price,
-      category: formData.category,
-      subcategory: formData.subcategory,
-      ingredients: formData.ingredients || ""
-    };
-
-    try {
-      // Add to Firebase
-      const dishId = await addMenuItemToFirebase(newItem);
-      
-      // Update the item with the generated Firebase ID
-      newItem.id = dishId;
-      
-      // Add to local state
-      setMenuItems([...menuItems, newItem]);
-      toast.success(`Article ajouté au menu avec ID: ${dishId}`);
-      setIsAddDialogOpen(false);
-      resetForm();
-    } catch (error) {
-      console.error("Error adding menu item:", error);
-      toast.error("Erreur lors de l'ajout de l'article au menu");
-    }
-  };
-
-  const handleEditItem = async () => {
-    if (!formData.name || !formData.description || formData.price === undefined || !formData.category || !formData.subcategory) {
-      toast.error("Veuillez remplir tous les champs");
+  const handlePriceEdit = async () => {
+    if (newPrice <= 0) {
+      toast.error("Veuillez entrer un prix valide");
       return;
     }
 
     try {
       // Update in Firebase if it's a Firebase item (has numeric ID)
       if (currentItemId && !currentItemId.startsWith('item-')) {
-        await updateMenuItemInFirebase(currentItemId, {
-          id: currentItemId,
-          name: formData.name,
-          description: formData.description,
-          price: formData.price,
-          category: formData.category,
-          subcategory: formData.subcategory,
-          ingredients: formData.ingredients || ""
-        });
+        const currentItem = menuItems.find(item => item.id === currentItemId);
+        if (currentItem) {
+          await updateMenuItemInFirebase(currentItemId, {
+            ...currentItem,
+            price: newPrice
+          });
+        }
       }
       
       // Update local state
       setMenuItems(prevItems => 
         prevItems.map(item => 
           item.id === currentItemId 
-            ? { 
-                ...item, 
-                name: formData.name!, 
-                description: formData.description!, 
-                price: formData.price!, 
-                category: formData.category!,
-                subcategory: formData.subcategory!,
-                ingredients: formData.ingredients 
-              } 
+            ? { ...item, price: newPrice } 
             : item
         )
       );
       
-      toast.success("Article mis à jour");
-      setIsEditDialogOpen(false);
-      resetForm();
+      toast.success("Prix mis à jour avec succès");
+      setIsPriceEditDialogOpen(false);
     } catch (error) {
-      console.error("Error updating menu item:", error);
-      toast.error("Erreur lors de la mise à jour de l'article");
+      console.error("Error updating price:", error);
+      toast.error("Erreur lors de la mise à jour du prix");
     }
   };
 
-  const handleDeleteItem = async () => {
-    try {
-      // Delete from Firebase if it's a Firebase item (has numeric ID)
-      if (currentItemId && !currentItemId.startsWith('item-')) {
-        // For now, we'll just log this as the delete function is a placeholder
-        console.log(`Would delete item with ID ${currentItemId} from Firebase`);
-      }
-      
-      // Update local state
-      setMenuItems(prevItems => prevItems.filter(item => item.id !== currentItemId));
-      toast.success("Article supprimé");
-      setIsDeleteDialogOpen(false);
-    } catch (error) {
-      console.error("Error deleting menu item:", error);
-      toast.error("Erreur lors de la suppression de l'article");
-    }
-  };
-
-  const openEditDialog = (item: MenuItem) => {
+  const openPriceEditDialog = (item: MenuItem) => {
     setCurrentItemId(item.id);
-    setFormData({
-      name: item.name,
-      description: item.description,
-      price: item.price,
-      category: item.category,
-      subcategory: item.subcategory,
-      ingredients: item.ingredients
-    });
-    setIsEditDialogOpen(true);
-  };
-
-  const openDeleteDialog = (itemId: string) => {
-    setCurrentItemId(itemId);
-    setIsDeleteDialogOpen(true);
+    setCurrentItemName(item.name);
+    setNewPrice(item.price);
+    setIsPriceEditDialogOpen(true);
   };
 
   const filteredMenuItems = menuItems.filter(item => {
@@ -1054,31 +934,6 @@ const Menu = () => {
       <Card className="card-dashboard">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-xl font-semibold text-restaurant-primary">Menu</CardTitle>
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-restaurant-primary hover:bg-restaurant-primary/90">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Ajouter un Article
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Ajouter un Nouvel Article</DialogTitle>
-                <DialogDescription>
-                  Ajoutez un nouvel article à votre menu. Cliquez sur sauvegarder lorsque vous avez terminé.
-                </DialogDescription>
-              </DialogHeader>
-              <MenuItemForm
-                formData={formData}
-                handleInputChange={handleInputChange}
-                handleCategoryChange={handleCategoryChange}
-                handleSubcategoryChange={handleSubcategoryChange}
-                onSubmit={handleAddItem}
-                onCancel={() => setIsAddDialogOpen(false)}
-                submitLabel="Ajouter"
-              />
-            </DialogContent>
-          </Dialog>
         </CardHeader>
         <CardContent>
           <MenuFilters
@@ -1104,45 +959,46 @@ const Menu = () => {
           ) : (
             <MenuItemTable
               items={filteredMenuItems}
-              onEdit={openEditDialog}
-              onDelete={openDeleteDialog}
+              onEdit={openPriceEditDialog}
+              onDelete={() => {}} // Fonction vide pour désactiver la suppression
             />
           )}
         </CardContent>
       </Card>
 
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <Dialog open={isPriceEditDialogOpen} onOpenChange={setIsPriceEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Modifier un Article</DialogTitle>
+            <DialogTitle>Modifier le Prix</DialogTitle>
             <DialogDescription>
-              Modifiez les détails de l'article de menu. Cliquez sur sauvegarder lorsque vous avez terminé.
+              Modifiez le prix de vente de l'article "{currentItemName}".
             </DialogDescription>
           </DialogHeader>
-          <MenuItemForm
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleCategoryChange={handleCategoryChange}
-            handleSubcategoryChange={handleSubcategoryChange}
-            onSubmit={handleEditItem}
-            onCancel={() => setIsEditDialogOpen(false)}
-            submitLabel="Sauvegarder"
-          />
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirmation de Suppression</DialogTitle>
-            <DialogDescription>
-              Êtes-vous sûr de vouloir supprimer cet article du menu ? Cette action ne peut pas être annulée.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-end space-x-2 mt-4">
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Annuler</Button>
-            <Button variant="destructive" onClick={handleDeleteItem}>Supprimer</Button>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="price">Nouveau Prix (DZD)</Label>
+              <Input
+                id="price"
+                type="number"
+                step="0.01"
+                min="0"
+                value={newPrice}
+                onChange={(e) => setNewPrice(parseFloat(e.target.value) || 0)}
+                className="input-field"
+              />
+            </div>
           </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsPriceEditDialogOpen(false)}>
+              Annuler
+            </Button>
+            <Button 
+              className="bg-restaurant-primary hover:bg-restaurant-primary/90" 
+              onClick={handlePriceEdit}
+            >
+              Sauvegarder
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

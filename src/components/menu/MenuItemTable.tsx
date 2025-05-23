@@ -2,7 +2,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Pencil, Trash2, Info, FileText } from "lucide-react";
+import { Info, FileText, DollarSign } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -48,7 +48,7 @@ interface MenuItemTableProps {
   onDelete: (itemId: string) => void;
 }
 
-const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
+const MenuItemTable = ({ items, onEdit }: MenuItemTableProps) => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const openCostDialog = (itemId: string) => {
@@ -194,22 +194,23 @@ const MenuItemTable = ({ items, onEdit, onDelete }: MenuItemTableProps) => {
                 </TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      onClick={() => onEdit(item)}
-                      className="h-8 w-8"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      onClick={() => onDelete(item.id)}
-                      className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            onClick={() => onEdit(item)}
+                            className="h-8 w-8"
+                          >
+                            <DollarSign className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Modifier le prix</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                 </TableCell>
               </TableRow>
