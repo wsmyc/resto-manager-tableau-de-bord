@@ -41,109 +41,142 @@ const IngredientInventory = () => {
   const [categoryFilter, setCategoryFilter] = useState('tous');
   const [expandedIngredients, setExpandedIngredients] = useState<Record<string, boolean>>({});
   
+  // Function to normalize ingredient names to avoid duplicates
+  const normalizeIngredientName = (name: string): string => {
+    return name
+      .toLowerCase()
+      .replace(/s$/, '') // Remove trailing 's'
+      .replace(/x$/, '') // Remove trailing 'x' 
+      .trim();
+  };
+
   // Generate ingredients from the prices database with batches
   useEffect(() => {
     const generateIngredients = () => {
-      const ingredientList: IngredientStock[] = Object.entries(ingredientPrices).map(([name, info], index) => {
+      const ingredientMap = new Map<string, IngredientStock>();
+      
+      Object.entries(ingredientPrices).forEach(([name, info], index) => {
+        const normalizedName = normalizeIngredientName(name);
+        const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+        
         // Group ingredients into categories
         let category = "Divers";
-        if (name.includes("oignon") || name.includes("tomate") || name.includes("carotte") || 
-            name.includes("poivron") || name.includes("ail") || name.includes("pomme") || name.includes("courgette")) {
+        if (normalizedName.includes("oignon") || normalizedName.includes("tomate") || normalizedName.includes("carotte") || 
+            normalizedName.includes("poivron") || normalizedName.includes("ail") || normalizedName.includes("pomme") || normalizedName.includes("courgette")) {
           category = "Légumes";
-        } else if (name.includes("agneau") || name.includes("viande") || name.includes("poulet") || 
-                  name.includes("merguez") || name.includes("bœuf")) {
+        } else if (normalizedName.includes("agneau") || normalizedName.includes("viande") || normalizedName.includes("poulet") || 
+                  normalizedName.includes("merguez") || normalizedName.includes("bœuf")) {
           category = "Viandes";
-        } else if (name.includes("poisson") || name.includes("dorade") || name.includes("crevette") || 
-                  name.includes("saumon")) {
+        } else if (normalizedName.includes("poisson") || normalizedName.includes("dorade") || normalizedName.includes("crevette") || 
+                  normalizedName.includes("saumon")) {
           category = "Poissons et Fruits de mer";
-        } else if (name.includes("frik") || name.includes("pois chiche") || name.includes("semoule") || 
-                  name.includes("lentille") || name.includes("riz")) {
+        } else if (normalizedName.includes("frik") || normalizedName.includes("pois chiche") || normalizedName.includes("semoule") || 
+                  normalizedName.includes("lentille") || normalizedName.includes("riz")) {
           category = "Céréales et Légumineuses";
-        } else if (name.includes("huile") || name.includes("beurre")) {
+        } else if (normalizedName.includes("huile") || normalizedName.includes("beurre")) {
           category = "Huiles et Matières grasses";
-        } else if (name.includes("epice") || name.includes("menthe") || name.includes("persil") || 
-                  name.includes("coriandre")) {
+        } else if (normalizedName.includes("epice") || normalizedName.includes("menthe") || normalizedName.includes("persil") || 
+                  normalizedName.includes("coriandre")) {
           category = "Épices et Herbes";
-        } else if (name.includes("sucre") || name.includes("miel")) {
+        } else if (normalizedName.includes("sucre") || normalizedName.includes("miel")) {
           category = "Sucres et Édulcorants";
-        } else if (name.includes("lait") || name.includes("fromage") || name.includes("yaourt") || 
-                  name.includes("crème") || name.includes("oeuf")) {
+        } else if (normalizedName.includes("lait") || normalizedName.includes("fromage") || normalizedName.includes("yaourt") || 
+                  normalizedName.includes("crème") || normalizedName.includes("oeuf")) {
           category = "Produits Laitiers et Œufs";
-        } else if (name.includes("orange") || name.includes("citron") || name.includes("pomme") || 
-                  name.includes("fruit")) {
+        } else if (normalizedName.includes("orange") || normalizedName.includes("citron") || normalizedName.includes("pomme") || 
+                  normalizedName.includes("fruit")) {
           category = "Fruits";
         }
         
-        // Generate random stock levels for demonstration
-        const maxLevel = Math.floor(Math.random() * 20) + 10; // 10-30
+        // Check if we already have this ingredient (normalized)
+        const existingIngredient = ingredientMap.get(normalizedName);
         
-        // Generate batches with different expiry dates
-        const batches: StockBatch[] = [];
-        let totalStock = 0;
-        
-        // First batch
-        const today = new Date();
-        const firstBatchAmount = Math.floor(Math.random() * maxLevel * 0.6) + 1;
-        totalStock += firstBatchAmount;
-        
-        // Order date between 5-20 days ago
-        const firstOrderDaysAgo = Math.floor(Math.random() * 15) + 5;
-        const firstOrderDate = new Date(today);
-        firstOrderDate.setDate(today.getDate() - firstOrderDaysAgo);
-        
-        // Expiry date between 10-30 days from now
-        const firstExpiryDaysFromNow = Math.floor(Math.random() * 20) + 10;
-        const firstExpiryDate = new Date(today);
-        firstExpiryDate.setDate(today.getDate() + firstExpiryDaysFromNow);
-        
-        batches.push({
-          id: `batch-${index}-1`,
-          amount: firstBatchAmount,
-          orderDate: firstOrderDate.toLocaleDateString('fr-FR'),
-          expiryDate: firstExpiryDate.toLocaleDateString('fr-FR')
-        });
-        
-        // Second batch (only if first batch doesn't cover the stock)
-        if (totalStock < maxLevel * 0.7) {
-          const secondBatchAmount = Math.floor(Math.random() * (maxLevel - totalStock)) + 1;
+        if (existingIngredient) {
+          // Merge with existing ingredient
+          const additionalStock = Math.floor(Math.random() * 10) + 1;
+          const today = new Date();
           
-          // More recent order (1-4 days ago)
-          const secondOrderDaysAgo = Math.floor(Math.random() * 4) + 1;
-          const secondOrderDate = new Date(today);
-          secondOrderDate.setDate(today.getDate() - secondOrderDaysAgo);
+          // Add new batch to existing ingredient
+          const newBatch: StockBatch = {
+            id: `batch-${existingIngredient.id}-${Date.now()}`,
+            amount: additionalStock,
+            orderDate: new Date(today.getTime() - Math.random() * 10 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR'),
+            expiryDate: new Date(today.getTime() + (Math.random() * 30 + 10) * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR')
+          };
           
-          // Expiry date further in the future (30-45 days from now)
-          const secondExpiryDaysFromNow = Math.floor(Math.random() * 15) + 30;
-          const secondExpiryDate = new Date(today);
-          secondExpiryDate.setDate(today.getDate() + secondExpiryDaysFromNow);
+          existingIngredient.batches.push(newBatch);
+          existingIngredient.currentStock += additionalStock;
+          existingIngredient.totalValue = existingIngredient.currentStock * existingIngredient.pricePerUnit;
+        } else {
+          // Create new ingredient
+          const maxLevel = Math.floor(Math.random() * 20) + 10;
+          const batches: StockBatch[] = [];
+          let totalStock = 0;
+          
+          // First batch
+          const today = new Date();
+          const firstBatchAmount = Math.floor(Math.random() * maxLevel * 0.6) + 1;
+          totalStock += firstBatchAmount;
+          
+          const firstOrderDaysAgo = Math.floor(Math.random() * 15) + 5;
+          const firstOrderDate = new Date(today);
+          firstOrderDate.setDate(today.getDate() - firstOrderDaysAgo);
+          
+          const firstExpiryDaysFromNow = Math.floor(Math.random() * 20) + 10;
+          const firstExpiryDate = new Date(today);
+          firstExpiryDate.setDate(today.getDate() + firstExpiryDaysFromNow);
           
           batches.push({
-            id: `batch-${index}-2`,
-            amount: secondBatchAmount,
-            orderDate: secondOrderDate.toLocaleDateString('fr-FR'),
-            expiryDate: secondExpiryDate.toLocaleDateString('fr-FR')
+            id: `batch-${index}-1`,
+            amount: firstBatchAmount,
+            orderDate: firstOrderDate.toLocaleDateString('fr-FR'),
+            expiryDate: firstExpiryDate.toLocaleDateString('fr-FR')
           });
           
-          totalStock += secondBatchAmount;
+          // Second batch (only if first batch doesn't cover the stock)
+          if (totalStock < maxLevel * 0.7) {
+            const secondBatchAmount = Math.floor(Math.random() * (maxLevel - totalStock)) + 1;
+            
+            const secondOrderDaysAgo = Math.floor(Math.random() * 4) + 1;
+            const secondOrderDate = new Date(today);
+            secondOrderDate.setDate(today.getDate() - secondOrderDaysAgo);
+            
+            const secondExpiryDaysFromNow = Math.floor(Math.random() * 15) + 30;
+            const secondExpiryDate = new Date(today);
+            secondExpiryDate.setDate(today.getDate() + secondExpiryDaysFromNow);
+            
+            batches.push({
+              id: `batch-${index}-2`,
+              amount: secondBatchAmount,
+              orderDate: secondOrderDate.toLocaleDateString('fr-FR'),
+              expiryDate: secondExpiryDate.toLocaleDateString('fr-FR')
+            });
+            
+            totalStock += secondBatchAmount;
+          }
+          
+          const minLevel = Math.floor(maxLevel * 0.2);
+          
+          const newIngredient: IngredientStock = {
+            id: `ing-${index + 100}`,
+            name: displayName,
+            category,
+            currentStock: totalStock,
+            batches,
+            unit: info.unit,
+            pricePerUnit: info.price,
+            minLevel,
+            maxLevel,
+            totalValue: totalStock * info.price,
+            lastRestocked: batches[batches.length - 1].orderDate
+          };
+          
+          ingredientMap.set(normalizedName, newIngredient);
         }
-        
-        const minLevel = Math.floor(maxLevel * 0.2); // 20% of max
-        
-        return {
-          id: `ing-${index + 100}`,
-          name: name.charAt(0).toUpperCase() + name.slice(1), // Capitalize first letter
-          category,
-          currentStock: totalStock,
-          batches,
-          unit: info.unit,
-          pricePerUnit: info.price,
-          minLevel,
-          maxLevel,
-          totalValue: totalStock * info.price,
-          lastRestocked: batches[batches.length - 1].orderDate
-        };
       });
       
+      // Convert map to array
+      const ingredientList = Array.from(ingredientMap.values());
       setIngredients(ingredientList);
       setLoading(false);
     };
@@ -166,7 +199,7 @@ const IngredientInventory = () => {
     if (index !== -1) {
       const today = new Date();
       const expiryDate = new Date();
-      expiryDate.setDate(today.getDate() + 30); // Set expiry to 30 days from now
+      expiryDate.setDate(today.getDate() + 30);
       
       const newBatch: StockBatch = {
         id: `batch-${currentIngredient.id}-${Date.now()}`,
