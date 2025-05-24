@@ -7,6 +7,7 @@ import ExpenseAnalytics from "@/components/stock/ExpenseAnalytics";
 import IngredientInventory from "@/components/stock/IngredientInventory";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { TableIcon, BarChartBig } from "lucide-react";
 
 const StockManagement = () => {
   const [activeTab, setActiveTab] = useState("inventory");
@@ -38,7 +39,10 @@ const StockManagement = () => {
                 variant="outline" 
                 onClick={() => setUseNewInventory(!useNewInventory)}
               >
-                {useNewInventory ? "Vue simplifiée" : "Vue détaillée"}
+                {useNewInventory ? 
+                  <><TableIcon size={16} className="mr-1" /> Vue simplifiée</> : 
+                  <><BarChartBig size={16} className="mr-1" /> Vue détaillée</>
+                }
               </Button>
             </CardHeader>
             <CardContent>
