@@ -1,4 +1,3 @@
-
 // src/services/types.ts
 
 import type { Timestamp } from 'firebase/firestore';
@@ -16,11 +15,11 @@ export interface Commande {
   notes?: string;
 }
 
-/** 2. Collection `commande_plat` */
-export interface CommandePlat {
+/** 2. Collection `commande_plat` - Structure réelle basée sur les captures */
+export interface CommandesPlat {
   idCmd: string;
   idP: string;
-  quantité: number;
+  quantite: number;
 }
 
 /** 3. Collection `plats` */
@@ -153,6 +152,22 @@ export interface Notification {
     ingredientId?: string;
     tableId?: string;
   };
+}
+
+/** Collection `clients` */
+export interface Client {
+  id?: string;
+  name: string;
+  email: string;
+  phone_number: string;
+  birthdate?: string;
+  gender?: string;
+  is_guest?: boolean;
+  allergies?: string[];
+  preferences?: any;
+  restrictions?: any;
+  fidelity_points?: number;
+  created_at?: Timestamp;
 }
 
 /** Mappage catégorie -> ID */
