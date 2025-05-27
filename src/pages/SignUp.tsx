@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ChefHat } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
+import { signUpUser, updateUserProfile } from "@/services/firebase";
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState("");
@@ -16,7 +16,6 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
- 
   const [managerCode, setManagerCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -32,7 +31,7 @@ const SignUp = () => {
       return;
     }
 
-    // Vérification du code manager (dans un vrai système, ceci serait vérifié côté serveur)
+    // Vérification du code manager
     if (managerCode !== "MANAGER2024") {
       toast.error("Code manager invalide.");
       setIsLoading(false);
@@ -40,14 +39,29 @@ const SignUp = () => {
     }
 
     try {
-      // Simulation d'enregistrement Firebase
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const user = await signUpUser(email, password);
+      
+      // Update user profile with display name
+      await updateUserProfile({
+        displayName: `${firstName} ${lastName}`
+      });
       
       toast.success("Compte créé avec succès!");
-      navigate("/login");
-    } catch (error) {
+      navigate("/dashboard");
+    } catch (error: any) {
       console.error("Erreur d'inscription:", error);
-      toast.error("Échec de l'inscription. Veuillez réessayer.");
+      
+      let errorMessage = "Échec de l'inscription. Veuillez réessayer.";
+      
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = "Cette adresse email est déjà utilisée.";
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = "Le mot de passe est trop faible.";
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = "Adresse email invalide.";
+      }
+      
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -136,25 +150,20 @@ const SignUp = () => {
               </div>
             </div>
             
-            
-            
-            {(
-              <div className="space-y-2">
-                <Label htmlFor="managerCode">Code Manager</Label>
-                <Input
-                  id="managerCode"
-                  type="password"
-                  placeholder="Entrez le code secret manager"
-                  required
-                  value={managerCode}
-                  onChange={(e) => setManagerCode(e.target.value)}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Ce code est fourni uniquement aux managers autorisés.
-                </p>
-              </div>
-            )}
-            
+            <div className="space-y-2">
+              <Label htmlFor="managerCode">Code Manager</Label>
+              <Input
+                id="managerCode"
+                type="password"
+                placeholder="Entrez le code secret manager"
+                required
+                value={managerCode}
+                onChange={(e) => setManagerCode(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">
+                Ce code est fourni uniquement aux managers autorisés.
+              </p>
+            </div>
           </CardContent>
           <CardFooter className="flex flex-col">
             <Button 

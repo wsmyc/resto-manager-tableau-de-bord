@@ -17,12 +17,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { signOutUser } from "@/services/firebase";
+import { useAuth } from "@/contexts/AuthContext";
 
 const AppLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -37,9 +40,15 @@ const AppLayout = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const handleLogout = () => {
-    toast.success("Déconnexion réussie");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await signOutUser();
+      toast.success("Déconnexion réussie");
+      navigate("/login");
+    } catch (error) {
+      console.error("Erreur de déconnexion:", error);
+      toast.error("Erreur lors de la déconnexion");
+    }
   };
 
   const toggleSidebar = () => {
@@ -169,7 +178,7 @@ const AppLayout = () => {
             </h1>
             <div className="flex items-center space-x-4">
               <span className="text-sm font-medium text-restaurant-primary hidden sm:block">
-                Bonjour, Manager
+                Bonjour, {currentUser?.displayName || currentUser?.email || "Manager"}
               </span>
             </div>
           </div>

@@ -7,7 +7,7 @@ import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
 import OrderFilters from "@/components/orders/OrderFilters";
 import OrdersTable from "@/components/orders/OrdersTable";
 import { db, logDebug } from "@/services/firebase";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, getDocs, where } from "firebase/firestore";
 
 interface Order {
   id: string;
@@ -20,11 +20,41 @@ interface Order {
   server: string;
 }
 
+interface CommandePlat {
+  idCmd: string;
+  idP: string;
+  quantite: number;
+}
+
 const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
+
+  // Function to get order items from commandes_plat collection
+  const getOrderItems = async (orderId: string): Promise<string[]> => {
+    try {
+      const q = query(
+        collection(db, 'commandes_plat'),
+        where('idCmd', '==', orderId)
+      );
+      const snapshot = await getDocs(q);
+      
+      const items: string[] = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data() as CommandePlat;
+        // For now, we'll show the dish ID and quantity
+        // In a real app, you'd fetch the actual dish names from a 'plats' collection
+        items.push(`Plat ${data.idP} (x${data.quantite})`);
+      });
+      
+      return items.length > 0 ? items : [`Commande #${orderId.substring(0, 4)}`];
+    } catch (error) {
+      console.error("Error fetching order items:", error);
+      return [`Commande #${orderId.substring(0, 4)}`];
+    }
+  };
 
   useEffect(() => {
     // Setup real-time listener for orders
@@ -37,12 +67,15 @@ const Orders = () => {
     
     const unsubscribe = onSnapshot(
       q,
-      (snapshot) => {
+      async (snapshot) => {
         try {
           const ordersData: Order[] = [];
           
-          snapshot.forEach((doc) => {
+          for (const doc of snapshot.docs) {
             const data = doc.data();
+            
+            // Get items for this order
+            const orderItems = await getOrderItems(doc.id);
             
             // Map Firebase status to our UI status
             let status: Order["status"] = "En attente";
@@ -70,14 +103,14 @@ const Orders = () => {
             ordersData.push({
               id: doc.id,
               customerName: data.idC || "Client inconnu",
-              items: [`Commande #${doc.id.substring(0, 4)}`],
+              items: orderItems,
               total: data.montant || 0,
               status: status,
               time: timeString,
               tableNumber: data.idTable || "N/A",
               server: "Non assigné" // This could be fetched from employes collection if needed
             });
-          });
+          }
           
           setOrders(ordersData);
           setIsLoading(false);

@@ -4,6 +4,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -24,32 +26,38 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          
-          {/* Redirect from / to /dashboard */}
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-          
-          {/* Redirect from /messagerie to /notifications (to handle legacy URLs) */}
-          <Route path="/messagerie" element={<Navigate to="/notifications" />} />
-          
-          {/* Protected routes inside the AppLayout */}
-          <Route element={<AppLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/stock" element={<StockManagement />} />
-            <Route path="/reservations" element={<Reservations />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/employees" element={<Employees />} />
-            <Route path="/notifications" element={<Notifications />} />
-          </Route>
-          
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            
+            {/* Redirect from / to /dashboard */}
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+            
+            {/* Redirect from /messagerie to /notifications (to handle legacy URLs) */}
+            <Route path="/messagerie" element={<Navigate to="/notifications" />} />
+            
+            {/* Protected routes inside the AppLayout */}
+            <Route element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/stock" element={<StockManagement />} />
+              <Route path="/reservations" element={<Reservations />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/employees" element={<Employees />} />
+              <Route path="/notifications" element={<Notifications />} />
+            </Route>
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
