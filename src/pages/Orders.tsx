@@ -7,17 +7,23 @@ import OrderStatusBadge from "@/components/orders/OrderStatusBadge";
 import OrderFilters from "@/components/orders/OrderFilters";
 import OrdersTable from "@/components/orders/OrdersTable";
 import { db, logDebug } from "@/services/firebase";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, getDocs, where, doc, getDoc } from "firebase/firestore";
+
+interface OrderItem {
+  platName: string;
+  quantity: number;
+  price: number;
+  total: number;
+}
 
 interface Order {
   id: string;
   customerName: string;
-  items: string[];
+  items: OrderItem[];
   total: number;
   status: "En attente" | "Lancée" | "Annulée";
   time: string;
   tableNumber: string;
-  server: string;
 }
 
 const Orders = () => {
@@ -25,6 +31,73 @@ const Orders = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
+
+  // Function to get client name from clients collection
+  const getClientName = async (clientId: string): Promise<string> => {
+    try {
+      const clientDoc = await getDoc(doc(db, 'clients', clientId));
+      if (clientDoc.exists()) {
+        const clientData = clientDoc.data();
+        return clientData.name || "Client inconnu";
+      }
+      return "Client inconnu";
+    } catch (error) {
+      console.error("Error fetching client:", error);
+      return "Client inconnu";
+    }
+  };
+
+  // Function to get plat details from plats collection
+  const getPlatDetails = async (platId: string): Promise<{ nom: string; prix: number }> => {
+    try {
+      const platDoc = await getDoc(doc(db, 'plats', platId));
+      if (platDoc.exists()) {
+        const platData = platDoc.data();
+        return {
+          nom: platData.nom || "Plat inconnu",
+          prix: platData.prix || 0
+        };
+      }
+      return { nom: "Plat inconnu", prix: 0 };
+    } catch (error) {
+      console.error("Error fetching plat:", error);
+      return { nom: "Plat inconnu", prix: 0 };
+    }
+  };
+
+  // Function to get order items from commandes_plat collection
+  const getOrderItems = async (orderId: string): Promise<{ items: OrderItem[]; calculatedTotal: number }> => {
+    try {
+      const q = query(
+        collection(db, 'commandes_plat'),
+        where('idCmd', '==', orderId)
+      );
+      const snapshot = await getDocs(q);
+      
+      const items: OrderItem[] = [];
+      let calculatedTotal = 0;
+      
+      for (const doc of snapshot.docs) {
+        const data = doc.data();
+        const platDetails = await getPlatDetails(data.idP);
+        const itemTotal = platDetails.prix * data.quantite;
+        
+        items.push({
+          platName: platDetails.nom,
+          quantity: data.quantite,
+          price: platDetails.prix,
+          total: itemTotal
+        });
+        
+        calculatedTotal += itemTotal;
+      }
+      
+      return { items, calculatedTotal };
+    } catch (error) {
+      console.error("Error fetching order items:", error);
+      return { items: [], calculatedTotal: 0 };
+    }
+  };
 
   useEffect(() => {
     // Setup real-time listener for orders
@@ -37,12 +110,18 @@ const Orders = () => {
     
     const unsubscribe = onSnapshot(
       q,
-      (snapshot) => {
+      async (snapshot) => {
         try {
           const ordersData: Order[] = [];
           
-          snapshot.forEach((doc) => {
+          for (const doc of snapshot.docs) {
             const data = doc.data();
+            
+            // Get client name from clients collection
+            const clientName = await getClientName(data.idC);
+            
+            // Get detailed items and calculated total from commandes_plat and plats
+            const { items, calculatedTotal } = await getOrderItems(doc.id);
             
             // Map Firebase status to our UI status
             let status: Order["status"] = "En attente";
@@ -69,15 +148,14 @@ const Orders = () => {
             
             ordersData.push({
               id: doc.id,
-              customerName: data.idC || "Client inconnu",
-              items: [`Commande #${doc.id.substring(0, 4)}`],
-              total: data.montant || 0,
+              customerName: clientName,
+              items: items,
+              total: calculatedTotal,
               status: status,
               time: timeString,
-              tableNumber: data.idTable || "N/A",
-              server: "Non assigné" // This could be fetched from employes collection if needed
+              tableNumber: data.idTable || "N/A"
             });
-          });
+          }
           
           setOrders(ordersData);
           setIsLoading(false);
@@ -100,8 +178,6 @@ const Orders = () => {
   }, []);
 
   const updateOrderStatus = (orderId: string, newStatus: Order["status"]) => {
-    // This function is handled in the OrdersTable component directly
-    // through the Firebase update mechanism
     setOrders(prev => 
       prev.map(order => 
         order.id === orderId 
@@ -115,7 +191,6 @@ const Orders = () => {
     const matchesSearch = 
       order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.server.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.tableNumber.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
@@ -152,7 +227,7 @@ const Orders = () => {
             <OrdersTable
               orders={filteredOrders}
               onStatusChange={updateOrderStatus}
-              isChef={false} // Set to true for chef view, false for manager
+              isChef={false}
             />
           )}
         </CardContent>

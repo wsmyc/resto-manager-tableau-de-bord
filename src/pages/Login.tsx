@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ChefHat } from "lucide-react";
+import { signInUser } from "@/services/firebase";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,17 +20,23 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Simulate Firebase authentication
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In a real app, this would be Firebase Auth
-      // await signInWithEmailAndPassword(auth, email, password);
-      
+      await signInUser(email, password);
       toast.success("Connexion réussie");
       navigate("/dashboard");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erreur de connexion:", error);
-      toast.error("Échec de la connexion. Veuillez vérifier vos identifiants.");
+      
+      let errorMessage = "Échec de la connexion. Veuillez vérifier vos identifiants.";
+      
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = "Aucun utilisateur trouvé avec cet email.";
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = "Mot de passe incorrect.";
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = "Adresse email invalide.";
+      }
+      
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
