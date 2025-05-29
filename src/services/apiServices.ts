@@ -9,7 +9,7 @@ import type {
   Reservation,
   Ingredient,
   Plat,
-  CommandePlat,
+  commandePlat,
   SalesBySubcategory,
   Employe,
   PlatCostDetails,
@@ -81,7 +81,7 @@ export function getTotalCommandes(): Promise<{ total: number }> {
 }
 
 // ----- Commande Plat -----
-export function getCommandePlatList(): Promise<CommandePlat[]> {
+export function getCommandePlatList(): Promise<commandePlat[]> {
   return api.get('/commande-plat/').then(res => res.data);
 }
 
