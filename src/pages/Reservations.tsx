@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format, isToday, isTomorrow, addDays } from "date-fns";
+import { format, isToday, isTomorrow, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CalendarIcon, X, Search, AlertCircle, PlusCircle } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -15,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ReservationForm from "@/components/reservations/ReservationForm";
+import { db, logDebug } from "@/services/firebase";
+import { collection, onSnapshot, query, orderBy, getDocs, setDoc, Timestamp, doc, getDoc } from "firebase/firestore";
 
 interface Reservation {
   id: string;
@@ -24,6 +25,7 @@ interface Reservation {
   time: string;
   status: "En attente" | "Confirmée" | "Annulée";
   phone: string;
+  tableId: string;
 }
 
 const ReservationStatusBadge = ({ status }: { status: Reservation["status"] }) => {
@@ -46,6 +48,16 @@ const ReservationStatusBadge = ({ status }: { status: Reservation["status"] }) =
   );
 };
 
+const generateRandomPhoneNumber = (): string => {
+  const prefixes = ["05", "06", "07"];
+  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+  const number = Array(8)
+    .fill(0)
+    .map(() => Math.floor(Math.random() * 10))
+    .join("");
+  return `${prefix} ${number.slice(0, 2)} ${number.slice(2, 4)} ${number.slice(4, 6)} ${number.slice(6, 8)}`;
+};
+
 const Reservations = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,120 +71,100 @@ const Reservations = () => {
     people: 2,
     date: new Date(),
     time: "19:30",
-    status: "En attente"
+    status: "En attente",
+    tableId: "table1",
   });
 
+  const fetchClientDetails = async (clientId: string): Promise<string> => {
+    try {
+      const clientDocRef = doc(db, "clients", clientId);
+      const clientDoc = await getDoc(clientDocRef);
+      if (clientDoc.exists()) {
+        const clientData = clientDoc.data();
+        return clientData.username || "Client inconnu";
+      }
+      return "Client inconnu";
+    } catch (error) {
+      console.error("Error fetching client:", error);
+      return "Client inconnu";
+    }
+  };
+
   useEffect(() => {
-    // In a real application, this would fetch from Firebase
-    const fetchReservations = async () => {
-      setIsLoading(true);
+    if (!db) {
+      console.error("Firestore db is not initialized!");
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+
+    const q = query(collection(db, "reservations"), orderBy("date_time", "desc"));
+
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Mock data with dates around today
-        const today = new Date();
-        const tomorrow = addDays(today, 1);
-        const dayAfterTomorrow = addDays(today, 2);
-        const yesterday = addDays(today, -1);
-        
-        const mockReservations: Reservation[] = [
-          {
-            id: "RSV-001",
-            customerName: "Karim Benzema",
-            people: 4,
-            date: today,
-            time: "19:30",
-            status: "Confirmée",
-            phone: "05 55 12 34 56"
-          },
-          {
-            id: "RSV-002",
-            customerName: "Inès Abdelli",
-            people: 2,
-            date: today,
-            time: "20:00",
-            status: "En attente",
-            phone: "06 61 23 45 67"
-          },
-          {
-            id: "RSV-003",
-            customerName: "Mohammed Lamine",
-            people: 6,
-            date: tomorrow,
-            time: "19:00",
-            status: "Confirmée",
-            phone: "07 70 34 56 78"
-          },
-          {
-            id: "RSV-004",
-            customerName: "Amina Khelif",
-            people: 3,
-            date: tomorrow,
-            time: "20:30",
-            status: "En attente",
-            phone: "05 41 67 89 01"
-          },
-          {
-            id: "RSV-005",
-            customerName: "Riyad Mahrez",
-            people: 2,
-            date: dayAfterTomorrow,
-            time: "21:00",
-            status: "Confirmée",
-            phone: "05 57 78 90 12"
-          },
-          {
-            id: "RSV-006",
-            customerName: "Doria Achour",
-            people: 8,
-            date: yesterday,
-            time: "19:30",
-            status: "Annulée",
-            phone: "06 67 89 01 23"
-          },
-          {
-            id: "RSV-007",
-            customerName: "Mourad Oudia",
-            people: 5,
-            date: today,
-            time: "12:30",
-            status: "Confirmée",
-            phone: "07 90 12 34 56"
-          },
-          {
-            id: "RSV-008",
-            customerName: "Samira Bouzidi",
-            people: 2,
-            date: tomorrow,
-            time: "13:00",
-            status: "En attente",
-            phone: "05 59 01 23 45"
+        const reservationsData: Reservation[] = [];
+        const clientPromises: Promise<void>[] = [];
+
+        snapshot.docs.forEach(doc => {
+          const data = doc.data();
+          const reservationDate = parseISO(data.date_time);
+          if (isNaN(reservationDate.getTime())) return;
+
+          let status: Reservation["status"] = "En attente";
+          switch (data.status?.toLowerCase()) {
+            case "confirmed": status = "Confirmée"; break;
+            case "cancelled": status = "Annulée"; break;
+            case "pending": case "en attente": status = "En attente"; break;
           }
-        ];
-        
-        setReservations(mockReservations);
+
+          const reservation: Reservation = {
+            id: doc.id,
+            customerName: "Client inconnu", // Placeholder until client data is fetched
+            phone: generateRandomPhoneNumber(),
+            people: data.party_size || 0,
+            date: reservationDate,
+            time: format(reservationDate, "HH:mm", { locale: fr }),
+            status: status,
+            tableId: data.table_id || "N/A",
+          };
+
+          const promise = fetchClientDetails(data.client_id).then(username => {
+            reservation.customerName = username;
+          });
+
+          clientPromises.push(promise);
+          reservationsData.push(reservation);
+        });
+
+        await Promise.all(clientPromises);
+        setReservations([...reservationsData]); // Force re-render with updated data
+        setIsLoading(false);
+        logDebug("Reservations fetched successfully", reservationsData.length);
       } catch (error) {
-        console.error("Erreur lors du chargement des réservations:", error);
-        toast.error("Impossible de charger les réservations");
-      } finally {
+        console.error("Error processing reservations:", error);
+        toast.error("Erreur lors du chargement des réservations");
         setIsLoading(false);
       }
-    };
+    }, (error) => {
+      console.error("Error listening to reservations:", error);
+      toast.error("Erreur de connexion à la base de données");
+      setIsLoading(false);
+    });
 
-    fetchReservations();
+    return () => unsubscribe();
   }, []);
 
-  const cancelReservation = (reservationId: string) => {
-    // In a real application, this would update Firebase
-    setReservations(prev => 
-      prev.map(reservation => 
-        reservation.id === reservationId 
-          ? { ...reservation, status: "Annulée" } 
-          : reservation
-      )
-    );
-    
-    toast.success(`Réservation ${reservationId} annulée`);
+  const cancelReservation = async (reservationId: string) => {
+    try {
+      if (!db) throw new Error("Firestore db is not initialized!");
+      const reservationDocRef = doc(db, "reservations", reservationId);
+      await setDoc(reservationDocRef, { status: "cancelled" }, { merge: true });
+      toast.success(`Réservation ${reservationId} annulée`);
+    } catch (error) {
+      console.error("Error cancelling reservation:", error);
+      toast.error("Erreur lors de l'annulation de la réservation");
+    }
   };
 
   const filteredReservations = reservations.filter(reservation => {
@@ -192,43 +184,28 @@ const Reservations = () => {
   });
 
   const sortedReservations = [...filteredReservations].sort((a, b) => {
-    // Sort by date first
     const dateComparison = a.date.getTime() - b.date.getTime();
     if (dateComparison !== 0) return dateComparison;
-    
-    // If same date, sort by time
     return a.time.localeCompare(b.time);
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleDateChange = (date: Date | undefined) => {
-    setFormData({
-      ...formData,
-      date
-    });
+    setFormData({ ...formData, date });
   };
 
   const handleTimeChange = (value: string) => {
     if (value === "default") return;
-    setFormData({
-      ...formData,
-      time: value
-    });
+    setFormData({ ...formData, time: value });
   };
 
   const handlePeopleChange = (value: string) => {
     if (value === "default") return;
-    setFormData({
-      ...formData,
-      people: parseInt(value)
-    });
+    setFormData({ ...formData, people: parseInt(value) });
   };
 
   const resetForm = () => {
@@ -238,30 +215,53 @@ const Reservations = () => {
       people: 2,
       date: new Date(),
       time: "19:30",
-      status: "En attente"
+      status: "En attente",
+      tableId: "table1",
     });
   };
 
-  const handleAddReservation = () => {
-    if (!formData.customerName || !formData.phone || !formData.date || !formData.time || !formData.people) {
+  const handleAddReservation = async () => {
+    if (!db) {
+      console.error("Firestore db is not initialized!");
+      toast.error("Erreur de connexion à la base de données");
+      return;
+    }
+
+    if (!formData.customerName || !formData.phone || !formData.date || !formData.time || !formData.people || !formData.tableId) {
       toast.error("Veuillez remplir tous les champs obligatoires");
       return;
     }
 
-    const newReservation: Reservation = {
-      id: `RSV-${String(reservations.length + 1).padStart(3, '0')}`,
-      customerName: formData.customerName,
-      phone: formData.phone,
-      people: formData.people,
-      date: formData.date,
-      time: formData.time,
-      status: "En attente"
-    };
+    try {
+      const randomPhone = generateRandomPhoneNumber();
+      const clientId = `client_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      await setDoc(doc(db, "clients", clientId), {
+        username: formData.customerName,
+        phone_number: randomPhone,
+      });
 
-    setReservations([...reservations, newReservation]);
-    toast.success("Réservation ajoutée");
-    setIsAddDialogOpen(false);
-    resetForm();
+      const [hours, minutes] = formData.time.split(":");
+      const reservationDate = new Date(formData.date);
+      reservationDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+      const reservationId = `res_${format(reservationDate, "yyyyMMddHHmmss")}`;
+      await setDoc(doc(db, "reservations", reservationId), {
+        client_id: clientId,
+        date_time: reservationDate.toISOString(),
+        party_size: formData.people,
+        status: "pending",
+        table_id: formData.tableId,
+        created_at: Timestamp.fromDate(new Date()),
+      });
+
+      toast.success("Réservation ajoutée");
+      setIsAddDialogOpen(false);
+      resetForm();
+    } catch (error) {
+      console.error("Error adding reservation:", error);
+      toast.error("Erreur lors de l'ajout de la réservation");
+    }
   };
 
   const formatDateLabel = (date: Date) => {
@@ -317,11 +317,7 @@ const Reservations = () => {
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateFilter ? (
-                      format(dateFilter, "P", { locale: fr })
-                    ) : (
-                      "Sélectionner une date"
-                    )}
+                    {dateFilter ? format(dateFilter, "P", { locale: fr }) : "Sélectionner une date"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -405,7 +401,6 @@ const Reservations = () => {
         </CardContent>
       </Card>
 
-      {/* Add Reservation Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
@@ -418,10 +413,7 @@ const Reservations = () => {
             handleTimeChange={handleTimeChange}
             handlePeopleChange={handlePeopleChange}
             onSubmit={handleAddReservation}
-            onCancel={() => {
-              setIsAddDialogOpen(false);
-              resetForm();
-            }}
+            onCancel={() => { setIsAddDialogOpen(false); resetForm(); }}
             submitLabel="Ajouter"
           />
         </DialogContent>
