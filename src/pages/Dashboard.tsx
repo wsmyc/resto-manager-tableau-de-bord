@@ -38,8 +38,8 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   
   // Static values that match other pages
-  const totalOrders = 100; // Match Orders.tsx
-  const activeReservations = 8; // Match Reservations.tsx (total number of reservations)
+  const totalOrders = 37; // Match Orders.tsx
+  const activeReservations = 7; // Match Reservations.tsx (total number of reservations)
   const todayReservations = 3; // Match Reservations.tsx (reservations for today)
   const weeklyRevenue = 135800; // Sum of weeklyRevenueData
   const weeklyRevenueChange = 12; // Static percentage
@@ -58,7 +58,7 @@ const Dashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">{totalOrders}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Basé sur les données en temps réel
+              Cette semaine
             </p>
           </CardContent>
         </Card>

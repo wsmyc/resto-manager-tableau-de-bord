@@ -37,7 +37,7 @@ const Orders = () => {
       const clientDoc = await getDoc(doc(db, "clients", clientId));
       if (clientDoc.exists()) {
         const clientData = clientDoc.data();
-        return clientData.name || "Client inconnu";
+        return clientData.username || "Client inconnu";
       }
       return "Client inconnu";
     } catch (error) {

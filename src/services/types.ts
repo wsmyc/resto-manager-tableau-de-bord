@@ -140,20 +140,20 @@ export interface PlatCostDetails {
 /** Types pour les notifications */
 export interface Notification {
   id: string;
-  type: 'stock' | 'commande' | 'reservation';
+  type: "stock" | "commande" | "reservation" | "cancellation_request" | "cancellation_accepted" | "cancellation_refused";
   title: string;
-  content: string;
-  timestamp: Date;
+  message: string;
+  created_at: string;
   read: boolean;
-  actionRequired: boolean;
+  related_id?: string;
+  actionRequired?: boolean;
+  priority?: "normal" | "high";
   data?: {
     commandeId?: string;
     reservationId?: string;
-    ingredientId?: string;
     tableId?: string;
   };
 }
-
 /** Collection `clients` */
 export interface Client {
   id?: string;
